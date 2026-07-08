@@ -1,0 +1,145 @@
+import type { Language } from "./types";
+
+export type UiScenarioText = {
+  scenario: string;
+  exportPdf: string;
+  openPrint: string;
+  closeTab: string;
+  browseSaved: string;
+  searchSaved: string;
+  recent: string;
+  name: string;
+  loading: string;
+  noSaved: string;
+  savedInDatabase: string;
+  localDrafts: string;
+  database: string;
+  local: string;
+  metadataTitle: string;
+  metadataSub: string;
+  customerName: string;
+  notes: string;
+  customerPlaceholder: string;
+  notesPlaceholder: string;
+  saveScenario: string;
+  saveLocally: string;
+  saveSynced: string;
+  saveSyncFailed: string;
+  duplicateSuccess: string;
+  renameEmpty: string;
+  renameLocal: string;
+  renameSynced: string;
+  renameSyncFailed: string;
+  deleteLocal: string;
+  deleteSynced: string;
+  deleteSyncFailed: string;
+  resetEditor: string;
+};
+
+export const uiScenarioText: Record<Language, UiScenarioText> = {
+  th: {
+    scenario: "Scenario",
+    exportPdf: "Export report as PDF",
+    openPrint: "Open print preview",
+    closeTab: "Close tab",
+    browseSaved: "Browse saved scenarios",
+    searchSaved: "Search saved scenarios...",
+    recent: "ล่าสุด",
+    name: "ชื่อ",
+    loading: "กำลังโหลด...",
+    noSaved: "ยังไม่มี scenario ที่บันทึกไว้",
+    savedInDatabase: "Saved in database",
+    localDrafts: "Local drafts",
+    database: "database",
+    local: "local",
+    metadataTitle: "Scenario Details",
+    metadataSub: "ใส่ข้อมูลลูกค้าและบันทึกบริบทสำหรับ report หรือการคุยงาน",
+    customerName: "ชื่อลูกค้า / บริษัท",
+    notes: "หมายเหตุ",
+    customerPlaceholder: "เช่น Honda Motor Cycle Logistics",
+    notesPlaceholder: "เช่น สมมติฐานเพิ่มเติม, เงื่อนไขราคา, หรือ scope ของลูกค้า",
+    saveScenario: "Save to local tab and database",
+    saveLocally: "Saved locally",
+    saveSynced: "Saved locally and synced",
+    saveSyncFailed: "Saved locally, database sync failed",
+    duplicateSuccess: "Scenario duplicated as local draft",
+    renameEmpty: "Scenario name cannot be empty",
+    renameLocal: "Scenario renamed locally",
+    renameSynced: "Scenario renamed and synced",
+    renameSyncFailed: "Scenario renamed locally, database sync failed",
+    deleteLocal: "Scenario deleted",
+    deleteSynced: "Scenario deleted from local and database",
+    deleteSyncFailed: "Scenario removed locally, database delete failed",
+    resetEditor: "Reset editor to default preset"
+  },
+  en: {
+    scenario: "Scenario",
+    exportPdf: "Export report as PDF",
+    openPrint: "Open print preview",
+    closeTab: "Close tab",
+    browseSaved: "Browse saved scenarios",
+    searchSaved: "Search saved scenarios...",
+    recent: "Recent",
+    name: "Name",
+    loading: "Loading...",
+    noSaved: "No saved scenarios found.",
+    savedInDatabase: "Saved in database",
+    localDrafts: "Local drafts",
+    database: "database",
+    local: "local",
+    metadataTitle: "Scenario Details",
+    metadataSub: "Add customer context and notes for reporting or follow-up discussions.",
+    customerName: "Customer / company",
+    notes: "Notes",
+    customerPlaceholder: "Example: Honda Motor Cycle Logistics",
+    notesPlaceholder: "Example: pricing assumptions, site conditions, or meeting notes",
+    saveScenario: "Save to local tab and database",
+    saveLocally: "Saved locally",
+    saveSynced: "Saved locally and synced",
+    saveSyncFailed: "Saved locally, database sync failed",
+    duplicateSuccess: "Scenario duplicated as local draft",
+    renameEmpty: "Scenario name cannot be empty",
+    renameLocal: "Scenario renamed locally",
+    renameSynced: "Scenario renamed and synced",
+    renameSyncFailed: "Scenario renamed locally, database sync failed",
+    deleteLocal: "Scenario deleted",
+    deleteSynced: "Scenario deleted from local and database",
+    deleteSyncFailed: "Scenario removed locally, database delete failed",
+    resetEditor: "Reset editor to default preset"
+  },
+  ja: {
+    scenario: "Scenario",
+    exportPdf: "Export report as PDF",
+    openPrint: "Open print preview",
+    closeTab: "Close tab",
+    browseSaved: "Browse saved scenarios",
+    searchSaved: "Search saved scenarios...",
+    recent: "最新",
+    name: "名前",
+    loading: "Loading...",
+    noSaved: "No saved scenarios found.",
+    savedInDatabase: "Saved in database",
+    localDrafts: "Local drafts",
+    database: "database",
+    local: "local",
+    metadataTitle: "Scenario Details",
+    metadataSub: "レポートや提案用に顧客情報と補足メモを残せます。",
+    customerName: "顧客名 / 会社名",
+    notes: "メモ",
+    customerPlaceholder: "例: Honda Motor Cycle Logistics",
+    notesPlaceholder: "例: 価格前提、現場条件、打ち合わせメモ",
+    saveScenario: "Save to local tab and database",
+    saveLocally: "Saved locally",
+    saveSynced: "Saved locally and synced",
+    saveSyncFailed: "Saved locally, database sync failed",
+    duplicateSuccess: "Scenario duplicated as local draft",
+    renameEmpty: "Scenario name cannot be empty",
+    renameLocal: "Scenario renamed locally",
+    renameSynced: "Scenario renamed and synced",
+    renameSyncFailed: "Scenario renamed locally, database sync failed",
+    deleteLocal: "Scenario deleted",
+    deleteSynced: "Scenario deleted from local and database",
+    deleteSyncFailed: "Scenario removed locally, database delete failed",
+    resetEditor: "Reset editor to default preset"
+  }
+};
