@@ -19,13 +19,14 @@ import { uiFactorChoices, uiGroups, uiLabels, uiText } from '@/utils/roi/ui-copy
 import { uiScenarioText } from '@/utils/roi/ui-scenario-copy'
 import { getFieldTooltip } from '@/utils/roi/ui-help-copy'
 import { useRoiStore } from '@/stores/roi'
-import type { RoiInput } from '@/utils/roi/types'
+// import type { RoiInput } from '@/utils/roi/types'
 import type { ScenarioSortMode } from '@/utils/roi/scenario-types'
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, PointElement, LineElement, Filler, ChartTooltip, Legend)
 
 const store = useRoiStore()
 const isFullWidth = ref(false)
+const isSaveDialogVisible = ref(false)
 const snackbar = ref({ show: false, text: '', color: 'success' })
 
 const tr = computed(() => uiText[store.language])
@@ -221,7 +222,7 @@ function formatSavedAt(savedAt: string) {
   }).format(new Date(savedAt))
 }
 
-function fieldStep(key: keyof RoiInput) {
+function fieldStep(key:any) {
   if (key === 'otMultiplier' || key === 'staffCount' || key.includes('Minutes') || key === 'workHoursDay')
     return 0.1
 
@@ -231,14 +232,14 @@ function fieldStep(key: keyof RoiInput) {
   return 1
 }
 
-function fieldMin(key: keyof RoiInput) {
+function fieldMin(key:any) {
   if (key.includes('Life') || key === 'years' || key === 'workDaysYear' || key === 'workHoursDay')
     return 1
 
   return 0
 }
 
-function onNumericInput(key: keyof RoiInput, event: Event) {
+function onNumericInput(key:any, event: Event) {
   const value = Number((event.target as HTMLInputElement).value)
   store.updateInput(key, value)
 }
@@ -259,6 +260,15 @@ async function onSaveScenario() {
     showNotice(scenarioText.value.saveLocally)
   else
     showNotice(scenarioText.value.saveSyncFailed, 'error')
+
+  return response
+}
+
+async function onConfirmSaveScenario() {
+  const response = await onSaveScenario()
+
+  if (response.status === 'synced' || response.status === 'local')
+    isSaveDialogVisible.value = false
 }
 
 async function onRenameScenario(scenario: any) {
@@ -360,43 +370,11 @@ onMounted(async () => {
           <button
             class="btn-solid"
             type="button"
-            @click="onSaveScenario"
+            @click="isSaveDialogVisible = true"
           >
             <VIcon icon="tabler-device-floppy" size="16" />
             <span>save</span>
           </button>
-        </div>
-
-        <div class="scenario-meta-block">
-          <div class="section-head compact">
-            <div>
-              <h2>{{ scenarioText.metadataTitle }}</h2>
-              <p>{{ scenarioText.metadataSub }}</p>
-            </div>
-          </div>
-
-          <div class="grid2">
-            <div class="field">
-              <div class="field-label-row">
-                <label for="scenarioName">{{ scenarioText.scenario }}</label>
-              </div>
-              <input id="scenarioName" v-model="store.scenarioName" class="input-control" type="text">
-            </div>
-
-            <div class="field">
-              <div class="field-label-row">
-                <label for="customerName">{{ scenarioText.customerName }}</label>
-              </div>
-              <input id="customerName" v-model="store.customerName" class="input-control" :placeholder="scenarioText.customerPlaceholder" type="text">
-            </div>
-          </div>
-
-          <div class="field">
-            <div class="field-label-row">
-              <label for="scenarioNotes">{{ scenarioText.notes }}</label>
-            </div>
-            <textarea id="scenarioNotes" v-model="store.scenarioNotes" class="textarea-control" :placeholder="scenarioText.notesPlaceholder" />
-          </div>
         </div>
 
         <div v-for="group in uiGroups" :key="group.title" class="input-group">
@@ -589,6 +567,65 @@ onMounted(async () => {
         </div>
       </section>
     </section>
+
+    <VDialog
+      v-model="isSaveDialogVisible"
+      max-width="760"
+    >
+      <VCard class="roi-save-dialog">
+        <VCardTitle class="roi-save-dialog__title">
+          <div>
+            <div class="roi-save-dialog__eyebrow">
+              {{ scenarioText.metadataTitle }}
+            </div>
+            <h2>{{ scenarioText.metadataSub }}</h2>
+          </div>
+
+          <button
+            class="roi-save-dialog__close"
+            type="button"
+            aria-label="Close"
+            @click="isSaveDialogVisible = false"
+          >
+            <VIcon icon="tabler-x" />
+          </button>
+        </VCardTitle>
+
+        <VCardText class="roi-save-dialog__body">
+          <div class="grid2">
+            <div class="field">
+              <div class="field-label-row">
+                <label for="scenarioName">{{ scenarioText.scenario }}</label>
+              </div>
+              <input id="scenarioName" v-model="store.scenarioName" class="input-control" type="text">
+            </div>
+
+            <div class="field">
+              <div class="field-label-row">
+                <label for="customerName">{{ scenarioText.customerName }}</label>
+              </div>
+              <input id="customerName" v-model="store.customerName" class="input-control" :placeholder="scenarioText.customerPlaceholder" type="text">
+            </div>
+          </div>
+
+          <div class="field">
+            <div class="field-label-row">
+              <label for="scenarioNotes">{{ scenarioText.notes }}</label>
+            </div>
+            <textarea id="scenarioNotes" v-model="store.scenarioNotes" class="textarea-control" :placeholder="scenarioText.notesPlaceholder" />
+          </div>
+        </VCardText>
+
+        <VCardActions class="roi-save-dialog__actions">
+          <VBtn variant="text" color="default" @click="isSaveDialogVisible = false">
+            Cancel
+          </VBtn>
+          <VBtn color="primary" @click="onConfirmSaveScenario">
+            Save
+          </VBtn>
+        </VCardActions>
+      </VCard>
+    </VDialog>
 
     <RoiPrintReport
       :chart-data="chartData"

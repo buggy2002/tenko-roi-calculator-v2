@@ -4,7 +4,7 @@ import RoiCalculatorPage from '@/views/roi/RoiCalculatorPage.vue'
 definePage({
   meta: {
     public: true,
-    layout: 'default',
+    layout: 'blank',
   },
 })
 </script>

@@ -575,6 +575,59 @@ input {
   background: linear-gradient(180deg, rgba(248, 248, 246, .92), rgba(255, 255, 255, .98));
 }
 
+.roi-save-dialog {
+  border-radius: 22px;
+  background: #fff;
+}
+
+.roi-save-dialog__title {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 20px 22px 0;
+}
+
+.roi-save-dialog__eyebrow {
+  margin-bottom: 6px;
+  color: var(--orange);
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.roi-save-dialog__title h2 {
+  margin: 0;
+  color: var(--ink);
+  font-size: 20px;
+  line-height: 1.15;
+}
+
+.roi-save-dialog__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(16, 17, 20, .05);
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.roi-save-dialog__body {
+  padding: 18px 22px 10px;
+}
+
+.roi-save-dialog__actions {
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 0 22px 22px;
+}
+
 .section-head.compact {
   margin-bottom: 12px;
 }
@@ -1382,6 +1435,13 @@ input {
   .scenario-meta-block {
     margin-bottom: 16px;
     padding: 12px;
+  }
+
+  .roi-save-dialog__title,
+  .roi-save-dialog__body,
+  .roi-save-dialog__actions {
+    padding-left: 16px;
+    padding-right: 16px;
   }
 
   .grid2,
