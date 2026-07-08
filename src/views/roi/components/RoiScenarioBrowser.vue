@@ -1,38 +1,93 @@
-<script setup lang="ts">
+<script setup>
 import { computed, ref } from 'vue'
-import { roiPresets } from '@/utils/roi/presets'
-import type { ScenarioListGroup, ScenarioSortMode, StoredScenario } from '@/utils/roi/scenario-types'
-import type { PresetKey } from '@/utils/roi/types'
+import { useI18n } from 'vue-i18n'
+import { roiPresets } from '@/utils/roi/presets.js'
 
-const props = defineProps<{
-  currentLocalId: string | null
-  formatSavedAt: (value: string) => string
-  isRemoteLoading: boolean
-  presetKey: PresetKey
-  renameDraft: string
-  renamingLocalId: string | null
-  savedScenarioCount: number
-  scenarioGroups: ScenarioListGroup[]
-  scenarioText: Record<string, string>
-  sortMode: ScenarioSortMode
-  visibleTabs: StoredScenario[]
-}>()
+const props = defineProps({
+  currentLocalId: { type: String, default: null },
+  formatSavedAt: { type: Function, required: true },
+  isRemoteLoading: { type: Boolean, default: false },
+  presetKey: { type: String, required: true },
+  renameDraft: { type: String, default: '' },
+  renamingLocalId: { type: String, default: null },
+  savedScenarioCount: { type: Number, default: 0 },
+  scenarioGroups: { type: Array, default: () => [] },
+  sortMode: { type: String, required: true },
+  visibleTabs: { type: Array, default: () => [] },
+})
 
-const emit = defineEmits<{
-  (event: 'activate-preset-tab', value: PresetKey): void
-  (event: 'close-scenario-tab', value: string): void
-  (event: 'duplicate-scenario', value: StoredScenario): void
-  (event: 'open-scenario', value: StoredScenario): void
-  (event: 'rename-draft-change', value: string): void
-  (event: 'set-sort-mode', value: ScenarioSortMode): void
-  (event: 'start-rename-scenario', value: StoredScenario): void
-  (event: 'cancel-rename-scenario'): void
-  (event: 'submit-rename-scenario', value: StoredScenario): void
-  (event: 'delete-scenario', value: StoredScenario): void
-}>()
+const emit = defineEmits([
+  'activatePresetTab',
+  'closeScenarioTab',
+  'duplicateScenario',
+  'openScenario',
+  'renameDraftChange',
+  'setSortMode',
+  'startRenameScenario',
+  'cancelRenameScenario',
+  'submitRenameScenario',
+  'deleteScenario',
+])
 
 const listOpen = ref(false)
 const search = ref('')
+const { t, locale } = useI18n({ useScope: 'global' })
+
+const buildTextMap = (prefix, keys) => {
+  const result = {}
+
+  keys.forEach(key => {
+    result[key] = t(`${prefix}.${key}`)
+  })
+  
+  return result
+}
+
+const scenarioKeys = [
+  'scenario',
+  'exportPdf',
+  'openPrint',
+  'closeTab',
+  'browseSaved',
+  'searchSaved',
+  'recent',
+  'name',
+  'loading',
+  'noSaved',
+  'savedInDatabase',
+  'localDrafts',
+  'database',
+  'local',
+  'metadataTitle',
+  'metadataSub',
+  'customerName',
+  'notes',
+  'customerPlaceholder',
+  'notesPlaceholder',
+  'saveScenario',
+  'save',
+  'list',
+  'cancel',
+  'close',
+  'saveLocally',
+  'saveSynced',
+  'saveSyncFailed',
+  'duplicateSuccess',
+  'renameEmpty',
+  'renameLocal',
+  'renameSynced',
+  'renameSyncFailed',
+  'deleteLocal',
+  'deleteSynced',
+  'deleteSyncFailed',
+  'resetEditor',
+]
+
+const scenarioText = computed(() => {
+  locale.value
+  
+  return buildTextMap('roiScenario', scenarioKeys)
+})
 
 const filteredGroups = computed(() => {
   const needle = search.value.trim().toLowerCase()
@@ -49,19 +104,19 @@ const filteredGroups = computed(() => {
     .filter(group => group.items.length > 0)
 })
 
-function activatePresetTab(value: string) {
-  emit('activate-preset-tab', value as PresetKey)
+function activatePresetTab(value) {
+  emit('activatePresetTab', value)
 }
 
-function updateRenameDraft(event: Event) {
-  emit('rename-draft-change', (event.target as HTMLInputElement).value)
+function updateRenameDraft(event) {
+  emit('renameDraftChange', event.target?.value ?? '')
 }
 
-function groupHeading(value: string) {
+function groupHeading(value) {
   if (value === 'remote')
-    return props.scenarioText.savedInDatabase
+    return scenarioText.value.savedInDatabase
 
-  return props.scenarioText.localDrafts
+  return scenarioText.value.localDrafts
 }
 </script>
 
@@ -72,7 +127,8 @@ function groupHeading(value: string) {
         v-for="(preset, key) in roiPresets"
         :key="key"
         type="button"
-        :class="['session-tab', 'session-preset-tab', currentLocalId === null && presetKey === key && 'active']"
+        class="session-tab session-preset-tab"
+        :class="[currentLocalId === null && presetKey === key && 'active']"
         @click="activatePresetTab(key)"
       >
         <span class="session-tab-main">{{ preset.name }}</span>
@@ -81,12 +137,13 @@ function groupHeading(value: string) {
       <div
         v-for="scenario in visibleTabs"
         :key="scenario.localId"
-        :class="['session-tab', currentLocalId === scenario.localId && 'active']"
+        class="session-tab"
+        :class="[currentLocalId === scenario.localId && 'active']"
       >
         <button
           class="session-tab-main"
           type="button"
-          @click="emit('open-scenario', scenario)"
+          @click="emit('openScenario', scenario)"
         >
           {{ scenario.name }}
         </button>
@@ -94,9 +151,12 @@ function groupHeading(value: string) {
           class="session-tab-close"
           type="button"
           :aria-label="scenarioText.closeTab"
-          @click="emit('close-scenario-tab', scenario.localId)"
+          @click="emit('closeScenarioTab', scenario.localId)"
         >
-          <VIcon icon="tabler-x" size="16" />
+          <VIcon
+            icon="tabler-x"
+            size="16"
+          />
         </button>
       </div>
     </div>
@@ -107,8 +167,11 @@ function groupHeading(value: string) {
         type="button"
         @click="listOpen = true"
       >
-        <span>list</span>
-        <VIcon icon="tabler-layout-list" size="18" />
+        <span>{{ scenarioText.list }}</span>
+        <VIcon
+          icon="tabler-layout-list"
+          size="18"
+        />
       </button>
     </div>
 
@@ -123,6 +186,7 @@ function groupHeading(value: string) {
           <button
             class="btn-icon"
             type="button"
+            :aria-label="scenarioText.close"
             @click="listOpen = false"
           >
             <VIcon icon="tabler-x" />
@@ -143,7 +207,7 @@ function groupHeading(value: string) {
                 class="scenario-sort-button"
                 :class="{ active: sortMode === 'recent' }"
                 type="button"
-                @click="emit('set-sort-mode', 'recent')"
+                @click="emit('setSortMode', 'recent')"
               >
                 {{ scenarioText.recent }}
               </button>
@@ -151,7 +215,7 @@ function groupHeading(value: string) {
                 class="scenario-sort-button"
                 :class="{ active: sortMode === 'name' }"
                 type="button"
-                @click="emit('set-sort-mode', 'name')"
+                @click="emit('setSortMode', 'name')"
               >
                 {{ scenarioText.name }}
               </button>
@@ -188,7 +252,8 @@ function groupHeading(value: string) {
                 <div
                   v-for="scenario in group.items"
                   :key="scenario.localId"
-                  :class="['scenario-list-item', 'rounded-2xl', 'px-3', 'py-3', currentLocalId === scenario.localId && 'scenario-list-item-active']"
+                  class="scenario-list-item rounded-2xl px-3 py-3"
+                  :class="[currentLocalId === scenario.localId && 'scenario-list-item-active']"
                 >
                   <template v-if="renamingLocalId === scenario.localId">
                     <div class="scenario-rename-wrap">
@@ -197,24 +262,30 @@ function groupHeading(value: string) {
                         class="input-control"
                         type="text"
                         @input="updateRenameDraft"
-                        @keydown.enter.prevent="emit('submit-rename-scenario', scenario)"
-                        @keydown.esc.prevent="emit('cancel-rename-scenario')"
+                        @keydown.enter.prevent="emit('submitRenameScenario', scenario)"
+                        @keydown.esc.prevent="emit('cancelRenameScenario')"
                       >
 
                       <div class="scenario-rename-actions">
                         <button
                           class="scenario-list-icon-button confirm"
                           type="button"
-                          @click="emit('submit-rename-scenario', scenario)"
+                          @click="emit('submitRenameScenario', scenario)"
                         >
-                          <VIcon icon="tabler-check" size="16" />
+                          <VIcon
+                            icon="tabler-check"
+                            size="16"
+                          />
                         </button>
                         <button
                           class="scenario-list-icon-button"
                           type="button"
-                          @click="emit('cancel-rename-scenario')"
+                          @click="emit('cancelRenameScenario')"
                         >
-                          <VIcon icon="tabler-x" size="16" />
+                          <VIcon
+                            icon="tabler-x"
+                            size="16"
+                          />
                         </button>
                       </div>
                     </div>
@@ -225,7 +296,7 @@ function groupHeading(value: string) {
                       <button
                         class="scenario-list-title text-left"
                         type="button"
-                        @click="emit('open-scenario', scenario); listOpen = false"
+                        @click="emit('openScenario', scenario); listOpen = false"
                       >
                         {{ scenario.name }}
                       </button>
@@ -234,29 +305,39 @@ function groupHeading(value: string) {
                         <button
                           class="scenario-list-icon-button"
                           type="button"
-                          @click="emit('start-rename-scenario', scenario)"
+                          @click="emit('startRenameScenario', scenario)"
                         >
-                          <VIcon icon="tabler-pencil" size="16" />
+                          <VIcon
+                            icon="tabler-pencil"
+                            size="16"
+                          />
                         </button>
                         <button
                           class="scenario-list-icon-button"
                           type="button"
-                          @click="emit('duplicate-scenario', scenario)"
+                          @click="emit('duplicateScenario', scenario)"
                         >
-                          <VIcon icon="tabler-copy-plus" size="16" />
+                          <VIcon
+                            icon="tabler-copy-plus"
+                            size="16"
+                          />
                         </button>
                         <button
                           class="scenario-list-icon-button danger"
                           type="button"
-                          @click="emit('delete-scenario', scenario)"
+                          @click="emit('deleteScenario', scenario)"
                         >
-                          <VIcon icon="tabler-trash" size="16" />
+                          <VIcon
+                            icon="tabler-trash"
+                            size="16"
+                          />
                         </button>
                       </div>
                     </div>
 
                     <div class="scenario-list-meta mt-2">
-                      {{ scenario.customerName ? `${scenario.customerName} | ` : '' }}{{ formatSavedAt(scenario.savedAt) }}
+                      {{ scenario.customerName ? `${scenario.customerName} | ` : '' }}{{ formatSavedAt(scenario.savedAt)
+                      }}
                     </div>
                   </template>
                 </div>

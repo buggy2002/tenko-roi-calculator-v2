@@ -1,27 +1,40 @@
-<script setup lang="ts">
-import robotImage from '@/assets/images/roi/tenko-robot-main.png'
+<script setup>
+import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
+import robotImage from '@images/roi/tenko-robot-main.png'
 import { Line } from 'vue-chartjs'
 
-defineProps<{
-  chartData: Record<string, unknown>
-  chartOptions: Record<string, unknown>
-  customerName: string
-  fmt: (value: number) => string
-  fmt1: (value: number) => string
-  formatterLocale: string
-  hrs: (value: number, rounded?: boolean) => string
-  input: Record<string, number>
-  labels: Record<string, string>
-  mins: (value: number) => string
-  printMetrics: Array<{ icon: string, title: string, value: string, note: string, accent: boolean, tone: string }>
-  result: Record<string, any>
-  scenarioName: string
-  scenarioNotes: string
-  scenarioText: Record<string, string>
-  tr: Record<string, string>
-}>()
+defineProps({
+  chartData: { type: Object, required: true },
+  chartOptions: { type: Object, required: true },
+  customerName: { type: String, default: '' },
+  fmt: { type: Function, required: true },
+  fmt1: { type: Function, required: true },
+  formatterLocale: { type: String, required: true },
+  hrs: { type: Function, required: true },
+  input: { type: Object, required: true },
+  labels: { type: Object, required: true },
+  mins: { type: Function, required: true },
+  printMetrics: { type: Array, required: true },
+  result: { type: Object, required: true },
+  scenarioName: { type: String, required: true },
+  scenarioNotes: { type: String, default: '' },
+  tr: { type: Object, required: true },
+})
 
-function clampText(value: string, limit: number) {
+const { t, locale } = useI18n({ useScope: 'global' })
+
+const scenarioText = computed(() => {
+  locale.value
+
+  return {
+    scenario: t('roiScenario.scenario'),
+    customerName: t('roiScenario.customerName'),
+    notes: t('roiScenario.notes'),
+  }
+})
+
+function clampText(value, limit) {
   if (value.length <= limit)
     return value
 
@@ -35,78 +48,85 @@ function clampText(value: string, limit: number) {
     aria-hidden="true"
   >
     <div class="print-page print-executive">
-      <div class="pr-bg-lines" />
-      <div class="pr-topline">
+      <div class="roi-print-bg-lines" />
+      <div class="roi-print-topline">
         <div>{{ tr.printBrandSmall }}</div>
-        <div class="pr-logo-mark">
+        <div class="roi-print-logo-mark">
           TENKO<span>ROBOT</span>
         </div>
       </div>
 
-      <div class="pr-hero-title">
-        <div class="pr-title">
+      <div class="roi-print-hero-title">
+        <div class="roi-print-title">
           {{ tr.printHeroTitle }}
         </div>
-        <div class="pr-subtitle">
+        <div class="roi-print-subtitle">
           {{ tr.printHeroSubtitle }}
         </div>
 
-        <div class="pr-brief-meta">
+        <div class="roi-print-brief-meta">
           <div
             v-if="customerName"
-            class="pr-meta-row"
+            class="roi-print-meta-row"
           >
-            <span class="pr-meta-label">{{ scenarioText.customerName }}</span>
-            <span class="pr-meta-value">{{ customerName }}</span>
+            <span class="roi-print-meta-label">{{ scenarioText.customerName }}</span>
+            <span class="roi-print-meta-value">{{ customerName }}</span>
           </div>
 
-          <div class="pr-meta-row">
-            <span class="pr-meta-label">{{ scenarioText.scenario }}</span>
-            <span class="pr-meta-value">{{ scenarioName }}</span>
+          <div class="roi-print-meta-row">
+            <span class="roi-print-meta-label">{{ scenarioText.scenario }}</span>
+            <span class="roi-print-meta-value">{{ scenarioName }}</span>
           </div>
 
           <div
             v-if="scenarioNotes"
-            class="pr-meta-row"
+            class="roi-print-meta-row"
           >
-            <span class="pr-meta-label">{{ scenarioText.notes }}</span>
-            <span class="pr-meta-value">{{ clampText(scenarioNotes, 120) }}</span>
+            <span class="roi-print-meta-label">{{ scenarioText.notes }}</span>
+            <span class="roi-print-meta-value">{{ clampText(scenarioNotes, 120) }}</span>
           </div>
         </div>
       </div>
 
       <img
-        class="pr-robot-main"
+        class="roi-print-robot-main"
         :src="robotImage"
         alt="Tenko Robot"
       >
 
-      <div class="pr-impact-panel">
+      <div class="roi-print-impact-panel">
         <div
           v-for="(item, index) in printMetrics"
           :key="item.title"
-          :class="['pr-impact-item', index === printMetrics.length - 1 && 'last']"
+          class="roi-print-impact-item"
+          :class="[index === printMetrics.length - 1 && 'last']"
         >
-          <div :class="['pr-icon', item.accent && 'pr-icon-orange']">
+          <div
+            class="roi-print-icon"
+            :class="[item.accent && 'roi-print-icon-orange']"
+          >
             {{ item.icon }}
           </div>
           <div>
-            <div class="pr-impact-title">
+            <div class="roi-print-impact-title">
               {{ item.title }}
             </div>
-            <div :class="['pr-impact-value', item.tone]">
+            <div
+              class="roi-print-impact-value"
+              :class="[item.tone]"
+            >
               {{ item.value }}
             </div>
-            <div class="pr-impact-mini">
+            <div class="roi-print-impact-mini">
               {{ item.note }}
             </div>
           </div>
         </div>
       </div>
 
-      <div class="pr-lower-grid">
-        <div class="pr-compare-panel">
-          <div class="pr-compare-head">
+      <div class="roi-print-lower-grid">
+        <div class="roi-print-compare-panel">
+          <div class="roi-print-compare-head">
             {{ tr.execDesc }}
           </div>
 
@@ -153,58 +173,61 @@ function clampText(value: string, limit: number) {
           </div>
         </div>
 
-        <div class="print-chart pr-chart-panel">
-          <div class="pr-chart-head">
-            <div class="pr-chart-title">
+        <div class="print-chart roi-print-chart-panel">
+          <div class="roi-print-chart-head">
+            <div class="roi-print-chart-title">
               {{ tr.chartTitle }}
             </div>
-            <div class="pr-chart-desc">
+            <div class="roi-print-chart-desc">
               {{ tr.chartDesc }}
             </div>
           </div>
-          <div class="pr-chartbox">
-            <Line :data="chartData" :options="chartOptions" />
+          <div class="roi-print-chartbox">
+            <Line
+              :data="chartData"
+              :options="chartOptions"
+            />
           </div>
         </div>
       </div>
     </div>
 
     <div class="print-page print-details">
-      <div class="pr-bg-lines" />
-      <div class="pr-topline detail">
+      <div class="roi-print-bg-lines" />
+      <div class="roi-print-topline detail">
         <div>TENKO ROI CALCULATOR</div>
-        <div class="pr-logo-mark">
+        <div class="roi-print-logo-mark">
           TENKO<span>ROBOT</span>
         </div>
       </div>
 
-      <div class="pr-title detail-title">
+      <div class="roi-print-title detail-title">
         {{ tr.printDetailTitle }}
       </div>
-      <div class="pr-subtitle detail-subtitle">
+      <div class="roi-print-subtitle detail-subtitle">
         {{ tr.printDetailSubtitle }}
       </div>
 
-      <div class="pr-kpi-grid">
-        <div class="pr-kpi">
+      <div class="roi-print-kpi-grid">
+        <div class="roi-print-kpi">
           <small>{{ tr.cycle }}</small>
           <strong>{{ mins(result.cycle) }}</strong>
         </div>
-        <div class="pr-kpi">
+        <div class="roi-print-kpi">
           <small>{{ tr.costPerMin }}</small>
           <strong>{{ `${fmt1(result.costPerMin)}/${tr.min}` }}</strong>
         </div>
-        <div class="pr-kpi">
+        <div class="roi-print-kpi">
           <small>{{ tr.utilTitle }}</small>
           <strong>{{ `${result.utilPct.toFixed(1)}%` }}</strong>
         </div>
-        <div class="pr-kpi">
+        <div class="roi-print-kpi">
           <small>{{ tr.roiFromTotal }}</small>
           <strong>{{ `${result.roi.toFixed(1)}%` }}</strong>
         </div>
       </div>
 
-      <div class="pr-note">
+      <div class="roi-print-note">
         <span>{{ tr.disclaimer }}</span>
         <span v-if="customerName">{{ scenarioText.customerName }}: {{ customerName }}</span>
         <span v-if="scenarioNotes">{{ scenarioText.notes }}: {{ scenarioNotes }}</span>

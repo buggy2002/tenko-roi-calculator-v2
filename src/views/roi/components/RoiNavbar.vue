@@ -1,20 +1,22 @@
-<script setup lang="ts">
-import type { Language } from '@/utils/roi/types'
+<script setup>
+import { useI18n } from 'vue-i18n'
 
-defineProps<{
-  language: Language
-  isFullWidth: boolean
-  printLabel: string
-  fullWidthLabel: string
-}>()
+defineProps({
+  language: { type: String, required: true },
+  isFullWidth: { type: Boolean, default: false },
+  printLabel: { type: String, required: true },
+  fullWidthLabel: { type: String, required: true },
+})
 
-const emit = defineEmits<{
-  (event: 'print'): void
-  (event: 'toggle-full-width'): void
-  (event: 'update:language', value: Language): void
-}>()
+const emit = defineEmits([
+  'print',
+  'toggleFullWidth',
+  'updateLanguage',
+])
 
-const languageOptions: Array<{ value: Language, label: string }> = [
+const { t } = useI18n({ useScope: 'global' })
+
+const languageOptions = [
   { value: 'th', label: 'Thai' },
   { value: 'en', label: 'English' },
   { value: 'ja', label: 'Japanese' },
@@ -24,7 +26,7 @@ const languageOptions: Array<{ value: Language, label: string }> = [
 <template>
   <header class="nav-shell">
     <div class="brand-mark">
-      Tenko ROI Calculator
+      {{ t('roi.brand') }}
     </div>
 
     <div class="nav-actions">
@@ -32,7 +34,7 @@ const languageOptions: Array<{ value: Language, label: string }> = [
         class="btn-icon"
         type="button"
         :aria-label="fullWidthLabel"
-        @click="emit('toggle-full-width')"
+        @click="emit('toggleFullWidth')"
       >
         <VIcon :icon="isFullWidth ? 'tabler-minimize' : 'tabler-maximize'" />
       </button>
@@ -43,7 +45,7 @@ const languageOptions: Array<{ value: Language, label: string }> = [
             class="btn-icon"
             type="button"
             v-bind="props"
-            aria-label="Language"
+            :aria-label="t('roi.language')"
           >
             <VIcon icon="tabler-world" />
           </button>
@@ -53,7 +55,7 @@ const languageOptions: Array<{ value: Language, label: string }> = [
           <VListItem
             v-for="option in languageOptions"
             :key="option.value"
-            @click="emit('update:language', option.value)"
+            @click="emit('updateLanguage', option.value)"
           >
             <template #prepend>
               <VIcon

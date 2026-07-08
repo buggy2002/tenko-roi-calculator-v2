@@ -4,6 +4,15 @@
   "Pages": "Pages",
   "Charts & Maps": "Charts & Maps",
   "Others": "Others",
+  "roi": {
+    "brand": "Tenko ROI Calculator",
+    "language": "Language"
+  },
+  "roiScenario": {
+    "scenario": "Scenario",
+    "customerName": "Customer / company",
+    "notes": "Notes"
+  },
   "Typography": "Typography",
   "Cards": "Cards",
   "Basic": "Basic",

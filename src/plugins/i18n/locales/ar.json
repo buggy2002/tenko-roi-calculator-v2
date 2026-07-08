@@ -4,6 +4,15 @@
   "Pages": "الصفحات",
   "Charts & Maps": "الرسوم البيانية والخرائط",
   "Others": "آحرون",
+  "roi": {
+    "brand": "Tenko ROI Calculator",
+    "language": "اللغة"
+  },
+  "roiScenario": {
+    "scenario": "Scenario",
+    "customerName": "العميل / الشركة",
+    "notes": "ملاحظات"
+  },
   "Typography": "الطباعة",
   "Cards": "البطاقات",
   "Basic": "أساسي",

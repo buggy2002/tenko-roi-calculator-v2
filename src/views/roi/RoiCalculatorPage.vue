@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { computed, onMounted, ref, watch } from 'vue'
 import {
   BarElement,
@@ -12,37 +12,233 @@ import {
   Tooltip as ChartTooltip,
 } from 'chart.js'
 import { Bar, Line } from 'vue-chartjs'
+import { useI18n } from 'vue-i18n'
 import RoiNavbar from './components/RoiNavbar.vue'
 import RoiPrintReport from './components/RoiPrintReport.vue'
 import RoiScenarioBrowser from './components/RoiScenarioBrowser.vue'
-import { uiFactorChoices, uiGroups, uiLabels, uiText } from '@/utils/roi/ui-copy'
-import { uiScenarioText } from '@/utils/roi/ui-scenario-copy'
-import { getFieldTooltip } from '@/utils/roi/ui-help-copy'
-import { useRoiStore } from '@/stores/roi'
-// import type { RoiInput } from '@/utils/roi/types'
-import type { ScenarioSortMode } from '@/utils/roi/scenario-types'
+import { uiFactorChoices, uiGroups } from '@/utils/roi/ui-copy.js'
+import { getFieldTooltip } from '@/utils/roi/ui-help-copy.js'
+import { useRoiStore } from '@/stores/roi.js'
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, PointElement, LineElement, Filler, ChartTooltip, Legend)
 
 const store = useRoiStore()
+const { t, locale } = useI18n({ useScope: 'global' })
 const isFullWidth = ref(false)
 const isSaveDialogVisible = ref(false)
 const snackbar = ref({ show: false, text: '', color: 'success' })
 
-const tr = computed(() => uiText[store.language])
-const labels = computed(() => uiLabels[store.language])
-const scenarioText = computed(() => uiScenarioText[store.language])
+const buildTextMap = (prefix, keys) => {
+  const result = {}
+
+  keys.forEach(key => {
+    result[key] = t(`${prefix}.${key}`)
+  })
+  
+  return result
+}
+
+const roiTextKeys = [
+  'print',
+  'fullWidth',
+  'fullWidthOn',
+  'fullWidthOff',
+  'eyebrow',
+  'titleA',
+  'desc',
+  'inputTitle',
+  'inputSub',
+  'operation',
+  'staffCost',
+  'productivity',
+  'equipment',
+  'tenko',
+  'workload',
+  'cost',
+  'hiddenCost',
+  'equipmentTag',
+  'allIn',
+  'autoOtHint',
+  'autoOn',
+  'autoOff',
+  'factorChoice',
+  'factorGeneral',
+  'factorGeneralDesc',
+  'factorJapanese',
+  'factorJapaneseDesc',
+  'factorMultinational',
+  'factorMultinationalDesc',
+  'factorCustom',
+  'factorHint',
+  'reset',
+  'saving',
+  'timeSaving',
+  'prodSaving',
+  'worth',
+  'worthGood',
+  'worthBad',
+  'worthGoodNote',
+  'worthBadNote',
+  'oldMethod',
+  'annualCost',
+  'annualTime',
+  'prodLoss',
+  'totalCost',
+  'execTitle',
+  'execDesc',
+  'costBreakTitle',
+  'costBreakDesc',
+  'staffByUtil',
+  'baseSalary',
+  'otCost',
+  'extras',
+  'dep',
+  'maint',
+  'cal',
+  'tenkoMonthly',
+  'setup',
+  'other',
+  'cycle',
+  'costPerMin',
+  'timeSaveDay',
+  'roiFromTotal',
+  'chartTitle',
+  'chartDesc',
+  'timeChartTitle',
+  'timeChartDesc',
+  'timeChartAnnual',
+  'timeChartSaved',
+  'start',
+  'year',
+  'hours',
+  'min',
+  'disclaimer',
+  'assumptions',
+  'formula',
+  'utilTitle',
+  'utilLegend',
+  'productivityPanelDesc',
+  'printHeroTitle',
+  'printHeroSubtitle',
+  'printBrandSmall',
+  'printDetailTitle',
+  'printDetailSubtitle',
+  'printConclusionTitle',
+  'printConclusionLine',
+  'printBenefitSafeTitle',
+  'printBenefitSafeDesc',
+  'printBenefitProdTitle',
+  'printBenefitProdDesc',
+  'printBenefitInvestTitle',
+  'printBenefitInvestDesc',
+]
+
+const roiLabelKeys = [
+  'peoplePerDay',
+  'daysPerMonth',
+  'minutesPerPerson',
+  'waitMinutes',
+  'tenkoMinutesPerPerson',
+  'workDaysYear',
+  'staffCount',
+  'salaryPerMonth',
+  'otHoursPerDay',
+  'otMultiplier',
+  'socialSecurityYear',
+  'bonusYear',
+  'absenceYear',
+  'employeeAvgSalary',
+  'workHoursDay',
+  'employeeCostFactor',
+  'alcBuy',
+  'alcMaint',
+  'alcCal',
+  'alcLife',
+  'bpBuy',
+  'bpMaint',
+  'bpCal',
+  'bpLife',
+  'tempBuy',
+  'tempMaint',
+  'tempCal',
+  'tempLife',
+  'tenkoMonthly',
+  'tenkoSetup',
+  'tenkoOtherYear',
+  'years',
+]
+
+const roiScenarioKeys = [
+  'scenario',
+  'exportPdf',
+  'openPrint',
+  'closeTab',
+  'browseSaved',
+  'searchSaved',
+  'recent',
+  'name',
+  'loading',
+  'noSaved',
+  'savedInDatabase',
+  'localDrafts',
+  'database',
+  'local',
+  'metadataTitle',
+  'metadataSub',
+  'customerName',
+  'notes',
+  'customerPlaceholder',
+  'notesPlaceholder',
+  'saveScenario',
+  'save',
+  'list',
+  'cancel',
+  'close',
+  'saveLocally',
+  'saveSynced',
+  'saveSyncFailed',
+  'duplicateSuccess',
+  'renameEmpty',
+  'renameLocal',
+  'renameSynced',
+  'renameSyncFailed',
+  'deleteLocal',
+  'deleteSynced',
+  'deleteSyncFailed',
+  'resetEditor',
+]
+
+const tr = computed(() => {
+  locale.value
+  
+  return buildTextMap('roi', roiTextKeys)
+})
+
+const labels = computed(() => {
+  locale.value
+  
+  return buildTextMap('roiLabels', roiLabelKeys)
+})
+
+const scenarioText = computed(() => {
+  locale.value
+  
+  return buildTextMap('roiScenario', roiScenarioKeys)
+})
 
 const chartLabels = computed(() => [tr.value.start, ...Array.from({ length: store.result.years }, (_, index) => `${tr.value.year} ${index + 1}`)])
 
 const formatterLocale = computed(() => store.formatterLocale)
 const currencySymbol = '\u0E3F'
-const fmt = (value: number) => `${currencySymbol}${Math.round(value).toLocaleString(formatterLocale.value)}`
-const fmt1 = (value: number) =>
+const fmt = value => `${currencySymbol}${Math.round(value).toLocaleString(formatterLocale.value)}`
+
+const fmt1 = value =>
   `${currencySymbol}${Number(value || 0).toLocaleString(formatterLocale.value, { minimumFractionDigits: 1, maximumFractionDigits: 1 })}`
-const hrs = (value: number, rounded = false) =>
+
+const hrs = (value, rounded = false) =>
   `${(rounded ? Math.round(value) : value).toLocaleString(formatterLocale.value, { maximumFractionDigits: rounded ? 0 : 1 })} ${tr.value.hours}`
-const mins = (value: number) => `${value.toLocaleString(formatterLocale.value, { maximumFractionDigits: 1 })} ${tr.value.min}`
+
+const mins = value => `${value.toLocaleString(formatterLocale.value, { maximumFractionDigits: 1 })} ${tr.value.min}`
 
 const chartData = computed(() => ({
   labels: chartLabels.value,
@@ -115,7 +311,7 @@ const chartOptions = computed(() => ({
       beginAtZero: true,
       grid: { color: 'rgba(0,0,0,.05)' },
       ticks: {
-        callback: (value: number | string) => `${currencySymbol}${(Number(value) / 1000).toFixed(0)}K`,
+        callback: value => `${currencySymbol}${(Number(value) / 1000).toFixed(0)}K`,
       },
     },
   },
@@ -142,7 +338,7 @@ const timeCostChartOptions = computed(() => ({
       beginAtZero: true,
       grid: { color: 'rgba(0,0,0,.05)' },
       ticks: {
-        callback: (value: number | string) =>
+        callback: value =>
           `${Number(value).toLocaleString(formatterLocale.value, { maximumFractionDigits: 0 })} ${tr.value.hours}`,
       },
     },
@@ -211,18 +407,18 @@ const printMetrics = computed(() => [
   },
 ])
 
-function showNotice(text: string, color = 'success') {
+function showNotice(text, color = 'success') {
   snackbar.value = { show: true, text, color }
 }
 
-function formatSavedAt(savedAt: string) {
+function formatSavedAt(savedAt) {
   return new Intl.DateTimeFormat(formatterLocale.value, {
     dateStyle: 'medium',
     timeStyle: 'short',
   }).format(new Date(savedAt))
 }
 
-function fieldStep(key:any) {
+function fieldStep(key) {
   if (key === 'otMultiplier' || key === 'staffCount' || key.includes('Minutes') || key === 'workHoursDay')
     return 0.1
 
@@ -232,23 +428,24 @@ function fieldStep(key:any) {
   return 1
 }
 
-function fieldMin(key:any) {
+function fieldMin(key) {
   if (key.includes('Life') || key === 'years' || key === 'workDaysYear' || key === 'workHoursDay')
     return 1
 
   return 0
 }
 
-function onNumericInput(key:any, event: Event) {
-  const value = Number((event.target as HTMLInputElement).value)
+function onNumericInput(key, event) {
+  const value = Number(event.target.value)
+
   store.updateInput(key, value)
 }
 
-function updateRenameDraft(value: string) {
+function updateRenameDraft(value) {
   store.renameDraft = value
 }
 
-function updateSortMode(value: ScenarioSortMode) {
+function updateSortMode(value) {
   store.sortMode = value
 }
 
@@ -271,7 +468,7 @@ async function onConfirmSaveScenario() {
     isSaveDialogVisible.value = false
 }
 
-async function onRenameScenario(scenario: any) {
+async function onRenameScenario(scenario) {
   const status = await store.submitRenameScenario(scenario)
   if (status === 'synced')
     showNotice(scenarioText.value.renameSynced)
@@ -283,7 +480,7 @@ async function onRenameScenario(scenario: any) {
     showNotice(scenarioText.value.renameSyncFailed, 'error')
 }
 
-async function onDeleteScenario(scenario: any) {
+async function onDeleteScenario(scenario) {
   const status = await store.deleteScenario(scenario)
   if (status === 'synced')
     showNotice(scenarioText.value.deleteSynced)
@@ -293,7 +490,7 @@ async function onDeleteScenario(scenario: any) {
     showNotice(scenarioText.value.deleteSyncFailed, 'error')
 }
 
-function onDuplicateScenario(scenario: any) {
+function onDuplicateScenario(scenario) {
   store.duplicateScenario(scenario)
   showNotice(scenarioText.value.duplicateSuccess)
 }
@@ -303,11 +500,13 @@ function onPrint() {
 }
 
 watch(() => store.language, value => {
+  locale.value = value
   document.documentElement.lang = value
 }, { immediate: true })
 
 onMounted(async () => {
   store.hydrate()
+
   const status = await store.loadRemoteScenarios()
   if (status === 'error')
     showNotice('Database list refresh failed', 'error')
@@ -315,7 +514,10 @@ onMounted(async () => {
 </script>
 
 <template>
-  <main :class="['roi-app', isFullWidth && 'roi-app-fullwidth']">
+  <main
+    class="roi-app"
+    :class="[isFullWidth && 'roi-app-fullwidth']"
+  >
     <RoiNavbar
       :language="store.language"
       :is-full-width="isFullWidth"
@@ -323,7 +525,7 @@ onMounted(async () => {
       :full-width-label="tr.fullWidth"
       @print="onPrint"
       @toggle-full-width="isFullWidth = !isFullWidth"
-      @update:language="store.setLanguage"
+      @update-language="store.setLanguage"
     />
 
     <section class="hero-shell roi-shell">
@@ -345,7 +547,6 @@ onMounted(async () => {
       :renaming-local-id="store.renamingLocalId"
       :saved-scenario-count="store.savedScenarios.length"
       :scenario-groups="store.scenarioGroups"
-      :scenario-text="scenarioText"
       :sort-mode="store.sortMode"
       :visible-tabs="store.visibleTabs"
       @activate-preset-tab="store.activatePresetTab"
@@ -365,29 +566,48 @@ onMounted(async () => {
         <div class="input-panel-head">
           <div class="session-name-block">
             <h2>{{ tr.inputTitle }}</h2>
-            <p class="subtext">{{ tr.inputSub }}</p>
+            <p class="subtext">
+              {{ tr.inputSub }}
+            </p>
           </div>
           <button
             class="btn-solid"
             type="button"
             @click="isSaveDialogVisible = true"
           >
-            <VIcon icon="tabler-device-floppy" size="16" />
-            <span>save</span>
+            <VIcon
+              icon="tabler-device-floppy"
+              size="16"
+            />
+            <span>{{ scenarioText.save }}</span>
           </button>
         </div>
 
-        <div v-for="group in uiGroups" :key="group.title" class="input-group">
+        <div
+          v-for="group in uiGroups"
+          :key="group.title"
+          class="input-group"
+        >
           <div class="group-head">
             <h3>{{ tr[group.title] }}</h3>
             <span class="tag">{{ tr[group.tag] }}</span>
           </div>
 
           <div class="grid2">
-            <div v-for="key in group.keys" :key="key" class="field">
+            <div
+              v-for="key in group.keys"
+              :key="key"
+              class="field"
+            >
               <div class="field-label-row">
                 <label :for="key">{{ labels[key] }}</label>
-                <button class="info-btn" :title="getFieldTooltip(store.language, key, labels[key])" type="button">i</button>
+                <button
+                  class="info-btn"
+                  :title="getFieldTooltip(store.language, key, labels[key])"
+                  type="button"
+                >
+                  i
+                </button>
               </div>
 
               <input
@@ -402,7 +622,10 @@ onMounted(async () => {
                 @input="onNumericInput(key, $event)"
               >
 
-              <div v-if="key === 'otHoursPerDay'" class="util-caption">
+              <div
+                v-if="key === 'otHoursPerDay'"
+                class="util-caption"
+              >
                 {{ store.autoOTEnabled && !store.otEdited ? tr.autoOn : tr.autoOff }}
               </div>
             </div>
@@ -415,30 +638,48 @@ onMounted(async () => {
                   <small>{{ tr.utilTitle }}</small>
                   <strong>{{ `${store.result.utilPct.toFixed(1)}%` }}</strong>
                 </div>
-                <span :class="['util-status', store.result.statusColor]">{{ store.result.status }}</span>
+                <span
+                  class="util-status"
+                  :class="[store.result.statusColor]"
+                >{{ store.result.status }}</span>
               </div>
 
               <div class="util-bar">
-                <div :class="['util-fill', store.result.statusColor]" :style="{ width: `${Math.min(100, store.result.utilPct)}%` }" />
+                <div
+                  class="util-fill"
+                  :class="[store.result.statusColor]"
+                  :style="{ width: `${Math.min(100, store.result.utilPct)}%` }"
+                />
               </div>
-              <div class="util-caption">{{ tr.utilLegend }}</div>
+              <div class="util-caption">
+                {{ tr.utilLegend }}
+              </div>
             </div>
 
-            <p class="hint">{{ tr.autoOtHint }}</p>
+            <p class="hint">
+              {{ tr.autoOtHint }}
+            </p>
           </template>
 
           <template v-if="group.title === 'productivity'">
             <div class="field factor-block">
               <div class="field-label-row">
                 <label>{{ tr.factorChoice }}</label>
-                <button class="info-btn" :title="getFieldTooltip(store.language, 'employeeCostFactorChoice', tr.factorChoice)" type="button">i</button>
+                <button
+                  class="info-btn"
+                  :title="getFieldTooltip(store.language, 'employeeCostFactorChoice', tr.factorChoice)"
+                  type="button"
+                >
+                  i
+                </button>
               </div>
 
               <div class="factor-options">
                 <button
                   v-for="choice in uiFactorChoices"
                   :key="choice.value"
-                  :class="['factor-option', store.factorChoice === choice.value && 'active']"
+                  class="factor-option"
+                  :class="[store.factorChoice === choice.value && 'active']"
                   type="button"
                   @click="store.selectFactor(choice.value)"
                 >
@@ -446,18 +687,28 @@ onMounted(async () => {
                     <b>{{ tr[choice.title] }}</b>
                     <small>{{ choice.value === 'custom' ? tr.factorCustom : tr[choice.desc] }}</small>
                   </span>
-                  <span class="factor-val">{{ choice.value === 'custom' ? store.input.employeeCostFactor.toFixed(2) : choice.value }}</span>
+                  <span class="factor-val">{{ choice.value === 'custom' ? store.input.employeeCostFactor.toFixed(2) :
+                    choice.value }}</span>
                 </button>
               </div>
             </div>
 
-            <p class="hint">{{ tr.factorHint }}</p>
+            <p class="hint">
+              {{ tr.factorHint }}
+            </p>
           </template>
         </div>
 
         <div class="btn-row">
-          <button class="btn-outline" type="button" @click="store.resetToDefaultSession()">
-            <VIcon icon="tabler-rotate-clockwise-2" size="16" />
+          <button
+            class="btn-outline"
+            type="button"
+            @click="store.resetToDefaultSession()"
+          >
+            <VIcon
+              icon="tabler-rotate-clockwise-2"
+              size="16"
+            />
             <span>{{ tr.reset }}</span>
           </button>
         </div>
@@ -465,10 +716,19 @@ onMounted(async () => {
 
       <section class="result-stack">
         <div class="summary-grid">
-          <div v-for="metric in metricCards" :key="metric.title" class="metric-card">
+          <div
+            v-for="metric in metricCards"
+            :key="metric.title"
+            class="metric-card"
+          >
             <small>{{ metric.title }}</small>
-            <strong :class="['metric-value', metric.tone]">{{ metric.value }}</strong>
-            <div class="mini">{{ metric.mini }}</div>
+            <strong
+              class="metric-value"
+              :class="[metric.tone]"
+            >{{ metric.value }}</strong>
+            <div class="mini">
+              {{ metric.mini }}
+            </div>
           </div>
         </div>
 
@@ -483,18 +743,38 @@ onMounted(async () => {
           <div class="compare-grid">
             <div class="compare-box old">
               <header>{{ tr.oldMethod }}</header>
-              <div class="compare-row"><span>{{ tr.annualCost }}</span><strong>{{ fmt(store.result.oldTotal) }}</strong></div>
-              <div class="compare-row"><span>{{ tr.annualTime }}</span><strong>{{ hrs(store.result.oldTimeYear) }}</strong></div>
-              <div class="compare-row"><span>{{ tr.prodLoss }}</span><strong>{{ fmt(store.result.oldProd) }}</strong></div>
-              <div class="compare-row total"><span>{{ tr.totalCost }}</span><strong>{{ fmt(store.result.oldGrand) }}</strong></div>
+              <div class="compare-row">
+                <span>{{ tr.annualCost }}</span><strong>{{ fmt(store.result.oldTotal) }}</strong>
+              </div>
+              <div class="compare-row">
+                <span>{{ tr.annualTime }}</span><strong>{{ hrs(store.result.oldTimeYear)
+                }}</strong>
+              </div>
+              <div class="compare-row">
+                <span>{{ tr.prodLoss }}</span><strong>{{ fmt(store.result.oldProd) }}</strong>
+              </div>
+              <div class="compare-row total">
+                <span>{{ tr.totalCost }}</span><strong>{{ fmt(store.result.oldGrand)
+                }}</strong>
+              </div>
             </div>
 
             <div class="compare-box new">
               <header>Tenko Robot</header>
-              <div class="compare-row"><span>{{ tr.annualCost }}</span><strong>{{ fmt(store.result.newTotal) }}</strong></div>
-              <div class="compare-row"><span>{{ tr.annualTime }}</span><strong>{{ hrs(store.result.newTimeYear) }}</strong></div>
-              <div class="compare-row"><span>{{ tr.prodLoss }}</span><strong>{{ fmt(store.result.newProd) }}</strong></div>
-              <div class="compare-row total"><span>{{ tr.totalCost }}</span><strong>{{ fmt(store.result.newGrand) }}</strong></div>
+              <div class="compare-row">
+                <span>{{ tr.annualCost }}</span><strong>{{ fmt(store.result.newTotal) }}</strong>
+              </div>
+              <div class="compare-row">
+                <span>{{ tr.annualTime }}</span><strong>{{ hrs(store.result.newTimeYear)
+                }}</strong>
+              </div>
+              <div class="compare-row">
+                <span>{{ tr.prodLoss }}</span><strong>{{ fmt(store.result.newProd) }}</strong>
+              </div>
+              <div class="compare-row total">
+                <span>{{ tr.totalCost }}</span><strong>{{ fmt(store.result.newGrand)
+                }}</strong>
+              </div>
             </div>
           </div>
         </div>
@@ -510,22 +790,51 @@ onMounted(async () => {
           <div class="compare-grid">
             <div class="compare-box old">
               <header>{{ tr.oldMethod }}</header>
-              <div class="compare-row"><span>{{ tr.staffByUtil }}</span><strong>{{ fmt(store.result.oldLabor) }}</strong></div>
-              <div class="compare-row"><span>{{ tr.baseSalary }}</span><strong>{{ fmt(store.result.baseSalaryCost) }}</strong></div>
-              <div class="compare-row"><span>{{ tr.otCost }}</span><strong>{{ fmt(store.result.otCost) }}</strong></div>
-              <div class="compare-row"><span>{{ tr.extras }}</span><strong>{{ fmt(store.result.staffExtras) }}</strong></div>
-              <div class="compare-row"><span>{{ tr.dep }}</span><strong>{{ fmt(store.result.oldDep) }}</strong></div>
-              <div class="compare-row"><span>{{ tr.maint }}</span><strong>{{ fmt(store.result.oldMaint) }}</strong></div>
-              <div class="compare-row"><span>{{ tr.cal }}</span><strong>{{ fmt(store.result.oldCal) }}</strong></div>
-              <div class="compare-row total"><span>{{ tr.annualCost }}</span><strong>{{ fmt(store.result.oldTotal) }}</strong></div>
+              <div class="compare-row">
+                <span>{{ tr.staffByUtil }}</span><strong>{{ fmt(store.result.oldLabor)
+                }}</strong>
+              </div>
+              <div class="compare-row">
+                <span>{{ tr.baseSalary }}</span><strong>{{ fmt(store.result.baseSalaryCost)
+                }}</strong>
+              </div>
+              <div class="compare-row">
+                <span>{{ tr.otCost }}</span><strong>{{ fmt(store.result.otCost) }}</strong>
+              </div>
+              <div class="compare-row">
+                <span>{{ tr.extras }}</span><strong>{{ fmt(store.result.staffExtras) }}</strong>
+              </div>
+              <div class="compare-row">
+                <span>{{ tr.dep }}</span><strong>{{ fmt(store.result.oldDep) }}</strong>
+              </div>
+              <div class="compare-row">
+                <span>{{ tr.maint }}</span><strong>{{ fmt(store.result.oldMaint) }}</strong>
+              </div>
+              <div class="compare-row">
+                <span>{{ tr.cal }}</span><strong>{{ fmt(store.result.oldCal) }}</strong>
+              </div>
+              <div class="compare-row total">
+                <span>{{ tr.annualCost }}</span><strong>{{ fmt(store.result.oldTotal)
+                }}</strong>
+              </div>
             </div>
 
             <div class="compare-box new">
               <header>Tenko Robot</header>
-              <div class="compare-row"><span>{{ tr.tenkoMonthly }}</span><strong>{{ fmt(store.result.newMonthly) }}</strong></div>
-              <div class="compare-row"><span>{{ tr.setup }}</span><strong>{{ fmt(store.result.newSetup) }}</strong></div>
-              <div class="compare-row"><span>{{ tr.other }}</span><strong>{{ fmt(store.result.newOther) }}</strong></div>
-              <div class="compare-row total"><span>{{ tr.annualCost }}</span><strong>{{ fmt(store.result.newTotal) }}</strong></div>
+              <div class="compare-row">
+                <span>{{ tr.tenkoMonthly }}</span><strong>{{ fmt(store.result.newMonthly)
+                }}</strong>
+              </div>
+              <div class="compare-row">
+                <span>{{ tr.setup }}</span><strong>{{ fmt(store.result.newSetup) }}</strong>
+              </div>
+              <div class="compare-row">
+                <span>{{ tr.other }}</span><strong>{{ fmt(store.result.newOther) }}</strong>
+              </div>
+              <div class="compare-row total">
+                <span>{{ tr.annualCost }}</span><strong>{{ fmt(store.result.newTotal)
+                }}</strong>
+              </div>
             </div>
           </div>
         </div>
@@ -539,10 +848,22 @@ onMounted(async () => {
           </div>
 
           <div class="kpi-grid">
-            <div class="kpi-card"><small>{{ tr.cycle }}</small><strong>{{ mins(store.result.cycle) }}</strong></div>
-            <div class="kpi-card"><small>{{ tr.costPerMin }}</small><strong>{{ `${fmt1(store.result.costPerMin)}/${tr.min}` }}</strong></div>
-            <div class="kpi-card"><small>{{ tr.timeSaveDay }}</small><strong>{{ hrs(store.result.timeSaveDay) }}</strong></div>
-            <div class="kpi-card"><small>{{ tr.roiFromTotal }}</small><strong>{{ `${store.result.roi.toFixed(1)}%` }}</strong></div>
+            <div class="kpi-card">
+              <small>{{ tr.cycle }}</small><strong>{{ mins(store.result.cycle) }}</strong>
+            </div>
+            <div class="kpi-card">
+              <small>{{ tr.costPerMin }}</small><strong>{{
+                `${fmt1(store.result.costPerMin)}/${tr.min}`
+              }}</strong>
+            </div>
+            <div class="kpi-card">
+              <small>{{ tr.timeSaveDay }}</small><strong>{{ hrs(store.result.timeSaveDay)
+              }}</strong>
+            </div>
+            <div class="kpi-card">
+              <small>{{ tr.roiFromTotal }}</small><strong>{{ `${store.result.roi.toFixed(1)}%`
+              }}</strong>
+            </div>
           </div>
         </div>
 
@@ -553,7 +874,12 @@ onMounted(async () => {
               <p>{{ tr.chartDesc }}</p>
             </div>
           </div>
-          <div class="chartbox"><Line :data="chartData" :options="chartOptions" /></div>
+          <div class="chartbox">
+            <Line
+              :data="chartData"
+              :options="chartOptions"
+            />
+          </div>
         </div>
 
         <div class="result-panel chart-panel time-chart-panel">
@@ -563,7 +889,12 @@ onMounted(async () => {
               <p>{{ tr.timeChartDesc }}</p>
             </div>
           </div>
-          <div class="chartbox"><Bar :data="timeCostChartData" :options="timeCostChartOptions" /></div>
+          <div class="chartbox">
+            <Bar
+              :data="timeCostChartData"
+              :options="timeCostChartOptions"
+            />
+          </div>
         </div>
       </section>
     </section>
@@ -584,7 +915,7 @@ onMounted(async () => {
           <button
             class="roi-save-dialog__close"
             type="button"
-            aria-label="Close"
+            :aria-label="scenarioText.close"
             @click="isSaveDialogVisible = false"
           >
             <VIcon icon="tabler-x" />
@@ -597,14 +928,25 @@ onMounted(async () => {
               <div class="field-label-row">
                 <label for="scenarioName">{{ scenarioText.scenario }}</label>
               </div>
-              <input id="scenarioName" v-model="store.scenarioName" class="input-control" type="text">
+              <input
+                id="scenarioName"
+                v-model="store.scenarioName"
+                class="input-control"
+                type="text"
+              >
             </div>
 
             <div class="field">
               <div class="field-label-row">
                 <label for="customerName">{{ scenarioText.customerName }}</label>
               </div>
-              <input id="customerName" v-model="store.customerName" class="input-control" :placeholder="scenarioText.customerPlaceholder" type="text">
+              <input
+                id="customerName"
+                v-model="store.customerName"
+                class="input-control"
+                :placeholder="scenarioText.customerPlaceholder"
+                type="text"
+              >
             </div>
           </div>
 
@@ -612,16 +954,28 @@ onMounted(async () => {
             <div class="field-label-row">
               <label for="scenarioNotes">{{ scenarioText.notes }}</label>
             </div>
-            <textarea id="scenarioNotes" v-model="store.scenarioNotes" class="textarea-control" :placeholder="scenarioText.notesPlaceholder" />
+            <textarea
+              id="scenarioNotes"
+              v-model="store.scenarioNotes"
+              class="textarea-control"
+              :placeholder="scenarioText.notesPlaceholder"
+            />
           </div>
         </VCardText>
 
         <VCardActions class="roi-save-dialog__actions">
-          <VBtn variant="text" color="default" @click="isSaveDialogVisible = false">
-            Cancel
+          <VBtn
+            variant="text"
+            color="default"
+            @click="isSaveDialogVisible = false"
+          >
+            {{ scenarioText.cancel }}
           </VBtn>
-          <VBtn color="primary" @click="onConfirmSaveScenario">
-            Save
+          <VBtn
+            color="primary"
+            @click="onConfirmSaveScenario"
+          >
+            {{ scenarioText.save }}
           </VBtn>
         </VCardActions>
       </VCard>
@@ -642,11 +996,14 @@ onMounted(async () => {
       :result="store.result"
       :scenario-name="store.scenarioName"
       :scenario-notes="store.scenarioNotes"
-      :scenario-text="scenarioText"
       :tr="tr"
     />
 
-    <VSnackbar v-model="snackbar.show" :color="snackbar.color" location="bottom right">
+    <VSnackbar
+      v-model="snackbar.show"
+      :color="snackbar.color"
+      location="bottom right"
+    >
       {{ snackbar.text }}
     </VSnackbar>
   </main>

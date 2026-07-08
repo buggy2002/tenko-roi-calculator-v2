@@ -1656,7 +1656,7 @@ input {
     page-break-after: auto;
   }
 
-  .pr-bg-lines {
+  .roi-print-bg-lines {
     position: absolute;
     inset: 0;
     opacity: .32;
@@ -1669,7 +1669,7 @@ input {
     pointer-events: none;
   }
 
-  .pr-topline {
+  .roi-print-topline {
     position: relative;
     z-index: 2;
     display: flex;
@@ -1684,11 +1684,11 @@ input {
     text-transform: uppercase;
   }
 
-  .pr-topline.detail {
+  .roi-print-topline.detail {
     margin-bottom: 6mm;
   }
 
-  .pr-logo-mark {
+  .roi-print-logo-mark {
     color: var(--orange);
     font-family: var(--font-mono), monospace;
     font-size: 14px;
@@ -1696,7 +1696,7 @@ input {
     line-height: 1;
   }
 
-  .pr-logo-mark span {
+  .roi-print-logo-mark span {
     display: block;
     margin-top: 1px;
     font-size: 7px;
@@ -1704,14 +1704,14 @@ input {
     text-align: right;
   }
 
-  .pr-hero-title {
+  .roi-print-hero-title {
     position: relative;
     z-index: 2;
     max-width: 92mm;
     margin-left: 2mm;
   }
 
-  .pr-robot-main {
+  .roi-print-robot-main {
     position: absolute;
     left: 26mm;
     top: 57mm;
@@ -1721,7 +1721,7 @@ input {
     filter: drop-shadow(0 7mm 8mm rgba(0, 0, 0, .13));
   }
 
-  .pr-title {
+  .roi-print-title {
     color: #22252b;
     font-size: 31px;
     font-weight: 900;
@@ -1731,7 +1731,7 @@ input {
     overflow-wrap: anywhere;
   }
 
-  .pr-subtitle {
+  .roi-print-subtitle {
     max-width: 88mm;
     margin-top: 5mm;
     color: #1d2027;
@@ -1739,19 +1739,19 @@ input {
     line-height: 1.3;
   }
 
-  .pr-brief-meta {
+  .roi-print-brief-meta {
     display: grid;
     gap: 1.4mm;
     max-width: 86mm;
     margin-top: 3.4mm;
   }
 
-  .pr-meta-row {
+  .roi-print-meta-row {
     display: grid;
     gap: .5mm;
   }
 
-  .pr-meta-label {
+  .roi-print-meta-label {
     color: #8a8f97;
     font-size: 6.6px;
     font-weight: 800;
@@ -1759,7 +1759,7 @@ input {
     text-transform: uppercase;
   }
 
-  .pr-meta-value {
+  .roi-print-meta-value {
     color: #23262d;
     font-size: 8.4px;
     font-weight: 700;
@@ -1767,7 +1767,7 @@ input {
     overflow-wrap: anywhere;
   }
 
-  .pr-impact-panel {
+  .roi-print-impact-panel {
     position: absolute;
     top: 55mm;
     right: 12mm;
@@ -1781,7 +1781,7 @@ input {
     backdrop-filter: blur(1mm);
   }
 
-  .pr-impact-item {
+  .roi-print-impact-item {
     display: grid;
     grid-template-columns: 18mm 1fr;
     gap: 6mm;
@@ -1791,11 +1791,11 @@ input {
     border-bottom: 1px solid #deded9;
   }
 
-  .pr-impact-item.last {
+  .roi-print-impact-item.last {
     border-bottom: 0;
   }
 
-  .pr-icon {
+  .roi-print-icon {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1809,13 +1809,13 @@ input {
     line-height: 1;
   }
 
-  .pr-icon-orange {
+  .roi-print-icon-orange {
     border-color: var(--orange);
     background: var(--orange);
     color: #fff;
   }
 
-  .pr-impact-title {
+  .roi-print-impact-title {
     color: #252830;
     font-size: 9.5px;
     font-weight: 900;
@@ -1824,7 +1824,7 @@ input {
     text-transform: uppercase;
   }
 
-  .pr-impact-value {
+  .roi-print-impact-value {
     margin-top: 1.5mm;
     font-family: var(--font-mono), monospace;
     font-size: 17px;
@@ -1834,14 +1834,14 @@ input {
     white-space: nowrap;
   }
 
-  .pr-impact-mini {
+  .roi-print-impact-mini {
     margin-top: 1.4mm;
     color: #60646b;
     font-size: 8px;
     line-height: 1.25;
   }
 
-  .pr-lower-grid {
+  .roi-print-lower-grid {
     position: absolute;
     left: 12mm;
     right: 12mm;
@@ -1853,19 +1853,19 @@ input {
     align-items: stretch;
   }
 
-  .pr-compare-panel,
-  .pr-chart-panel {
+  .roi-print-compare-panel,
+  .roi-print-chart-panel {
     border: 1px solid #d8d8d2;
     border-radius: 4mm;
     background: rgba(255, 255, 255, .94);
     box-shadow: 0 6mm 16mm rgba(10, 10, 10, .04);
   }
 
-  .pr-compare-panel {
+  .roi-print-compare-panel {
     padding: 3.6mm;
   }
 
-  .pr-compare-head {
+  .roi-print-compare-head {
     margin-bottom: 3mm;
     color: #5f6369;
     font-size: 8px;
@@ -1873,39 +1873,39 @@ input {
     text-transform: uppercase;
   }
 
-  .pr-chart-panel {
+  .roi-print-chart-panel {
     display: grid;
     grid-template-rows: auto 1fr;
     min-height: 95mm;
     padding: 3.6mm;
   }
 
-  .pr-chart-head {
+  .roi-print-chart-head {
     display: grid;
     gap: 1mm;
     margin-bottom: 3mm;
   }
 
-  .pr-chart-title {
+  .roi-print-chart-title {
     font-size: 10px;
     font-weight: 900;
     line-height: 1.1;
     text-transform: uppercase;
   }
 
-  .pr-chart-desc {
+  .roi-print-chart-desc {
     color: #60646b;
     font-size: 7.5px;
     line-height: 1.15;
   }
 
-  .pr-chartbox {
+  .roi-print-chartbox {
     width: 100%;
     height: 74mm;
     margin: 0 auto;
   }
 
-  .pr-chartbox canvas {
+  .roi-print-chartbox canvas {
     width: 100% !important;
     height: 74mm !important;
     max-width: 100% !important;
@@ -1991,7 +1991,7 @@ input {
     font-size: 11px;
   }
 
-  .pr-kpi-grid {
+  .roi-print-kpi-grid {
     position: absolute;
     top: 40mm;
     left: 12mm;
@@ -2002,7 +2002,7 @@ input {
     gap: 3.5mm;
   }
 
-  .pr-kpi {
+  .roi-print-kpi {
     min-height: 19mm;
     padding: 3.6mm;
     border: 1px solid #d8d8d2;
@@ -2010,7 +2010,7 @@ input {
     background: rgba(255, 255, 255, .94);
   }
 
-  .pr-kpi small {
+  .roi-print-kpi small {
     display: block;
     margin-bottom: 1.8mm;
     color: #60646b;
@@ -2019,7 +2019,7 @@ input {
     text-transform: uppercase;
   }
 
-  .pr-kpi strong {
+  .roi-print-kpi strong {
     display: block;
     font-family: var(--font-mono), monospace;
     font-size: 13px;
@@ -2027,7 +2027,7 @@ input {
     color: var(--orange);
   }
 
-  .pr-detail-grid {
+  .roi-print-detail-grid {
     position: absolute;
     top: 66mm;
     left: 12mm;
@@ -2040,7 +2040,7 @@ input {
     gap: 3.5mm;
   }
 
-  .pr-box {
+  .roi-print-box {
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -2049,7 +2049,7 @@ input {
     background: #fff;
   }
 
-  .pr-box h3 {
+  .roi-print-box h3 {
     display: flex;
     align-items: center;
     gap: 3mm;
@@ -2077,7 +2077,7 @@ input {
     line-height: 1;
   }
 
-  .pr-row {
+  .roi-print-row {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
@@ -2088,26 +2088,26 @@ input {
     font-size: 8.3px;
   }
 
-  .pr-row span:first-child {
+  .roi-print-row span:first-child {
     color: #60646b;
   }
 
-  .pr-row span:last-child {
+  .roi-print-row span:last-child {
     font-weight: 800;
     text-align: right;
   }
 
-  .pr-row.total {
+  .roi-print-row.total {
     background: #fff0e8;
     font-weight: 900;
   }
 
-  .pr-row.total span:first-child,
-  .pr-row.total span:last-child {
+  .roi-print-row.total span:first-child,
+  .roi-print-row.total span:last-child {
     color: var(--orange);
   }
 
-  .pr-note {
+  .roi-print-note {
     position: absolute;
     left: 13mm;
     right: 13mm;
@@ -2120,7 +2120,7 @@ input {
     line-height: 1.15;
   }
 
-  .pr-benefit-wrap {
+  .roi-print-benefit-wrap {
     position: absolute;
     left: 12mm;
     right: 12mm;
@@ -2129,7 +2129,7 @@ input {
     height: 40mm;
   }
 
-  .pr-benefit-strip {
+  .roi-print-benefit-strip {
     display: grid;
     grid-template-columns: 27mm 27mm 27mm 1fr;
     height: 100%;
@@ -2138,14 +2138,14 @@ input {
     background: #fff;
   }
 
-  .pr-benefit-item {
+  .roi-print-benefit-item {
     padding: 4.5mm 2mm 0;
     text-align: center;
     border-right: 1px solid #deded9;
     background: #fff;
   }
 
-  .pr-benefit-icon {
+  .roi-print-benefit-icon {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -2159,13 +2159,13 @@ input {
     font-weight: 900;
   }
 
-  .pr-benefit-item b {
+  .roi-print-benefit-item b {
     display: block;
     font-size: 6.8px;
     line-height: 1.1;
   }
 
-  .pr-benefit-item span {
+  .roi-print-benefit-item span {
     display: block;
     margin-top: 1.2mm;
     color: #666b73;
@@ -2173,7 +2173,7 @@ input {
     line-height: 1.2;
   }
 
-  .pr-conclusion {
+  .roi-print-conclusion {
     position: relative;
     overflow: hidden;
     padding: 6mm 10mm 5mm 18mm;
@@ -2181,7 +2181,7 @@ input {
     color: #fff;
   }
 
-  .pr-conclusion::before {
+  .roi-print-conclusion::before {
     content: "";
     position: absolute;
     inset: 0;
@@ -2198,31 +2198,31 @@ input {
     line-height: 1;
   }
 
-  .pr-conclusion-accent {
+  .roi-print-conclusion-accent {
     display: none;
   }
 
-  .pr-conclusion-text {
+  .roi-print-conclusion-text {
     position: relative;
     z-index: 1;
     margin: 0;
   }
 
-  .pr-conclusion b {
+  .roi-print-conclusion b {
     display: block;
     margin: 0 0 1.6mm;
     font-size: 12px;
     line-height: 1.05;
   }
 
-  .pr-conclusion span {
+  .roi-print-conclusion span {
     display: block;
     max-width: 76mm;
     font-size: 7.6px;
     line-height: 1.4;
   }
 
-  .pr-conclusion-sub {
+  .roi-print-conclusion-sub {
     margin-top: 1.4mm;
     opacity: .88;
   }
@@ -2234,7 +2234,7 @@ input {
     --font-sans: var(--font-sans);
   }
   :root {
-    --background: oklch(1 0 0);
+    --background: #f6f6f3;
     --foreground: oklch(0.145 0 0);
     --card: oklch(1 0 0);
     --card-foreground: oklch(0.145 0 0);

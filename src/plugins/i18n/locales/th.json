@@ -1,3 +1,12 @@
 {
-  "ROI Calculator": "ROI Calculator"
+  "ROI Calculator": "ROI Calculator",
+  "roi": {
+    "brand": "Tenko ROI Calculator",
+    "language": "ภาษา"
+  },
+  "roiScenario": {
+    "scenario": "Scenario",
+    "customerName": "ชื่อลูกค้า / บริษัท",
+    "notes": "หมายเหตุ"
+  }
 }
