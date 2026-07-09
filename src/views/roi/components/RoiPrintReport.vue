@@ -186,35 +186,38 @@ function formatNumber(value, maximumFractionDigits = 0) {
             </div>
           </div>
 
-          <div class="roi-print-scenario-card">
+          <!-- <div class="roi-print-scenario-card"> -->
+          <!--
             <div class="roi-print-scenario-head">
-              <div class="roi-print-scenario-icon">
-                <span>▣</span>
-              </div>
-
-              <div class="roi-print-scenario-copy">
-                <div class="roi-print-card-badge">
-                  SCENARIO
-                </div>
-                <div class="roi-print-scenario-name">
-                  {{ customerName || scenarioName }}
-                </div>
-              </div>
+            <div class="roi-print-scenario-icon">
+            <span>▣</span>
             </div>
 
+            <div class="roi-print-scenario-copy">
+            <div class="roi-print-card-badge">
+            SCENARIO
+            </div>
+            <div class="roi-print-scenario-name">
+            {{ customerName || scenarioName }}
+            </div>
+            </div>
+            </div> 
+          -->
+          <!-- 
             <div
-              v-if="customerName"
-              class="roi-print-scenario-note"
+            v-if="customerName"
+            class="roi-print-scenario-note"
             >
-              {{ scenarioText.scenario }}: {{ scenarioName }}
+            {{ scenarioText.scenario }}: {{ scenarioName }}
             </div>
             <div
-              v-if="scenarioNotes"
-              class="roi-print-scenario-note"
+            v-if="scenarioNotes"
+            class="roi-print-scenario-note"
             >
-              {{ clampText(scenarioNotes, 90) }}
+            {{ clampText(scenarioNotes, 90) }}
             </div>
-          </div>
+            </div> 
+          -->
 
           <div class="roi-print-assumption-card">
             <div class="roi-print-section-head">
