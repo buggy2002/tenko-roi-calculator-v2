@@ -1621,7 +1621,8 @@ input {
   .roi-print-summary-banner {
     position: relative;
     // min-height: 47mm;
-    padding: 5mm 6mm 5mm;
+    contain: content;
+    // padding: 3mm 4mm 3mm;
     overflow: hidden;
     border-radius: 2.4mm;
     color: #fff;
@@ -1648,19 +1649,20 @@ input {
 
   .roi-print-summary-main {
     display: grid;
-    grid-template-columns: 24mm 1fr;
-    gap: 4mm;
-    align-items: center;
-    margin-top: 5mm;
+    grid-template-columns: 14mm 1fr;
+    gap: 3mm;
+    margin-top: 4mm;
+    margin-bottom: 4mm;
+    margin-left: 8mm;
   }
 
   .roi-print-summary-mark {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 18mm;
-    height: 18mm;
-    border: 1.1mm solid rgba(115, 233, 126, .9);
+    width: 12mm;
+    height: 12mm;
+    border: 1.5mm solid rgba(115, 233, 126, .9);
     border-radius: 50%;
     color: #73e97e;
     font-size: 8mm;
@@ -1689,6 +1691,19 @@ input {
     width: 34mm;
     height: 22mm;
     opacity: .2;
+  }
+
+  .roi-print-summary-graphic-image {
+    display: block;
+    width: 90%;
+    height: auto;
+    object-fit: contain;
+    object-position: right bottom;
+  }
+
+  .roi-print-summary-bars,
+  .roi-print-summary-arrow {
+    display: none;
   }
 
   .roi-print-summary-bars {
@@ -1732,7 +1747,7 @@ input {
     grid-template-columns: 13mm 1fr;
     gap: 3mm;
     align-items: start;
-    min-height: 31mm;
+    // min-height: 31mm;
     padding: 4.2mm;
   }
 
@@ -1743,17 +1758,21 @@ input {
     width: 11mm;
     height: 11mm;
     border-radius: 50%;
-    background: rgba(21, 130, 78, .12);
-    color: var(--green);
-    font-size: 5.2mm;
-    font-weight: 900;
-    line-height: 1;
+    padding: 2.1mm;
+    background: linear-gradient(180deg, #2f8d56, #1d6f41);
+    box-shadow: inset 0 0 0 .28mm rgba(255, 255, 255, .18);
+  }
+
+  .roi-print-kpi-icon-image {
+    display: block;
+    width: 90%;
+    height: 90%;
+    object-fit: contain;
   }
 
   .roi-print-kpi-card.tone-orange .roi-print-kpi-icon,
   .roi-print-kpi-card.tone-red .roi-print-kpi-icon {
-    background: rgba(242, 107, 33, .12);
-    color: var(--orange);
+    background: linear-gradient(180deg, #ff7e2f, #f05a16);
   }
 
   .roi-print-kpi-card small {
@@ -2963,8 +2982,8 @@ input {
 
   .roi-print-summary-main {
     display: grid;
-    grid-template-columns: 24mm 1fr;
-    gap: 4mm;
+    grid-template-columns: 14mm 1fr;
+    gap: 1.5mm;
     align-items: center;
     margin-top: 5mm;
   }
@@ -3009,6 +3028,19 @@ input {
     width: 34mm;
     height: 22mm;
     opacity: .2;
+  }
+
+  .roi-print-summary-graphic-image {
+    display: block;
+    width: 120mm;
+    height: auto;
+    // object-fit: contain;
+    object-position: right bottom;
+  }
+
+  .roi-print-summary-bars,
+  .roi-print-summary-arrow {
+    display: none;
   }
 
   .roi-print-summary-bars {
@@ -3071,17 +3103,21 @@ input {
     width: 11mm;
     height: 11mm;
     border-radius: 50%;
-    background: rgba(21, 130, 78, .12);
-    color: var(--green);
-    font-size: 5.2mm;
-    font-weight: 900;
-    line-height: 1;
+    padding: 2.1mm;
+    background: linear-gradient(180deg, #2f8d56, #1d6f41);
+    box-shadow: inset 0 0 0 .28mm rgba(255, 255, 255, .18);
+  }
+
+  .roi-print-kpi-icon-image {
+    display: block;
+    width: 90%;
+    height: 90%;
+    object-fit: contain;
   }
 
   .roi-print-kpi-card.tone-orange .roi-print-kpi-icon,
   .roi-print-kpi-card.tone-red .roi-print-kpi-icon {
-    background: rgba(242, 107, 33, .12);
-    color: var(--orange);
+    background: linear-gradient(180deg, #ff7e2f, #f05a16);
   }
 
   .roi-print-kpi-card small {

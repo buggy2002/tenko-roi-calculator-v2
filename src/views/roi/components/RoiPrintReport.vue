@@ -1,8 +1,13 @@
 <script setup>
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+import growthGraphImage from '@images/roi/stats.png'
+import moneyIcon from '@images/roi/money.png'
 import robotImage from '@images/roi/tenko-robot-main.png'
+import targetIcon from '@images/roi/target.png'
+import timeIcon from '@images/roi/time.png'
 import { Line } from 'vue-chartjs'
+import statsIcon from '@images/roi/growth-graph-white.png'
 
 const props = defineProps({
   chartData: { type: Object, required: true },
@@ -116,6 +121,13 @@ const benefitItems = computed(() => [
   { icon: 'I', title: props.tr.printBenefitInvestTitle, desc: props.tr.printBenefitInvestDesc },
 ])
 
+const kpiIconMap = {
+  S: moneyIcon,
+  T: timeIcon,
+  P: statsIcon,
+  R: targetIcon,
+}
+
 function clampText(value, limit) {
   if (value.length <= limit)
     return value
@@ -140,7 +152,9 @@ function formatNumber(value, maximumFractionDigits = 0) {
       <div class="roi-print-header">
         <div class="roi-print-brand">
           <span class="roi-print-brand-dot" />
-          <span>TENKO ROI CALCULATOR</span>
+          <div class="roi-print-scenario-name">
+            {{ customerName || scenarioName }}
+          </div>
         </div>
         <div class="roi-print-logo-mark executive">
           TENKO ROBOT
@@ -229,11 +243,9 @@ function formatNumber(value, maximumFractionDigits = 0) {
             class="roi-print-summary-banner"
             :class="[`is-${worthSummary.tone}`]"
           >
-            <!--
-              <div class="roi-print-summary-tag">
+            <div class="roi-print-summary-tag">
               {{ tr.execTitle }}
-              </div> 
-            -->
+            </div> 
             <div class="roi-print-summary-main">
               <div class="roi-print-summary-mark">
                 &#10003;
@@ -248,15 +260,22 @@ function formatNumber(value, maximumFractionDigits = 0) {
               </div>
             </div>
             <div class="roi-print-summary-graphic">
-              <div class="roi-print-summary-bars">
+              <img
+                class="roi-print-summary-graphic-image"
+                :src="growthGraphImage"
+                alt=""
+              >
+              <!--
+                <div class="roi-print-summary-bars">
                 <span />
                 <span />
                 <span />
                 <span />
-              </div>
-              <div class="roi-print-summary-arrow">
+                </div>
+                <div class="roi-print-summary-arrow">
                 ↗
-              </div>
+                </div> 
+              -->
             </div>
           </div>
 
@@ -268,7 +287,11 @@ function formatNumber(value, maximumFractionDigits = 0) {
               :class="[`tone-${item.tone}`]"
             >
               <div class="roi-print-kpi-icon">
-                {{ item.icon }}
+                <img
+                  class="roi-print-kpi-icon-image"
+                  :src="kpiIconMap[item.icon]"
+                  alt=""
+                >
               </div>
               <div>
                 <small>{{ item.title }}</small>
