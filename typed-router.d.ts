@@ -63,6 +63,7 @@ declare module 'vue-router/auto-routes' {
     'pages-pricing': RouteRecordInfo<'pages-pricing', '/pages/pricing', Record<never, never>, Record<never, never>>,
     'pages-typography': RouteRecordInfo<'pages-typography', '/pages/typography', Record<never, never>, Record<never, never>>,
     'pages-user-profile-tab': RouteRecordInfo<'pages-user-profile-tab', '/pages/user-profile/:tab', { tab: ParamValue<true> }, { tab: ParamValue<false> }>,
+    'roi-report-preview': RouteRecordInfo<'roi-report-preview', '/roi-report-preview', Record<never, never>, Record<never, never>>,
     'roi-report-print': RouteRecordInfo<'roi-report-print', '/roi-report-print', Record<never, never>, Record<never, never>>,
   }
 }

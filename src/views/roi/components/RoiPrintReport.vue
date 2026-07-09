@@ -50,10 +50,10 @@ const assumptionItems = computed(() => [
 ])
 
 const comparisonRows = computed(() => [
-  { label: props.tr.annualCost, oldValue: props.fmt(props.result.oldTotal), newValue: props.fmt(props.result.newTotal) },
-  { label: props.tr.annualTime, oldValue: props.hrs(props.result.oldTimeYear), newValue: props.hrs(props.result.newTimeYear) },
-  { label: props.tr.prodLoss, oldValue: props.fmt(props.result.oldProd), newValue: props.fmt(props.result.newProd) },
-  { label: props.tr.totalCost, oldValue: props.fmt(props.result.oldGrand), newValue: props.fmt(props.result.newGrand), total: true },
+  { icon: 'C', label: props.tr.annualCost, oldValue: props.fmt(props.result.oldTotal), newValue: props.fmt(props.result.newTotal) },
+  { icon: 'T', label: props.tr.annualTime, oldValue: props.hrs(props.result.oldTimeYear), newValue: props.hrs(props.result.newTimeYear) },
+  { icon: 'P', label: props.tr.prodLoss, oldValue: props.fmt(props.result.oldProd), newValue: props.fmt(props.result.newProd) },
+  { icon: 'R', label: props.tr.totalCost, oldValue: props.fmt(props.result.oldGrand), newValue: props.fmt(props.result.newGrand), total: true },
 ])
 
 const cumulativeSaving = computed(() => {
@@ -136,6 +136,7 @@ function formatNumber(value, maximumFractionDigits = 0) {
     <div class="print-page print-executive">
       <div class="roi-print-bg-lines" />
 
+      <!-- # Header -->
       <div class="roi-print-header">
         <div class="roi-print-brand">
           <span class="roi-print-brand-dot" />
@@ -145,18 +146,21 @@ function formatNumber(value, maximumFractionDigits = 0) {
           TENKO ROBOT
         </div>
       </div>
+      <!-- # Header -->
 
       <div class="roi-print-body-grid">
         <section class="roi-print-left-column">
           <div class="roi-print-hero-card">
-            <div class="roi-print-title">
+            <!--
+              <div class="roi-print-title">
               {{ tr.titleA }}
               <span>Tenko Robot</span>
-            </div>
+              </div>
 
-            <div class="roi-print-subtitle">
+              <div class="roi-print-subtitle">
               {{ tr.desc }}
-            </div>
+              </div> 
+            -->
 
             <div class="roi-print-robot-stage">
               <div class="roi-print-robot-glow" />
@@ -230,7 +234,7 @@ function formatNumber(value, maximumFractionDigits = 0) {
             </div>
             <div class="roi-print-summary-main">
               <div class="roi-print-summary-mark">
-                OK
+                &#10003;
               </div>
               <div>
                 <div class="roi-print-summary-title">
@@ -297,7 +301,8 @@ function formatNumber(value, maximumFractionDigits = 0) {
                 :class="[row.total && 'total']"
               >
                 <div class="roi-print-compare-label">
-                  {{ row.label }}
+                  <span class="roi-print-compare-icon">{{ row.icon }}</span>
+                  <span>{{ row.label }}</span>
                 </div>
                 <div class="roi-print-compare-value old">
                   {{ row.oldValue }}
@@ -313,23 +318,26 @@ function formatNumber(value, maximumFractionDigits = 0) {
             <div class="roi-print-chart-head">
               <div>
                 <div class="roi-print-chart-title">
-                  {{ tr.chartTitle }}
+                  {{ tr.chartTitle }} <span>({{ input.years }}-{{ tr.year }} Projection)</span>
                 </div>
                 <div class="roi-print-chart-desc">
-                  {{ `${tr.chartDesc} (${input.years} ${tr.year})` }}
+                  {{ tr.chartDesc }}
                 </div>
+              </div>
+            </div>
+
+            <div class="roi-print-chart-area">
+              <div class="roi-print-chartbox executive">
+                <Line
+                  :data="chartData"
+                  :options="chartOptions"
+                />
               </div>
               <div class="roi-print-saving-pill">
                 <small>{{ `${tr.saving} ${input.years} ${tr.year}` }}</small>
                 <strong>{{ fmt(cumulativeSaving) }}</strong>
+                <span>Total Saving</span>
               </div>
-            </div>
-
-            <div class="roi-print-chartbox executive">
-              <Line
-                :data="chartData"
-                :options="chartOptions"
-              />
             </div>
           </div>
         </section>

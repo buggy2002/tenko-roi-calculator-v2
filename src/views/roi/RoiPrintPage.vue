@@ -12,9 +12,14 @@ import {
 } from 'chart.js'
 import { useI18n } from 'vue-i18n'
 import RoiPrintReport from './components/RoiPrintReport.vue'
-import { calculateRoi } from '@/utils/roi/calculate-roi.js'
-import { defaultInput } from '@/utils/roi/presets.js'
+import { calculateRoi } from '@/utils/roi/calculate-roi'
+import { defaultInput } from '@/utils/roi/presets'
 import { readRoiPrintSnapshot } from '@/utils/roi/print-snapshot'
+
+const props = defineProps({
+  autoPrint: { type: Boolean, default: true },
+  previewMode: { type: Boolean, default: false },
+})
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Filler, ChartTooltip, Legend)
 
@@ -54,10 +59,12 @@ const roiTextKeys = [
   'execDesc',
   'costBreakTitle',
   'costBreakDesc',
+  'staffCost',
   'staffByUtil',
   'baseSalary',
   'otCost',
   'extras',
+  'equipment',
   'dep',
   'maint',
   'cal',
@@ -75,6 +82,7 @@ const roiTextKeys = [
   'hours',
   'min',
   'disclaimer',
+  'autoOtHint',
   'assumptions',
   'formula',
   'utilTitle',
@@ -160,6 +168,9 @@ const fmt = value => `${currencySymbol}${Math.round(value).toLocaleString(format
 const fmt1 = value =>
   `${currencySymbol}${Number(value || 0).toLocaleString(formatterLocale.value, { minimumFractionDigits: 1, maximumFractionDigits: 1 })}`
 
+const fmtPercent = value =>
+  `${Number(value || 0).toLocaleString(formatterLocale.value, { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%`
+
 const hrs = (value, rounded = false) =>
   `${(rounded ? Math.round(value) : value).toLocaleString(formatterLocale.value, { maximumFractionDigits: rounded ? 0 : 1 })} ${tr.value.hours}`
 
@@ -171,21 +182,25 @@ const chartData = computed(() => ({
     {
       label: tr.value.oldMethod,
       data: result.value.oldData,
-      borderColor: '#b83c32',
-      backgroundColor: 'rgba(184,60,50,.07)',
+      borderColor: '#f26a21',
+      backgroundColor: 'rgba(242,106,33,.06)',
+      pointBackgroundColor: '#f26a21',
+      pointBorderColor: '#f26a21',
       borderWidth: 3,
       pointRadius: 4,
-      fill: true,
+      fill: false,
       tension: 0.32,
     },
     {
       label: 'Tenko Robot',
       data: result.value.newData,
-      borderColor: '#15824e',
-      backgroundColor: 'rgba(21,130,78,.07)',
+      borderColor: '#12824f',
+      backgroundColor: 'rgba(18,130,79,.06)',
+      pointBackgroundColor: '#12824f',
+      pointBorderColor: '#12824f',
       borderWidth: 3,
       pointRadius: 4,
-      fill: true,
+      fill: false,
       tension: 0.32,
     },
   ],
@@ -194,25 +209,42 @@ const chartData = computed(() => ({
 const chartOptions = computed(() => ({
   responsive: true,
   maintainAspectRatio: false,
+  animation: false,
+  devicePixelRatio: 2,
   interaction: { mode: 'index', intersect: false },
   plugins: {
+    tooltip: { enabled: false },
     legend: {
       position: 'top',
+      align: 'start',
       labels: {
-        boxWidth: 12,
-        boxHeight: 12,
+        boxWidth: 10,
+        boxHeight: 10,
         usePointStyle: true,
         pointStyle: 'circle',
+        color: '#202228',
+        font: {
+          size: 10,
+          weight: '700',
+        },
       },
     },
   },
   scales: {
-    x: { grid: { color: 'rgba(0,0,0,.04)' } },
+    x: {
+      grid: { color: 'rgba(0,0,0,.04)' },
+      ticks: {
+        color: '#555',
+        font: { size: 10, weight: '700' },
+      },
+    },
     y: {
       beginAtZero: true,
-      grid: { color: 'rgba(0,0,0,.05)' },
+      grid: { color: 'rgba(0,0,0,.07)' },
       ticks: {
-        callback: value => `${currencySymbol}${(Number(value) / 1000).toFixed(0)}K`,
+        color: '#555',
+        font: { size: 10, weight: '700' },
+        callback: value => `${currencySymbol}${Number(value).toLocaleString(formatterLocale.value)}`,
       },
     },
   },
@@ -245,13 +277,33 @@ const printMetrics = computed(() => [
   },
   {
     icon: 'R',
-    title: tr.value.worth,
-    value: result.value.isWorth ? tr.value.worthGood : tr.value.worthBad,
-    note: result.value.isWorth ? tr.value.worthGoodNote : tr.value.worthBadNote,
-    tone: result.value.isWorth ? 'green' : 'red',
+    title: tr.value.roiFromTotal,
+    value: fmtPercent(result.value.roi),
+    note: 'Total Saving',
+    tone: 'orange',
     accent: false,
   },
 ])
+
+function wait(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms))
+}
+
+function waitForImages() {
+  if (typeof document === 'undefined')
+    return Promise.resolve()
+
+  const images = Array.from(document.images).filter(img => !img.complete)
+
+  return Promise.all(images.map(img => new Promise(resolve => {
+    img.onload = resolve
+    img.onerror = resolve
+  })))
+}
+
+function triggerPrint() {
+  window.print()
+}
 
 watch(language, value => {
   locale.value = value
@@ -270,12 +322,38 @@ onMounted(async () => {
   scenarioNotes.value = snapshot?.scenarioNotes ?? ''
 
   await nextTick()
-  window.print()
+  await document.fonts?.ready
+  await waitForImages()
+  await wait(500)
+
+  if (props.autoPrint)
+    window.print()
 })
 </script>
 
 <template>
-  <main class="roi-print-route">
+  <main
+    class="roi-print-route"
+    :class="[previewMode && 'roi-print-route-preview']"
+  >
+    <div
+      v-if="previewMode"
+      class="roi-print-preview-toolbar"
+    >
+      <div class="roi-print-preview-copy">
+        <strong>ROI Print Preview</strong>
+        <span>/roi-report-preview</span>
+      </div>
+
+      <button
+        type="button"
+        class="roi-print-preview-button"
+        @click="triggerPrint"
+      >
+        Print
+      </button>
+    </div>
+
     <RoiPrintReport
       :chart-data="chartData"
       :chart-options="chartOptions"

@@ -1,7 +1,7 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { roiPresets } from '@/utils/roi/presets.js'
+import { roiPresets } from '@/utils/roi/presets'
 
 const props = defineProps({
   currentLocalId: { type: String, default: null },

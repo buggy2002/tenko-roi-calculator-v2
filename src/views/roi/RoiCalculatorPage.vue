@@ -16,9 +16,8 @@ import { useI18n } from 'vue-i18n'
 import RoiNavbar from './components/RoiNavbar.vue'
 import RoiPrintReport from './components/RoiPrintReport.vue'
 import RoiScenarioBrowser from './components/RoiScenarioBrowser.vue'
-import { writeRoiPrintSnapshot } from '@/utils/roi/print-snapshot'
-import { uiFactorChoices, uiGroups } from '@/utils/roi/ui-copy.js'
-import { getFieldTooltip } from '@/utils/roi/ui-help-copy.js'
+import { uiFactorChoices, uiGroups } from '../../utils/roi/ui-copy'
+import { getFieldTooltip } from '../../utils/roi/ui-help-copy'
 import { useRoiStore } from '@/stores/roi.js'
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, PointElement, LineElement, Filler, ChartTooltip, Legend)
@@ -236,6 +235,9 @@ const fmt = value => `${currencySymbol}${Math.round(value).toLocaleString(format
 const fmt1 = value =>
   `${currencySymbol}${Number(value || 0).toLocaleString(formatterLocale.value, { minimumFractionDigits: 1, maximumFractionDigits: 1 })}`
 
+const fmtPercent = value =>
+  `${Number(value || 0).toLocaleString(formatterLocale.value, { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%`
+
 const hrs = (value, rounded = false) =>
   `${(rounded ? Math.round(value) : value).toLocaleString(formatterLocale.value, { maximumFractionDigits: rounded ? 0 : 1 })} ${tr.value.hours}`
 
@@ -313,6 +315,80 @@ const chartOptions = computed(() => ({
       grid: { color: 'rgba(0,0,0,.05)' },
       ticks: {
         callback: value => `${currencySymbol}${(Number(value) / 1000).toFixed(0)}K`,
+      },
+    },
+  },
+}))
+
+const printChartData = computed(() => ({
+  labels: chartLabels.value,
+  datasets: [
+    {
+      label: tr.value.oldMethod,
+      data: store.result.oldData,
+      borderColor: '#f26a21',
+      backgroundColor: 'rgba(242,106,33,.06)',
+      pointBackgroundColor: '#f26a21',
+      pointBorderColor: '#f26a21',
+      borderWidth: 3,
+      pointRadius: 4,
+      fill: false,
+      tension: 0.32,
+    },
+    {
+      label: 'Tenko Robot',
+      data: store.result.newData,
+      borderColor: '#12824f',
+      backgroundColor: 'rgba(18,130,79,.06)',
+      pointBackgroundColor: '#12824f',
+      pointBorderColor: '#12824f',
+      borderWidth: 3,
+      pointRadius: 4,
+      fill: false,
+      tension: 0.32,
+    },
+  ],
+}))
+
+const printChartOptions = computed(() => ({
+  responsive: true,
+  maintainAspectRatio: false,
+  animation: false,
+  devicePixelRatio: 2,
+  interaction: { mode: 'index', intersect: false },
+  plugins: {
+    tooltip: { enabled: false },
+    legend: {
+      position: 'top',
+      align: 'start',
+      labels: {
+        boxWidth: 10,
+        boxHeight: 10,
+        usePointStyle: true,
+        pointStyle: 'circle',
+        color: '#202228',
+        font: {
+          size: 10,
+          weight: '700',
+        },
+      },
+    },
+  },
+  scales: {
+    x: {
+      grid: { color: 'rgba(0,0,0,.04)' },
+      ticks: {
+        color: '#555',
+        font: { size: 10, weight: '700' },
+      },
+    },
+    y: {
+      beginAtZero: true,
+      grid: { color: 'rgba(0,0,0,.07)' },
+      ticks: {
+        color: '#555',
+        font: { size: 10, weight: '700' },
+        callback: value => `${currencySymbol}${Number(value).toLocaleString(formatterLocale.value)}`,
       },
     },
   },
@@ -400,10 +476,10 @@ const printMetrics = computed(() => [
   },
   {
     icon: 'R',
-    title: tr.value.worth,
-    value: store.result.isWorth ? tr.value.worthGood : tr.value.worthBad,
-    note: store.result.isWorth ? tr.value.worthGoodNote : tr.value.worthBadNote,
-    tone: store.result.isWorth ? 'green' : 'red',
+    title: tr.value.roiFromTotal,
+    value: fmtPercent(store.result.roi),
+    note: 'Total Saving',
+    tone: 'orange',
     accent: false,
   },
 ])
@@ -497,19 +573,7 @@ function onDuplicateScenario(scenario) {
 }
 
 function onPrint() {
-  writeRoiPrintSnapshot({
-    customerName: store.customerName,
-    input: store.input,
-    language: store.language,
-    scenarioName: store.scenarioName,
-    scenarioNotes: store.scenarioNotes,
-  })
-
-  const targetUrl = new URL('/roi-report-print', window.location.origin)
-  const printWindow = window.open(targetUrl.toString(), '_blank', 'noopener,noreferrer')
-
-  if (!printWindow)
-    window.location.assign(targetUrl.toString())
+  window.print()
 }
 
 watch(() => store.language, value => {
@@ -1017,8 +1081,8 @@ onMounted(async () => {
     </VDialog>
 
     <RoiPrintReport
-      :chart-data="chartData"
-      :chart-options="chartOptions"
+      :chart-data="printChartData"
+      :chart-options="printChartOptions"
       :customer-name="store.customerName"
       :fmt="fmt"
       :fmt1="fmt1"

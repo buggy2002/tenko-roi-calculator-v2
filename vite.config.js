@@ -113,6 +113,9 @@ export default defineConfig({
   build: {
     chunkSizeWarningLimit: 5000,
   },
+  server: {
+    allowedHosts: ['unpilloried-wishfully-weston.ngrok-free.dev'],
+  },
   optimizeDeps: {
     include: [
       'vue',
