@@ -601,13 +601,24 @@ onMounted(async () => {
             >
               <div class="field-label-row">
                 <label :for="key">{{ labels[key] }}</label>
-                <button
-                  class="info-btn"
-                  :title="getFieldTooltip(store.language, key, labels[key])"
-                  type="button"
+                <VTooltip
+                  location="top"
+                  content-class="roi-help-tooltip"
                 >
-                  i
-                </button>
+                  <template #activator="{ props }">
+                    <button
+                      class="info-btn"
+                      type="button"
+                      v-bind="props"
+                    >
+                      i
+                    </button>
+                  </template>
+
+                  <div class="roi-help-tooltip__inner">
+                    {{ getFieldTooltip(store.language, key, labels[key]) }}
+                  </div>
+                </VTooltip>
               </div>
 
               <input
@@ -665,13 +676,24 @@ onMounted(async () => {
             <div class="field factor-block">
               <div class="field-label-row">
                 <label>{{ tr.factorChoice }}</label>
-                <button
-                  class="info-btn"
-                  :title="getFieldTooltip(store.language, 'employeeCostFactorChoice', tr.factorChoice)"
-                  type="button"
+                <VTooltip
+                  location="top"
+                  content-class="roi-help-tooltip"
                 >
-                  i
-                </button>
+                  <template #activator="{ props }">
+                    <button
+                      class="info-btn"
+                      type="button"
+                      v-bind="props"
+                    >
+                      i
+                    </button>
+                  </template>
+
+                  <div class="roi-help-tooltip__inner">
+                    {{ getFieldTooltip(store.language, 'employeeCostFactorChoice', tr.factorChoice) }}
+                  </div>
+                </VTooltip>
               </div>
 
               <div class="factor-options">

@@ -202,7 +202,7 @@ function groupHeading(value) {
               type="text"
             >
 
-            <div class="scenario-list-sort scenario-list-sort-inline rounded-3xl">
+            <div class="scenario-list-sort scenario-list-sort-inline">
               <button
                 class="scenario-sort-button"
                 :class="{ active: sortMode === 'recent' }"

@@ -729,8 +729,43 @@ input {
 .info-btn:focus-visible {
   border-color: var(--orange);
   color: var(--orange);
-  background: var(--orangeSoft);
+  background: var(--orange-soft);
   outline: none;
+}
+
+.v-overlay__content.roi-help-tooltip {
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  border: 0 !important;
+}
+
+.roi-help-tooltip__inner {
+  position: relative;
+  max-width: min(320px, calc(100vw - 32px));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  background: #111318;
+  color: #fff;
+  padding: 10px 14px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.28);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.5;
+  white-space: normal;
+}
+
+.roi-help-tooltip__inner::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -6px;
+  width: 12px;
+  height: 12px;
+  border-right: 1px solid rgba(255, 255, 255, .08);
+  border-bottom: 1px solid rgba(255, 255, 255, .08);
+  background: #111318;
+  transform: translateX(-50%) rotate(45deg);
 }
 
 .hint {
