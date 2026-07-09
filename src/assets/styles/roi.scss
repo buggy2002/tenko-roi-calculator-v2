@@ -1685,7 +1685,7 @@ input {
     page-break-after: always;
     width: 210mm;
     height: 297mm;
-    padding: 13mm 12mm;
+    padding: 9mm 10mm 10mm;
     background: linear-gradient(130deg, #ffffff 0%, #f8f8f6 65%, #ffffff 100%);
   }
 
@@ -1706,16 +1706,20 @@ input {
     pointer-events: none;
   }
 
+  .roi-print-header,
   .roi-print-topline {
     position: relative;
     z-index: 2;
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: space-between;
-    margin-bottom: 7mm;
+    min-height: 11mm;
+    margin-bottom: 5mm;
+    padding-bottom: 3.2mm;
+    border-bottom: .35mm solid rgba(242, 107, 33, .5);
     color: #51545a;
     font-family: var(--font-mono), monospace;
-    font-size: 8.5px;
+    font-size: 8px;
     font-weight: 800;
     letter-spacing: .06em;
     text-transform: uppercase;
@@ -1723,6 +1727,21 @@ input {
 
   .roi-print-topline.detail {
     margin-bottom: 6mm;
+  }
+
+  .roi-print-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 3mm;
+    color: #17191e;
+  }
+
+  .roi-print-brand-dot {
+    width: 6.5mm;
+    height: 6.5mm;
+    border-radius: 50%;
+    background: var(--orange);
+    box-shadow: 0 0 0 2.4mm rgba(242, 107, 33, .12);
   }
 
   .roi-print-logo-mark {
@@ -1733,6 +1752,11 @@ input {
     line-height: 1;
   }
 
+  .roi-print-logo-mark.executive {
+    font-size: 16px;
+    font-weight: 900;
+  }
+
   .roi-print-logo-mark span {
     display: block;
     margin-top: 1px;
@@ -1741,298 +1765,572 @@ input {
     text-align: right;
   }
 
-  .roi-print-hero-title {
+  .roi-print-body-grid {
     position: relative;
     z-index: 2;
-    max-width: 92mm;
-    margin-left: 2mm;
+    display: grid;
+    grid-template-columns: 69mm 1fr;
+    gap: 5mm;
+    min-height: 247mm;
+  }
+
+  .roi-print-left-column,
+  .roi-print-right-column {
+    display: grid;
+    gap: 4mm;
+    align-content: start;
+  }
+
+  .roi-print-hero-card,
+  .roi-print-scenario-card,
+  .roi-print-assumption-card,
+  .roi-print-kpi-card,
+  .roi-print-compare-table-card,
+  .roi-print-chart-card,
+  .roi-print-kpi,
+  .roi-print-box {
+    position: relative;
+    overflow: hidden;
+    border: .35mm solid #ddd8cf;
+    border-radius: 4mm;
+    background: rgba(255, 255, 255, .94);
+    box-shadow: 0 5mm 16mm rgba(12, 12, 12, .035);
+  }
+
+  .roi-print-hero-card {
+    min-height: 105mm;
+    padding: 4mm 4mm 0;
+    background:
+      radial-gradient(circle at 40% 18%, rgba(242, 107, 33, .08), transparent 30%),
+      linear-gradient(180deg, rgba(255, 255, 255, .96), rgba(248, 248, 244, .94));
+  }
+
+  .roi-print-title {
+    color: #111318;
+    font-size: 28px;
+    font-weight: 900;
+    letter-spacing: 0;
+    line-height: 1.03;
+    overflow-wrap: anywhere;
+  }
+
+  .roi-print-title span {
+    display: block;
+    margin-top: 1.8mm;
+    color: var(--orange);
+  }
+
+  .roi-print-subtitle {
+    max-width: 56mm;
+    margin-top: 4mm;
+    color: #5e646d;
+    font-size: 10.2px;
+    line-height: 1.48;
+  }
+
+  .roi-print-robot-stage {
+    position: absolute;
+    inset: auto 0 0 0;
+    height: 60mm;
+  }
+
+  .roi-print-robot-glow {
+    position: absolute;
+    inset: 10mm 8mm 0 8mm;
+    border-radius: 6mm;
+    background:
+      radial-gradient(circle at 50% 18%, rgba(242, 107, 33, .2), transparent 24%),
+      linear-gradient(180deg, rgba(248, 243, 238, .8), rgba(255, 255, 255, 0));
   }
 
   .roi-print-robot-main {
     position: absolute;
-    left: 26mm;
-    top: 57mm;
+    left: 50%;
+    bottom: 0;
     z-index: 1;
-    width: 58mm;
+    width: 53mm;
     height: auto;
-    filter: drop-shadow(0 7mm 8mm rgba(0, 0, 0, .13));
+    transform: translateX(-50%);
+    filter: drop-shadow(0 5mm 7mm rgba(0, 0, 0, .12));
   }
 
-  .roi-print-title {
-    color: #22252b;
-    font-size: 31px;
+  .roi-print-scenario-card {
+    padding: 4mm;
+    color: #fff;
+    background: linear-gradient(145deg, #2e3035 0%, #16181d 100%);
+  }
+
+  .roi-print-card-badge {
+    margin-bottom: 2mm;
+    color: var(--orange);
+    font-size: 8px;
     font-weight: 900;
-    letter-spacing: 0;
-    line-height: .95;
+    letter-spacing: .08em;
     text-transform: uppercase;
-    overflow-wrap: anywhere;
   }
 
-  .roi-print-subtitle {
-    max-width: 88mm;
-    margin-top: 5mm;
-    color: #1d2027;
-    font-size: 12px;
-    line-height: 1.3;
-  }
-
-  .roi-print-brief-meta {
-    display: grid;
-    gap: 1.4mm;
-    max-width: 86mm;
-    margin-top: 3.4mm;
-  }
-
-  .roi-print-meta-row {
-    display: grid;
-    gap: .5mm;
-  }
-
-  .roi-print-meta-label {
-    color: #8a8f97;
-    font-size: 6.6px;
+  .roi-print-scenario-name {
+    font-size: 15px;
     font-weight: 800;
-    letter-spacing: .06em;
+    line-height: 1.2;
+  }
+
+  .roi-print-scenario-note {
+    margin-top: 1.6mm;
+    color: rgba(255, 255, 255, .75);
+    font-size: 7.4px;
+    line-height: 1.35;
+  }
+
+  .roi-print-assumption-card {
+    padding: 4mm;
+  }
+
+  .roi-print-section-head {
+    margin-bottom: 2.4mm;
+    color: #1b1d22;
+    font-size: 10px;
+    font-weight: 900;
+    line-height: 1.15;
+  }
+
+  .roi-print-assumption-list {
+    display: grid;
+  }
+
+  .roi-print-assumption-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 2.8mm;
+    padding: 2.45mm 0;
+    border-top: .2mm dashed #e3dfd8;
+    font-size: 8px;
+  }
+
+  .roi-print-assumption-row:first-child {
+    border-top: 0;
+    padding-top: 0;
+  }
+
+  .roi-print-assumption-row span {
+    color: #646972;
+  }
+
+  .roi-print-assumption-row strong {
+    color: #16181d;
+    font-family: var(--font-mono), monospace;
+    font-size: 8.3px;
+    font-weight: 900;
+    text-align: right;
+  }
+
+  .roi-print-assumption-foot {
+    margin-top: 3mm;
+    padding-top: 2.4mm;
+    border-top: .25mm solid #ece7df;
+    color: #7a8089;
+    font-size: 7px;
+    line-height: 1.35;
+  }
+
+  .roi-print-summary-banner {
+    position: relative;
+    min-height: 42mm;
+    padding: 6mm 6mm 5mm;
+    overflow: hidden;
+    border-radius: 4.5mm;
+    color: #fff;
+    background: linear-gradient(140deg, #143b22 0%, #0b2d18 58%, #123f22 100%);
+    box-shadow: 0 6mm 18mm rgba(14, 46, 28, .12);
+  }
+
+  .roi-print-summary-banner.is-bad {
+    background: linear-gradient(140deg, #4a211d 0%, #2f1412 58%, #5a261f 100%);
+  }
+
+  .roi-print-summary-tag {
+    display: inline-flex;
+    align-items: center;
+    min-height: 9mm;
+    padding: 0 5mm;
+    border-radius: 0 0 4mm 4mm;
+    background: rgba(71, 187, 100, .22);
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: .03em;
     text-transform: uppercase;
   }
 
-  .roi-print-meta-value {
-    color: #23262d;
-    font-size: 8.4px;
-    font-weight: 700;
-    line-height: 1.32;
-    overflow-wrap: anywhere;
+  .roi-print-summary-banner.is-bad .roi-print-summary-tag {
+    background: rgba(255, 126, 91, .22);
   }
 
-  .roi-print-impact-panel {
-    position: absolute;
-    top: 55mm;
-    right: 12mm;
-    z-index: 2;
-    width: 102mm;
-    overflow: hidden;
-    border: 1px solid #d8d8d2;
-    border-radius: 4mm;
-    background: rgba(255, 255, 255, .92);
-    box-shadow: 0 10mm 26mm rgba(10, 10, 10, .05);
-    backdrop-filter: blur(1mm);
-  }
-
-  .roi-print-impact-item {
+  .roi-print-summary-main {
     display: grid;
-    grid-template-columns: 18mm 1fr;
-    gap: 6mm;
+    grid-template-columns: 22mm 1fr;
+    gap: 4mm;
     align-items: center;
-    min-height: 27mm;
-    padding: 5.2mm 6mm;
-    border-bottom: 1px solid #deded9;
+    margin-top: 5mm;
   }
 
-  .roi-print-impact-item.last {
-    border-bottom: 0;
-  }
-
-  .roi-print-icon {
+  .roi-print-summary-mark {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 14mm;
-    height: 14mm;
-    border: 1.2mm solid #222;
+    width: 18mm;
+    height: 18mm;
+    border: 1.1mm solid rgba(115, 233, 126, .9);
     border-radius: 50%;
-    color: #222;
-    font-size: 6mm;
+    color: #73e97e;
+    font-size: 8mm;
     font-weight: 900;
     line-height: 1;
   }
 
-  .roi-print-icon-orange {
-    border-color: var(--orange);
-    background: var(--orange);
-    color: #fff;
+  .roi-print-summary-banner.is-bad .roi-print-summary-mark {
+    border-color: rgba(255, 164, 124, .94);
+    color: #ffb092;
   }
 
-  .roi-print-impact-title {
-    color: #252830;
-    font-size: 9.5px;
+  .roi-print-summary-title {
+    font-size: 29px;
     font-weight: 900;
-    letter-spacing: .02em;
-    line-height: 1.2;
-    text-transform: uppercase;
+    line-height: .98;
+    letter-spacing: -.01em;
   }
 
-  .roi-print-impact-value {
-    margin-top: 1.5mm;
-    font-family: var(--font-mono), monospace;
-    font-size: 17px;
+  .roi-print-summary-note {
+    margin-top: 1.6mm;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.22;
+  }
+
+  .roi-print-summary-bars {
+    position: absolute;
+    right: 5mm;
+    bottom: 4mm;
+    display: flex;
+    align-items: end;
+    gap: 2mm;
+    opacity: .16;
+  }
+
+  .roi-print-summary-bars span {
+    display: block;
+    width: 4.4mm;
+    background: #9cffae;
+  }
+
+  .roi-print-summary-bars span:nth-child(1) { height: 8mm; }
+  .roi-print-summary-bars span:nth-child(2) { height: 13mm; }
+  .roi-print-summary-bars span:nth-child(3) { height: 18mm; }
+  .roi-print-summary-bars span:nth-child(4) { height: 24mm; }
+
+  .roi-print-summary-banner.is-bad .roi-print-summary-bars span {
+    background: #ffc1ad;
+  }
+
+  .roi-print-kpi-grid.executive {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 3.5mm;
+  }
+
+  .roi-print-kpi-card {
+    display: grid;
+    grid-template-columns: 13mm 1fr;
+    gap: 3mm;
+    align-items: start;
+    min-height: 29mm;
+    padding: 4mm;
+  }
+
+  .roi-print-kpi-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 11mm;
+    height: 11mm;
+    border-radius: 50%;
+    background: rgba(21, 130, 78, .12);
+    color: var(--green);
+    font-size: 5.2mm;
     font-weight: 900;
-    letter-spacing: 0;
-    line-height: 1.06;
-    white-space: nowrap;
+    line-height: 1;
   }
 
-  .roi-print-impact-mini {
-    margin-top: 1.4mm;
-    color: #60646b;
-    font-size: 8px;
+  .roi-print-kpi-card.tone-orange .roi-print-kpi-icon,
+  .roi-print-kpi-card.tone-red .roi-print-kpi-icon {
+    background: rgba(242, 107, 33, .12);
+    color: var(--orange);
+  }
+
+  .roi-print-kpi-card small {
+    display: block;
+    color: #5f656d;
+    font-size: 7.5px;
+    font-weight: 800;
     line-height: 1.25;
   }
 
-  .roi-print-lower-grid {
-    position: absolute;
-    left: 12mm;
-    right: 12mm;
-    bottom: 14mm;
-    z-index: 2;
-    display: grid;
-    grid-template-columns: 78mm 1fr;
-    gap: 4.5mm;
-    align-items: stretch;
+  .roi-print-kpi-card strong {
+    display: block;
+    margin-top: 1.8mm;
+    font-family: var(--font-mono), monospace;
+    font-size: 19px;
+    font-weight: 900;
+    line-height: 1.02;
   }
 
-  .roi-print-compare-panel,
-  .roi-print-chart-panel {
-    border: 1px solid #d8d8d2;
-    border-radius: 4mm;
-    background: rgba(255, 255, 255, .94);
-    box-shadow: 0 6mm 16mm rgba(10, 10, 10, .04);
-  }
+  .roi-print-kpi-card.tone-green strong { color: var(--green); }
+  .roi-print-kpi-card.tone-orange strong { color: var(--orange); }
+  .roi-print-kpi-card.tone-red strong { color: var(--red); }
 
-  .roi-print-compare-panel {
-    padding: 3.6mm;
-  }
-
-  .roi-print-compare-head {
-    margin-bottom: 3mm;
-    color: #5f6369;
+  .roi-print-kpi-mini {
+    margin-top: 1.8mm;
+    color: #777d85;
     font-size: 8px;
-    font-weight: 700;
-    text-transform: uppercase;
+    line-height: 1.2;
   }
 
-  .roi-print-chart-panel {
+  .roi-print-compare-table-card {
+    padding: 0;
+  }
+
+  .roi-print-compare-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4mm;
+    padding: 3mm 4mm;
+    background: linear-gradient(90deg, #313236, #17181c);
+    color: #fff;
+    font-size: 8px;
+    font-weight: 800;
+  }
+
+  .roi-print-compare-table {
+    display: grid;
+    background: rgba(255, 255, 255, .9);
+  }
+
+  .roi-print-compare-toprow,
+  .roi-print-compare-line {
+    display: grid;
+    grid-template-columns: 1.34fr .83fr .83fr;
+  }
+
+  .roi-print-compare-toprow > div,
+  .roi-print-compare-line > div {
+    padding: 3mm 3.4mm;
+    border-top: .24mm solid #ece7df;
+    border-right: .24mm solid #ece7df;
+  }
+
+  .roi-print-compare-toprow > div:last-child,
+  .roi-print-compare-line > div:last-child {
+    border-right: 0;
+  }
+
+  .roi-print-compare-toprow {
+    background: linear-gradient(180deg, rgba(255,255,255,.98), rgba(248,248,245,.96));
+    font-size: 8px;
+    font-weight: 900;
+  }
+
+  .roi-print-compare-toprow .old {
+    color: var(--orange);
+    text-align: center;
+  }
+
+  .roi-print-compare-toprow .new {
+    color: var(--green);
+    text-align: center;
+  }
+
+  .roi-print-compare-line {
+    font-size: 8.4px;
+    background: rgba(255, 255, 255, .74);
+  }
+
+  .roi-print-compare-label {
+    color: #454a52;
+    font-weight: 700;
+  }
+
+  .roi-print-compare-value {
+    font-family: var(--font-mono), monospace;
+    font-size: 9.5px;
+    font-weight: 900;
+    text-align: center;
+  }
+
+  .roi-print-compare-value.old {
+    color: var(--orange);
+  }
+
+  .roi-print-compare-value.new {
+    color: var(--green);
+  }
+
+  .roi-print-compare-line.total {
+    background: #fff7f1;
+  }
+
+  .roi-print-chart-card {
     display: grid;
     grid-template-rows: auto 1fr;
-    min-height: 95mm;
-    padding: 3.6mm;
+    padding: 4mm;
   }
 
   .roi-print-chart-head {
-    display: grid;
-    gap: 1mm;
-    margin-bottom: 3mm;
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 4mm;
+    margin-bottom: 2.6mm;
   }
 
   .roi-print-chart-title {
-    font-size: 10px;
+    color: #17191e;
+    font-size: 11px;
     font-weight: 900;
     line-height: 1.1;
-    text-transform: uppercase;
   }
 
   .roi-print-chart-desc {
-    color: #60646b;
-    font-size: 7.5px;
+    margin-top: 1.2mm;
+    color: #6a7078;
+    font-size: 7.2px;
+    line-height: 1.25;
+  }
+
+  .roi-print-saving-pill {
+    min-width: 31mm;
+    padding: 2.6mm 3mm;
+    border: .3mm solid #d8e6d6;
+    border-radius: 3mm;
+    background: linear-gradient(180deg, #fbfff8, #f1f7ea);
+    text-align: left;
+  }
+
+  .roi-print-saving-pill small {
+    display: block;
+    color: #556058;
+    font-size: 6.8px;
+    font-weight: 800;
     line-height: 1.15;
+  }
+
+  .roi-print-saving-pill strong {
+    display: block;
+    margin-top: 1.4mm;
+    color: var(--green);
+    font-family: var(--font-mono), monospace;
+    font-size: 11px;
+    line-height: 1.1;
   }
 
   .roi-print-chartbox {
     width: 100%;
-    height: 74mm;
     margin: 0 auto;
   }
 
-  .roi-print-chartbox canvas {
+  .roi-print-chartbox.executive {
+    height: 55mm;
+  }
+
+  .roi-print-chartbox.executive canvas {
     width: 100% !important;
-    height: 74mm !important;
+    height: 55mm !important;
     max-width: 100% !important;
-    max-height: 74mm !important;
+    max-height: 55mm !important;
   }
 
-  .print-compare {
-    grid-template-columns: 1fr;
-    gap: 3mm;
+  .roi-print-footer-strip {
+    position: absolute;
+    left: 10mm;
+    right: 10mm;
+    bottom: 10mm;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: 1fr 52mm;
+    border: .32mm solid #eadcc9;
+    border-radius: 4mm;
+    background: linear-gradient(180deg, rgba(255,255,255,.95), rgba(251,247,242,.94));
   }
 
-  .print-executive .compare-box {
-    border-radius: 3mm;
-    border-color: #d8d8d2;
-    background: rgba(255, 255, 255, .94);
-    box-shadow: none;
+  .roi-print-footer-summary {
+    display: grid;
+    grid-template-columns: 15mm 1fr;
+    gap: 3.2mm;
+    align-items: center;
+    padding: 4mm;
   }
 
-  .print-executive .compare-box header {
-    padding: 2.2mm 3mm;
-    font-size: 9px;
-    letter-spacing: .04em;
-    text-align: center;
-    text-transform: uppercase;
-  }
-
-  .print-executive .compare-box.old header {
-    background: #313236;
-  }
-
-  .print-executive .compare-box.new header {
-    background: var(--orange);
-  }
-
-  .print-executive .compare-row {
-    gap: 4mm;
-    padding: 2.05mm 3.6mm;
-    font-size: 8.6px;
-    background: rgba(255, 255, 255, .76);
-  }
-
-  .print-executive .compare-row span:first-child,
-  .print-executive .compare-row strong {
-    color: #3b3f46;
-  }
-
-  .print-executive .compare-row strong {
-    font-family: var(--font-mono), monospace;
-    color: #15171d;
-  }
-
-  .print-executive .compare-row.total {
-    background: #fff0e8;
+  .roi-print-footer-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 12mm;
+    height: 12mm;
+    border-radius: 50%;
+    background: rgba(21, 130, 78, .12);
+    color: var(--green);
+    font-size: 4.6mm;
     font-weight: 900;
   }
 
-  .print-executive .compare-row.total span:first-child,
-  .print-executive .compare-row.total strong {
-    color: var(--orange);
+  .roi-print-footer-copy strong {
+    display: block;
+    color: #22252b;
+    font-size: 10.5px;
+    line-height: 1.25;
   }
 
-  .print-chart {
-    min-height: 0;
-    height: 100%;
+  .roi-print-footer-copy span,
+  .roi-print-footer-note {
+    color: #6a7078;
+    font-size: 7.4px;
+    line-height: 1.35;
+  }
+
+  .roi-print-footer-copy span {
+    display: block;
+    margin-top: 1.3mm;
+  }
+
+  .roi-print-footer-note {
+    padding: 4mm;
+    border-left: .24mm solid #eadcc9;
   }
 
   .print-details .detail-title {
     position: absolute;
     top: 16mm;
-    left: 12mm;
-    right: 12mm;
+    left: 10mm;
+    right: 10mm;
     margin: 0;
-    font-size: 34px;
+    font-size: 32px;
   }
 
   .print-details .detail-subtitle {
     position: absolute;
-    top: 30mm;
-    left: 12mm;
-    right: 12mm;
+    top: 29mm;
+    left: 10mm;
+    right: 10mm;
     margin: 0;
     color: #5f6369;
-    font-size: 11px;
+    font-size: 10px;
   }
 
-  .roi-print-kpi-grid {
+  .roi-print-kpi-grid.detail {
     position: absolute;
-    top: 40mm;
-    left: 12mm;
-    right: 12mm;
+    top: 39mm;
+    left: 10mm;
+    right: 10mm;
     z-index: 3;
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -2042,34 +2340,31 @@ input {
   .roi-print-kpi {
     min-height: 19mm;
     padding: 3.6mm;
-    border: 1px solid #d8d8d2;
-    border-radius: 4mm;
-    background: rgba(255, 255, 255, .94);
   }
 
   .roi-print-kpi small {
     display: block;
     margin-bottom: 1.8mm;
     color: #60646b;
-    font-size: 7.2px;
+    font-size: 7.1px;
     font-weight: 800;
     text-transform: uppercase;
   }
 
   .roi-print-kpi strong {
     display: block;
-    font-family: var(--font-mono), monospace;
-    font-size: 13px;
-    line-height: 1.2;
     color: var(--orange);
+    font-family: var(--font-mono), monospace;
+    font-size: 12.4px;
+    line-height: 1.16;
   }
 
   .roi-print-detail-grid {
     position: absolute;
-    top: 66mm;
-    left: 12mm;
-    right: 12mm;
-    bottom: 56mm;
+    top: 64mm;
+    left: 10mm;
+    right: 10mm;
+    bottom: 50mm;
     z-index: 4;
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -2080,10 +2375,6 @@ input {
   .roi-print-box {
     display: flex;
     flex-direction: column;
-    overflow: hidden;
-    border: 1px solid #d8d8d2;
-    border-radius: 4mm;
-    background: #fff;
   }
 
   .roi-print-box h3 {
@@ -2091,12 +2382,12 @@ input {
     align-items: center;
     gap: 3mm;
     margin: 0;
-    padding: 3mm 3.8mm;
-    border-bottom: 1px solid #d8d8d2;
+    padding: 3mm 3.6mm;
+    border-bottom: .24mm solid #e5e0d7;
     background: linear-gradient(90deg, #fff, #f4f4f1);
-    font-size: 8.7px;
+    color: #202228;
+    font-size: 8.4px;
     font-weight: 900;
-    letter-spacing: .03em;
     text-transform: uppercase;
   }
 
@@ -2104,12 +2395,12 @@ input {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 10mm;
-    height: 10mm;
+    width: 9mm;
+    height: 9mm;
     border-radius: 50%;
     background: #2e3035;
     color: #fff;
-    font-size: 5.5mm;
+    font-size: 4.7mm;
     font-weight: 900;
     line-height: 1;
   }
@@ -2119,10 +2410,10 @@ input {
     align-items: flex-start;
     justify-content: space-between;
     gap: 3mm;
-    padding: 2.05mm 3.8mm;
-    border-top: 1px solid #ecece8;
+    padding: 2.3mm 3.6mm;
+    border-top: .2mm solid #ecece8;
     background: #fff;
-    font-size: 8.3px;
+    font-size: 8px;
   }
 
   .roi-print-row span:first-child {
@@ -2130,55 +2421,58 @@ input {
   }
 
   .roi-print-row span:last-child {
+    color: #17191e;
+    font-family: var(--font-mono), monospace;
     font-weight: 800;
     text-align: right;
   }
 
   .roi-print-row.total {
     background: #fff0e8;
-    font-weight: 900;
   }
 
   .roi-print-row.total span:first-child,
   .roi-print-row.total span:last-child {
     color: var(--orange);
+    font-weight: 900;
   }
 
   .roi-print-note {
     position: absolute;
-    left: 13mm;
-    right: 13mm;
-    bottom: 47mm;
+    left: 11mm;
+    right: 11mm;
+    bottom: 41mm;
     z-index: 5;
     display: grid;
     gap: 1.2mm;
     color: #666b73;
-    font-size: 7.2px;
-    line-height: 1.15;
+    font-size: 7px;
+    line-height: 1.18;
   }
 
   .roi-print-benefit-wrap {
     position: absolute;
-    left: 12mm;
-    right: 12mm;
+    left: 10mm;
+    right: 10mm;
     bottom: 10mm;
     z-index: 6;
-    height: 40mm;
+    height: 26mm;
   }
 
   .roi-print-benefit-strip {
     display: grid;
-    grid-template-columns: 27mm 27mm 27mm 1fr;
+    grid-template-columns: 28mm 28mm 28mm 1fr;
     height: 100%;
     overflow: hidden;
+    border: .32mm solid #eadcc9;
     border-radius: 4mm;
     background: #fff;
   }
 
   .roi-print-benefit-item {
-    padding: 4.5mm 2mm 0;
+    padding: 3.2mm 2.4mm;
     text-align: center;
-    border-right: 1px solid #deded9;
+    border-right: .2mm solid #deded9;
     background: #fff;
   }
 
@@ -2186,34 +2480,35 @@ input {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 9mm;
-    height: 9mm;
-    margin: 0 auto 2mm;
+    width: 8mm;
+    height: 8mm;
+    margin: 0 auto 1.7mm;
     border-radius: 50%;
     background: var(--orange-soft);
     color: var(--orange);
-    font-size: 5mm;
+    font-size: 4.2mm;
     font-weight: 900;
   }
 
   .roi-print-benefit-item b {
     display: block;
-    font-size: 6.8px;
-    line-height: 1.1;
+    color: #212329;
+    font-size: 6.5px;
+    line-height: 1.12;
   }
 
   .roi-print-benefit-item span {
     display: block;
-    margin-top: 1.2mm;
+    margin-top: 1mm;
     color: #666b73;
-    font-size: 5.9px;
-    line-height: 1.2;
+    font-size: 5.7px;
+    line-height: 1.18;
   }
 
   .roi-print-conclusion {
     position: relative;
     overflow: hidden;
-    padding: 6mm 10mm 5mm 18mm;
+    padding: 4mm 6mm 4mm 16mm;
     background: linear-gradient(130deg, #585a5f 0%, #222429 100%);
     color: #fff;
   }
@@ -2227,16 +2522,12 @@ input {
 
   .trophy {
     position: absolute;
-    top: 9.5mm;
-    left: 6mm;
+    top: 7.2mm;
+    left: 5mm;
     z-index: 1;
-    font-size: 9.5mm;
+    font-size: 6.2mm;
     font-weight: 900;
     line-height: 1;
-  }
-
-  .roi-print-conclusion-accent {
-    display: none;
   }
 
   .roi-print-conclusion-text {
@@ -2247,20 +2538,20 @@ input {
 
   .roi-print-conclusion b {
     display: block;
-    margin: 0 0 1.6mm;
-    font-size: 12px;
+    margin: 0 0 1.2mm;
+    font-size: 11px;
     line-height: 1.05;
   }
 
   .roi-print-conclusion span {
     display: block;
     max-width: 76mm;
-    font-size: 7.6px;
-    line-height: 1.4;
+    font-size: 7px;
+    line-height: 1.35;
   }
 
   .roi-print-conclusion-sub {
-    margin-top: 1.4mm;
+    margin-top: 1mm;
     opacity: .88;
   }
 }
