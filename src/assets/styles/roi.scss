@@ -1453,7 +1453,7 @@ input {
     position: relative;
     overflow: hidden;
     border: .35mm solid #ddd8cf;
-    border-radius: 4mm;
+    border-radius: 2mm;
     background: rgba(255, 255, 255, .94);
     box-shadow: 0 5mm 16mm rgba(12, 12, 12, .035);
   }
@@ -1538,7 +1538,7 @@ input {
     justify-content: center;
     width: 11.5mm;
     height: 11.5mm;
-    border-radius: 3mm;
+    border-radius: 1.8mm;
     background: linear-gradient(180deg, #f5864a, #e2622f);
     color: #fff;
     font-size: 6mm;
@@ -1620,10 +1620,10 @@ input {
 
   .roi-print-summary-banner {
     position: relative;
-    min-height: 47mm;
+    // min-height: 47mm;
     padding: 5mm 6mm 5mm;
     overflow: hidden;
-    border-radius: 4.5mm;
+    border-radius: 2.4mm;
     color: #fff;
     background: linear-gradient(140deg, #16452a 0%, #0d2f1d 58%, #123f22 100%);
     box-shadow: 0 6mm 18mm rgba(14, 46, 28, .12);
@@ -1638,7 +1638,7 @@ input {
     align-items: center;
     min-height: 9mm;
     padding: 0 5mm;
-    border-radius: 3.2mm;
+    border-radius: 0 0 1.8mm 0;
     background: rgba(71, 187, 100, .18);
     font-size: 9.5px;
     font-weight: 900;
@@ -1889,7 +1889,7 @@ input {
     min-width: 32mm;
     padding: 2.6mm 3mm;
     border: .3mm solid #d8e6d6;
-    border-radius: 3mm;
+    border-radius: 1.8mm;
     background: linear-gradient(180deg, #fbfff8, #f1f7ea);
     text-align: left;
   }
@@ -1936,7 +1936,7 @@ input {
     display: grid;
     grid-template-columns: 1.45fr 52mm;
     border: .32mm solid #eadcc9;
-    border-radius: 4mm;
+    border-radius: 2mm;
     background: linear-gradient(180deg, rgba(255,255,255,.95), rgba(251,247,242,.94));
   }
 
@@ -2134,7 +2134,7 @@ input {
     height: 100%;
     overflow: hidden;
     border: .32mm solid #eadcc9;
-    border-radius: 4mm;
+    border-radius: 2mm;
     background: #fff;
   }
 
@@ -2755,7 +2755,7 @@ input {
     position: relative;
     overflow: hidden;
     border: .35mm solid #ddd8cf;
-    border-radius: 4mm;
+    border-radius: 2mm;
     background: rgba(255, 255, 255, .94);
     box-shadow: 0 5mm 16mm rgba(12, 12, 12, .035);
   }
@@ -2841,7 +2841,7 @@ input {
     justify-content: center;
     width: 11.5mm;
     height: 11.5mm;
-    border-radius: 3mm;
+    border-radius: 1.8mm;
     background: linear-gradient(180deg, #f5864a, #e2622f);
     color: #fff;
     font-size: 6mm;
@@ -2931,10 +2931,10 @@ input {
 
   .roi-print-summary-banner {
     position: relative;
-    min-height: 47mm;
+    // min-height: 47mm;
     padding: 5mm 6mm 5mm;
     overflow: hidden;
-    border-radius: 4.5mm;
+    border-radius: 2.4mm;
     color: #fff;
     background: linear-gradient(140deg, #16452a 0%, #0d2f1d 58%, #123f22 100%);
     box-shadow: 0 6mm 18mm rgba(14, 46, 28, .12);
@@ -2949,7 +2949,7 @@ input {
     align-items: center;
     min-height: 9mm;
     padding: 0 5mm;
-    border-radius: 3.2mm;
+    border-radius: 0 0 1.8mm 0;
     background: rgba(71, 187, 100, .18);
     font-size: 9.5px;
     font-weight: 900;
@@ -3233,7 +3233,7 @@ input {
     min-width: 32mm;
     padding: 2.6mm 3mm;
     border: .3mm solid #d8e6d6;
-    border-radius: 3mm;
+    border-radius: 1.8mm;
     background: linear-gradient(180deg, #fbfff8, #f1f7ea);
     text-align: left;
   }
@@ -3280,7 +3280,7 @@ input {
     display: grid;
     grid-template-columns: 1.45fr 52mm;
     border: .32mm solid #eadcc9;
-    border-radius: 4mm;
+    border-radius: 2mm;
     background: linear-gradient(180deg, rgba(255,255,255,.95), rgba(251,247,242,.94));
   }
 
@@ -3487,7 +3487,7 @@ input {
     height: 100%;
     overflow: hidden;
     border: .32mm solid #eadcc9;
-    border-radius: 4mm;
+    border-radius: 2mm;
     background: #fff;
   }
 
