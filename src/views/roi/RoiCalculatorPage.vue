@@ -24,7 +24,7 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, PointElement, LineEleme
 
 const store = useRoiStore()
 const { t, locale } = useI18n({ useScope: 'global' })
-const isFullWidth = ref(false)
+const isFullWidth = ref(true)
 const isSaveDialogVisible = ref(false)
 const snackbar = ref({ show: false, text: '', color: 'success' })
 
