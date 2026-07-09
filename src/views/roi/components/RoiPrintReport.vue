@@ -169,12 +169,21 @@ function formatNumber(value, maximumFractionDigits = 0) {
           </div>
 
           <div class="roi-print-scenario-card">
-            <div class="roi-print-card-badge">
-              SCENARIO
+            <div class="roi-print-scenario-head">
+              <div class="roi-print-scenario-icon">
+                <span>▣</span>
+              </div>
+
+              <div class="roi-print-scenario-copy">
+                <div class="roi-print-card-badge">
+                  SCENARIO
+                </div>
+                <div class="roi-print-scenario-name">
+                  {{ customerName || scenarioName }}
+                </div>
+              </div>
             </div>
-            <div class="roi-print-scenario-name">
-              {{ customerName || scenarioName }}
-            </div>
+
             <div
               v-if="customerName"
               class="roi-print-scenario-note"
@@ -232,11 +241,16 @@ function formatNumber(value, maximumFractionDigits = 0) {
                 </div>
               </div>
             </div>
-            <div class="roi-print-summary-bars">
-              <span />
-              <span />
-              <span />
-              <span />
+            <div class="roi-print-summary-graphic">
+              <div class="roi-print-summary-bars">
+                <span />
+                <span />
+                <span />
+                <span />
+              </div>
+              <div class="roi-print-summary-arrow">
+                ↗
+              </div>
             </div>
           </div>
 
@@ -263,7 +277,6 @@ function formatNumber(value, maximumFractionDigits = 0) {
           <div class="roi-print-compare-table-card">
             <div class="roi-print-compare-header">
               <span>{{ tr.costBreakTitle }}</span>
-              <span>{{ tr.execDesc }}</span>
             </div>
 
             <div class="roi-print-compare-table">
@@ -325,16 +338,15 @@ function formatNumber(value, maximumFractionDigits = 0) {
       <div class="roi-print-footer-strip">
         <div class="roi-print-footer-summary">
           <div class="roi-print-footer-icon">
-            ROI
+            ↗
           </div>
           <div class="roi-print-footer-copy">
             <strong>{{ tr.printConclusionLine }}</strong>
-            <span>{{ tr.disclaimer }}</span>
           </div>
         </div>
 
         <div class="roi-print-footer-note">
-          Productivity Loss = employees x inspection days x inspection time x {{ fmt1(result.costPerMin) }}/{{ tr.min }}
+          {{ tr.disclaimer }}
         </div>
       </div>
     </div>

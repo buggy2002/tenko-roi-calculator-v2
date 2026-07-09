@@ -1,16 +1,7 @@
 <script setup>
-import TypographyHeadlines from '@/views/pages/typography/TypographyHeadlines.vue'
-import TypographyTexts from '@/views/pages/typography/TypographyTexts.vue'
+import UnavailableDemoPage from '@/components/UnavailableDemoPage.vue'
 </script>
 
 <template>
-  <VRow>
-    <VCol cols="12">
-      <TypographyHeadlines />
-    </VCol>
-
-    <VCol cols="12">
-      <TypographyTexts />
-    </VCol>
-  </VRow>
+  <UnavailableDemoPage title="Typography" />
 </template>

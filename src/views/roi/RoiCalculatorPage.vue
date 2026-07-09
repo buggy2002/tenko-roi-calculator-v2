@@ -16,6 +16,7 @@ import { useI18n } from 'vue-i18n'
 import RoiNavbar from './components/RoiNavbar.vue'
 import RoiPrintReport from './components/RoiPrintReport.vue'
 import RoiScenarioBrowser from './components/RoiScenarioBrowser.vue'
+import { writeRoiPrintSnapshot } from '@/utils/roi/print-snapshot'
 import { uiFactorChoices, uiGroups } from '@/utils/roi/ui-copy.js'
 import { getFieldTooltip } from '@/utils/roi/ui-help-copy.js'
 import { useRoiStore } from '@/stores/roi.js'
@@ -496,7 +497,19 @@ function onDuplicateScenario(scenario) {
 }
 
 function onPrint() {
-  window.print()
+  writeRoiPrintSnapshot({
+    customerName: store.customerName,
+    input: store.input,
+    language: store.language,
+    scenarioName: store.scenarioName,
+    scenarioNotes: store.scenarioNotes,
+  })
+
+  const targetUrl = new URL('/roi-report-print', window.location.origin)
+  const printWindow = window.open(targetUrl.toString(), '_blank', 'noopener,noreferrer')
+
+  if (!printWindow)
+    window.location.assign(targetUrl.toString())
 }
 
 watch(() => store.language, value => {
