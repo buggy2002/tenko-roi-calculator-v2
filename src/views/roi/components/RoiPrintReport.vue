@@ -224,14 +224,16 @@ function formatNumber(value, maximumFractionDigits = 0) {
           </div>
         </section>
 
-        <section class="roi-print-right-column">
+        <section class="roi-print-right-column roi-print-right-column-content">
           <div
             class="roi-print-summary-banner"
             :class="[`is-${worthSummary.tone}`]"
           >
-            <div class="roi-print-summary-tag">
+            <!--
+              <div class="roi-print-summary-tag">
               {{ tr.execTitle }}
-            </div>
+              </div> 
+            -->
             <div class="roi-print-summary-main">
               <div class="roi-print-summary-mark">
                 &#10003;
