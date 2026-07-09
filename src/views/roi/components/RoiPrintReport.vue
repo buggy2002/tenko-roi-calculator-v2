@@ -162,8 +162,8 @@ function formatNumber(value, maximumFractionDigits = 0) {
               </div> 
             -->
 
-            <div class="roi-print-robot-stage">
-              <div class="roi-print-robot-glow" />
+            <div>
+              <!-- <div class="roi-print-robot-glow" /> -->
               <img
                 class="roi-print-robot-main"
                 :src="robotImage"
