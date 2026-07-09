@@ -26,6 +26,9 @@
   --roi-shell-max-width: 1180px;
   --roi-sidebar-width: 410px;
   --roi-shell-padding-x: clamp(18px, 4vw, 56px);
+  position: relative;
+  min-height: 100vh;
+  background: radial-gradient(circle at 82% 0%, rgba(242, 107, 33, .13), transparent 30%), var(--bg);
 }
 
 .roi-app-fullwidth {
@@ -396,8 +399,8 @@ input {
   gap: 4px;
   padding: 3px;
   border: 1px solid var(--border);
-  /* border-radius: 8px; */
-  background: rgba(16, 17, 20, .03);
+  border-radius: 999px;
+  background: rgba(16, 17, 20, 0.103);
 }
 
 .scenario-list-search-row {
@@ -1647,7 +1650,7 @@ input {
     overflow: hidden;
     page-break-after: always;
     width: 210mm;
-    min-height: 297mm;
+    height: 297mm;
     padding: 13mm 12mm;
     background: linear-gradient(130deg, #ffffff 0%, #f8f8f6 65%, #ffffff 100%);
   }
@@ -1659,7 +1662,7 @@ input {
   .roi-print-bg-lines {
     position: absolute;
     inset: 0;
-    opacity: .32;
+    opacity: .35;
     background:
       radial-gradient(circle at 78% 4%, rgba(242, 107, 33, .10), transparent 17%),
       linear-gradient(90deg, rgba(190, 190, 185, .13) 1px, transparent 1px),

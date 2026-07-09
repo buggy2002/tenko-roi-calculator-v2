@@ -571,7 +571,7 @@ onMounted(async () => {
             </p>
           </div>
           <button
-            class="btn-solid"
+            class="btn-outline"
             type="button"
             @click="isSaveDialogVisible = true"
           >
