@@ -15,20 +15,36 @@ import { cookieRef } from '@/@layouts/stores/config'
 import '@core/scss/template/libs/vuetify/index.scss'
 import 'vuetify/styles'
 
+const legacyPrimaryColors = new Set(['#7367f0', '#675dd8'])
+
+const resolvePrimaryColor = (value, fallback) => {
+  const normalized = typeof value === 'string' ? value.trim().toLowerCase() : ''
+
+  if (!normalized || legacyPrimaryColors.has(normalized))
+    return fallback
+
+  return value
+}
+
 export default function (app) {
+  const lightPrimary = cookieRef('lightThemePrimaryColor', staticPrimaryColor)
+  const lightPrimaryDarken = cookieRef('lightThemePrimaryDarkenColor', staticPrimaryDarkenColor)
+  const darkPrimary = cookieRef('darkThemePrimaryColor', staticPrimaryColor)
+  const darkPrimaryDarken = cookieRef('darkThemePrimaryDarkenColor', staticPrimaryDarkenColor)
+
   const cookieThemeValues = {
     defaultTheme: resolveVuetifyTheme(themeConfig.app.theme),
     themes: {
       light: {
         colors: {
-          'primary': cookieRef('lightThemePrimaryColor', staticPrimaryColor).value,
-          'primary-darken-1': cookieRef('lightThemePrimaryDarkenColor', staticPrimaryDarkenColor).value,
+          'primary': resolvePrimaryColor(lightPrimary.value, staticPrimaryColor),
+          'primary-darken-1': resolvePrimaryColor(lightPrimaryDarken.value, staticPrimaryDarkenColor),
         },
       },
       dark: {
         colors: {
-          'primary': cookieRef('darkThemePrimaryColor', staticPrimaryColor).value,
-          'primary-darken-1': cookieRef('darkThemePrimaryDarkenColor', staticPrimaryDarkenColor).value,
+          'primary': resolvePrimaryColor(darkPrimary.value, staticPrimaryColor),
+          'primary-darken-1': resolvePrimaryColor(darkPrimaryDarken.value, staticPrimaryDarkenColor),
         },
       },
     },
