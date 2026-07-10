@@ -1823,7 +1823,7 @@ input {
   .roi-print-compare-toprow,
   .roi-print-compare-line {
     display: grid;
-    grid-template-columns: 1.34fr .83fr .83fr;
+    grid-template-columns: 1.22fr .8fr .8fr .8fr;
   }
 
   .roi-print-compare-toprow > div,
@@ -1854,6 +1854,11 @@ input {
     text-align: center;
   }
 
+  .roi-print-compare-toprow .diff {
+    color: #2f7ef7;
+    text-align: center;
+  }
+
   .roi-print-compare-line {
     font-size: 8.3px;
     background: rgba(255, 255, 255, .74);
@@ -1872,6 +1877,10 @@ input {
 
   .roi-print-compare-value.new {
     color: var(--green);
+  }
+
+  .roi-print-compare-value.diff {
+    color: #1b5fd1;
   }
 
   .roi-print-compare-line.total {

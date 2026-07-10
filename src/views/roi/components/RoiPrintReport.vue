@@ -55,10 +55,35 @@ const assumptionItems = computed(() => [
 ])
 
 const comparisonRows = computed(() => [
-  { icon: 'C', label: props.tr.annualCost, oldValue: props.fmt(props.result.oldTotal), newValue: props.fmt(props.result.newTotal) },
-  { icon: 'T', label: props.tr.annualTime, oldValue: props.hrs(props.result.oldTimeYear), newValue: props.hrs(props.result.newTimeYear) },
-  { icon: 'P', label: props.tr.prodLoss, oldValue: props.fmt(props.result.oldProd), newValue: props.fmt(props.result.newProd) },
-  { icon: 'R', label: props.tr.totalCost, oldValue: props.fmt(props.result.oldGrand), newValue: props.fmt(props.result.newGrand), total: true },
+  {
+    icon: 'C',
+    label: props.tr.annualCost,
+    oldValue: props.fmt(props.result.oldTotal),
+    newValue: props.fmt(props.result.newTotal),
+    diffValue: formatSignedValue(props.result.oldTotal - props.result.newTotal, props.fmt),
+  },
+  {
+    icon: 'T',
+    label: props.tr.annualTime,
+    oldValue: props.hrs(props.result.oldTimeYear),
+    newValue: props.hrs(props.result.newTimeYear),
+    diffValue: formatSignedValue(props.result.oldTimeYear - props.result.newTimeYear, props.hrs),
+  },
+  {
+    icon: 'P',
+    label: props.tr.prodLoss,
+    oldValue: props.fmt(props.result.oldProd),
+    newValue: props.fmt(props.result.newProd),
+    diffValue: formatSignedValue(props.result.oldProd - props.result.newProd, props.fmt),
+  },
+  {
+    icon: 'R',
+    label: props.tr.totalCost,
+    oldValue: props.fmt(props.result.oldGrand),
+    newValue: props.fmt(props.result.newGrand),
+    diffValue: formatSignedValue(props.result.oldGrand - props.result.newGrand, props.fmt),
+    total: true,
+  },
 ])
 
 const cumulativeSaving = computed(() => {
@@ -137,6 +162,13 @@ function clampText(value, limit) {
 
 function formatNumber(value, maximumFractionDigits = 0) {
   return Number(value || 0).toLocaleString(props.formatterLocale, { maximumFractionDigits })
+}
+
+function formatSignedValue(value, formatter) {
+  const amount = Number(value || 0)
+  const sign = amount > 0 ? '+' : amount < 0 ? '-' : ''
+
+  return `${sign}${formatter(Math.abs(amount))}`
 }
 </script>
 
@@ -320,6 +352,9 @@ function formatNumber(value, maximumFractionDigits = 0) {
                 <div class="new">
                   Tenko Robot
                 </div>
+                <div class="diff">
+                  {{ tr.diffColumn || 'Difference' }}
+                </div>
               </div>
 
               <div
@@ -337,6 +372,9 @@ function formatNumber(value, maximumFractionDigits = 0) {
                 </div>
                 <div class="roi-print-compare-value new">
                   {{ row.newValue }}
+                </div>
+                <div class="roi-print-compare-value diff">
+                  {{ row.diffValue }}
                 </div>
               </div>
             </div>
