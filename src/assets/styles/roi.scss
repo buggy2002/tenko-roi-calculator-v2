@@ -1368,11 +1368,11 @@ input {
     position: relative;
     z-index: 2;
     display: flex;
-    align-items: center;
+    align-items: start;
     justify-content: space-between;
-    min-height: 11mm;
+    // min-height: 11mm;
     // margin-bottom: 5mm;
-    padding-bottom: 3.2mm;
+    padding-bottom: 2mm;
     border-bottom: .45mm solid rgba(226, 98, 47, .75);
     color: #2c3036;
     font-family: var(--font-mono), monospace;
@@ -2697,7 +2697,7 @@ input {
     justify-content: space-between;
     min-height: 11mm;
     // margin-bottom: 5mm;
-    padding-bottom: 3.2mm;
+    // padding-bottom: 3.2mm;
     border-bottom: .45mm solid rgba(226, 98, 47, .75);
     color: #2c3036;
     font-family: var(--font-mono), monospace;
