@@ -86,12 +86,61 @@ const comparisonRows = computed(() => [
   },
 ])
 
-const cumulativeSaving = computed(() => {
-  const oldLast = props.result.oldData.at(-1) ?? 0
-  const newLast = props.result.newData.at(-1) ?? 0
+const timeChartLabels = computed(() => [
+  props.tr.start,
+  ...Array.from({ length: props.input.years }, (_, index) => `${props.tr.year} ${index + 1}`),
+])
 
-  return oldLast - newLast
+const cumulativeInspectionTimeSaving = computed(() => {
+  const oldLast = props.result.oldTimeYear * props.input.years
+  const newLast = props.result.newTimeYear * props.input.years
+
+  return Math.max(0, oldLast - newLast)
 })
+
+const timeChartData = computed(() => ({
+  labels: timeChartLabels.value,
+  datasets: [
+    {
+      label: props.tr.oldMethod,
+      data: [0, ...Array.from({ length: props.input.years }, (_, index) => props.result.oldTimeYear * (index + 1))],
+      borderColor: '#f26a21',
+      backgroundColor: 'rgba(242,106,33,.06)',
+      pointBackgroundColor: '#f26a21',
+      pointBorderColor: '#f26a21',
+      borderWidth: 3,
+      pointRadius: 4,
+      fill: false,
+      tension: 0.32,
+    },
+    {
+      label: 'Tenko Robot',
+      data: [0, ...Array.from({ length: props.input.years }, (_, index) => props.result.newTimeYear * (index + 1))],
+      borderColor: '#12824f',
+      backgroundColor: 'rgba(18,130,79,.06)',
+      pointBackgroundColor: '#12824f',
+      pointBorderColor: '#12824f',
+      borderWidth: 3,
+      pointRadius: 4,
+      fill: false,
+      tension: 0.32,
+    },
+  ],
+}))
+
+const timeChartOptions = computed(() => ({
+  ...props.chartOptions,
+  scales: {
+    ...props.chartOptions.scales,
+    y: {
+      ...props.chartOptions.scales?.y,
+      ticks: {
+        ...props.chartOptions.scales?.y?.ticks,
+        callback: value => `${Number(value).toLocaleString(props.formatterLocale)} ${props.tr.hours}`,
+      },
+    },
+  },
+}))
 
 const detailSections = computed(() => [
   {
@@ -275,30 +324,18 @@ function formatSignedValue(value, formatter) {
           -->
 
           <!-- mock graph -->
-          <div class="roi-print-chart-card">
-            <div class="roi-print-chart-head">
+          <div class="result-panel chart-panel time-chart-panel">
+            <div class="section-head">
               <div>
-                <div class="roi-print-chart-title">
-                  {{ tr.chartTitle }} <span>({{ input.years }}-{{ tr.year }} Projection)</span>
-                </div>
-                <div class="roi-print-chart-desc">
-                  {{ tr.chartDesc }}
-                </div>
+                <h2>{{ tr.timeChartTitle }}</h2>
+                <p>{{ tr.timeChartDesc }}</p>
               </div>
             </div>
-
-            <div class="roi-print-chart-area">
-              <div class="roi-print-chartbox executive">
-                <Line
-                  :data="chartData"
-                  :options="chartOptions"
-                />
-              </div>
-              <div class="roi-print-saving-pill">
-                <small>{{ `${tr.saving} ${input.years} ${tr.year}` }}</small>
-                <strong>{{ fmt(cumulativeSaving) }}</strong>
-                <span>Total Saving</span>
-              </div>
+            <div class="chartbox">
+              <Bar
+                :data="timeCostChartData"
+                :options="timeCostChartOptions"
+              />
             </div>
           </div>
         </section>
@@ -410,30 +447,18 @@ function formatSignedValue(value, formatter) {
             </div>
           </div>
 
-          <div class="roi-print-chart-card">
-            <div class="roi-print-chart-head">
+          <div class="result-panel chart-panel">
+            <div class="section-head">
               <div>
-                <div class="roi-print-chart-title">
-                  {{ tr.chartTitle }} <span>({{ input.years }}-{{ tr.year }} Projection)</span>
-                </div>
-                <div class="roi-print-chart-desc">
-                  {{ tr.chartDesc }}
-                </div>
+                <h2>{{ tr.chartTitle }}</h2>
+                <p>{{ tr.chartDesc }}</p>
               </div>
             </div>
-
-            <div class="roi-print-chart-area">
-              <div class="roi-print-chartbox executive">
-                <Line
-                  :data="chartData"
-                  :options="chartOptions"
-                />
-              </div>
-              <div class="roi-print-saving-pill">
-                <small>{{ `${tr.saving} ${input.years} ${tr.year}` }}</small>
-                <strong>{{ fmt(cumulativeSaving) }}</strong>
-                <span>Total Saving</span>
-              </div>
+            <div class="chartbox">
+              <Line
+                :data="chartData"
+                :options="chartOptions"
+              />
             </div>
           </div>
         </section>

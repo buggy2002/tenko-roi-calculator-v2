@@ -1442,6 +1442,10 @@ input {
     
   }
 
+  .print-executive .roi-print-left-column {
+    grid-template-rows: 1fr auto;
+  }
+
   .roi-print-hero-card,
   .roi-print-scenario-card,
   .roi-print-assumption-card,
@@ -1511,7 +1515,7 @@ input {
     inset: 0;
     z-index: 1;
     width: 100%;
-    height: 100%;
+    height: 500px;
     filter: drop-shadow(0 5mm 7mm rgba(0, 0, 0, .12));
     object-fit: cover;
     object-position: center top;
@@ -3250,6 +3254,10 @@ input {
     display: grid;
     grid-template-rows: auto 1fr;
     padding: 4.2mm;
+  }
+
+  .roi-print-chart-card-bottom {
+    align-self: end;
   }
 
   .roi-print-chart-head {
