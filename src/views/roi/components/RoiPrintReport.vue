@@ -251,24 +251,54 @@ function formatSignedValue(value, formatter) {
             </div> 
           -->
 
-          <div class="roi-print-assumption-card">
+          <!--
+            <div class="roi-print-assumption-card">
             <div class="roi-print-section-head">
-              {{ tr.assumptions }}
+            {{ tr.assumptions }}
             </div>
 
             <div class="roi-print-assumption-list">
-              <div
-                v-for="item in assumptionItems"
-                :key="item.label"
-                class="roi-print-assumption-row"
-              >
-                <span>{{ item.label }}</span>
-                <strong>{{ item.value }}</strong>
-              </div>
+            <div
+            v-for="item in assumptionItems"
+            :key="item.label"
+            class="roi-print-assumption-row"
+            >
+            <span>{{ item.label }}</span>
+            <strong>{{ item.value }}</strong>
+            </div>
             </div>
 
             <div class="roi-print-assumption-foot">
-              {{ tr.autoOtHint }}
+            {{ tr.autoOtHint }}
+            </div>
+            </div> 
+          -->
+
+          <!-- mock graph -->
+          <div class="roi-print-chart-card">
+            <div class="roi-print-chart-head">
+              <div>
+                <div class="roi-print-chart-title">
+                  {{ tr.chartTitle }} <span>({{ input.years }}-{{ tr.year }} Projection)</span>
+                </div>
+                <div class="roi-print-chart-desc">
+                  {{ tr.chartDesc }}
+                </div>
+              </div>
+            </div>
+
+            <div class="roi-print-chart-area">
+              <div class="roi-print-chartbox executive">
+                <Line
+                  :data="chartData"
+                  :options="chartOptions"
+                />
+              </div>
+              <div class="roi-print-saving-pill">
+                <small>{{ `${tr.saving} ${input.years} ${tr.year}` }}</small>
+                <strong>{{ fmt(cumulativeSaving) }}</strong>
+                <span>Total Saving</span>
+              </div>
             </div>
           </div>
         </section>
@@ -409,20 +439,22 @@ function formatSignedValue(value, formatter) {
         </section>
       </div>
 
-      <div class="roi-print-footer-strip">
+      <!--
+        <div class="roi-print-footer-strip">
         <div class="roi-print-footer-summary">
-          <div class="roi-print-footer-icon">
-            ↗
-          </div>
-          <div class="roi-print-footer-copy">
-            <strong>{{ tr.printConclusionLine }}</strong>
-          </div>
+        <div class="roi-print-footer-icon">
+        ↗
+        </div>
+        <div class="roi-print-footer-copy">
+        <strong>{{ tr.printConclusionLine }}</strong>
+        </div>
         </div>
 
         <div class="roi-print-footer-note">
-          {{ tr.disclaimer }}
+        {{ tr.disclaimer }}
         </div>
-      </div>
+        </div> 
+      -->
     </div>
 
     <div class="print-page print-details">
