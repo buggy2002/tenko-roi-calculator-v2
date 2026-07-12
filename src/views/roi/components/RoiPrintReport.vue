@@ -6,7 +6,7 @@ import moneyIcon from '@images/roi/money.png'
 import robotImage from '@images/roi/tenko-robot-main.png'
 import targetIcon from '@images/roi/target.png'
 import timeIcon from '@images/roi/time.png'
-import { Line } from 'vue-chartjs'
+import { Bar, Line } from 'vue-chartjs'
 import statsIcon from '@images/roi/growth-graph-white.png'
 
 const props = defineProps({
@@ -86,57 +86,70 @@ const comparisonRows = computed(() => [
   },
 ])
 
-const timeChartLabels = computed(() => [
-  props.tr.start,
-  ...Array.from({ length: props.input.years }, (_, index) => `${props.tr.year} ${index + 1}`),
-])
-
-const cumulativeInspectionTimeSaving = computed(() => {
-  const oldLast = props.result.oldTimeYear * props.input.years
-  const newLast = props.result.newTimeYear * props.input.years
-
-  return Math.max(0, oldLast - newLast)
-})
-
-const timeChartData = computed(() => ({
-  labels: timeChartLabels.value,
+const timeCostChartData = computed(() => ({
+  labels: [props.tr.timeChartAnnual],
   datasets: [
     {
       label: props.tr.oldMethod,
-      data: [0, ...Array.from({ length: props.input.years }, (_, index) => props.result.oldTimeYear * (index + 1))],
-      borderColor: '#f26a21',
-      backgroundColor: 'rgba(242,106,33,.06)',
-      pointBackgroundColor: '#f26a21',
-      pointBorderColor: '#f26a21',
-      borderWidth: 3,
-      pointRadius: 4,
-      fill: false,
-      tension: 0.32,
+      data: [props.result.oldTimeYear],
+      backgroundColor: 'rgba(184,60,50,.88)',
+      borderColor: '#b83c32',
+      borderWidth: 1,
+      borderRadius: 10,
+      borderSkipped: false,
     },
     {
       label: 'Tenko Robot',
-      data: [0, ...Array.from({ length: props.input.years }, (_, index) => props.result.newTimeYear * (index + 1))],
-      borderColor: '#12824f',
-      backgroundColor: 'rgba(18,130,79,.06)',
-      pointBackgroundColor: '#12824f',
-      pointBorderColor: '#12824f',
-      borderWidth: 3,
-      pointRadius: 4,
-      fill: false,
-      tension: 0.32,
+      data: [props.result.newTimeYear],
+      backgroundColor: 'rgba(21,130,78,.88)',
+      borderColor: '#15824e',
+      borderWidth: 1,
+      borderRadius: 10,
+      borderSkipped: false,
     },
   ],
 }))
 
-const timeChartOptions = computed(() => ({
-  ...props.chartOptions,
+const timeCostChartOptions = computed(() => ({
+  responsive: true,
+  maintainAspectRatio: false,
+  animation: false,
+  devicePixelRatio: 2,
+  interaction: { mode: 'index', intersect: false },
+  plugins: {
+    tooltip: { enabled: false },
+    legend: {
+      position: 'top',
+      align: 'center',
+      labels: {
+        boxWidth: 10,
+        boxHeight: 10,
+        usePointStyle: true,
+        pointStyle: 'circle',
+        color: '#202228',
+        font: {
+          size: 10,
+          weight: '700',
+        },
+      },
+    },
+  },
   scales: {
-    ...props.chartOptions.scales,
-    y: {
-      ...props.chartOptions.scales?.y,
+    x: {
+      grid: { display: false },
       ticks: {
-        ...props.chartOptions.scales?.y?.ticks,
-        callback: value => `${Number(value).toLocaleString(props.formatterLocale)} ${props.tr.hours}`,
+        color: '#555',
+        font: { size: 10, weight: '700' },
+      },
+    },
+    y: {
+      beginAtZero: true,
+      grid: { color: 'rgba(0,0,0,.05)' },
+      ticks: {
+        color: '#555',
+        font: { size: 10, weight: '700' },
+        callback: value =>
+          `${Number(value).toLocaleString(props.formatterLocale, { maximumFractionDigits: 0 })} ${props.tr.hours}`,
       },
     },
   },
@@ -322,22 +335,6 @@ function formatSignedValue(value, formatter) {
             </div>
             </div> 
           -->
-
-          <!-- mock graph -->
-          <div class="result-panel chart-panel time-chart-panel">
-            <div class="section-head">
-              <div>
-                <h2>{{ tr.timeChartTitle }}</h2>
-                <p>{{ tr.timeChartDesc }}</p>
-              </div>
-            </div>
-            <div class="chartbox">
-              <Bar
-                :data="timeCostChartData"
-                :options="timeCostChartOptions"
-              />
-            </div>
-          </div>
         </section>
 
         <section class="roi-print-right-column roi-print-right-column-content">
@@ -446,23 +443,40 @@ function formatSignedValue(value, formatter) {
               </div>
             </div>
           </div>
-
-          <div class="result-panel chart-panel">
-            <div class="section-head">
-              <div>
-                <h2>{{ tr.chartTitle }}</h2>
-                <p>{{ tr.chartDesc }}</p>
-              </div>
-            </div>
-            <div class="chartbox">
-              <Line
-                :data="chartData"
-                :options="chartOptions"
-              />
-            </div>
-          </div>
         </section>
       </div>
+
+      <section class="roi-print-chart-grid executive">
+        <div class="result-panel chart-panel time-chart-panel">
+          <div class="section-head">
+            <div>
+              <h2>{{ tr.timeChartTitle }}</h2>
+              <p>{{ tr.timeChartDesc }}</p>
+            </div>
+          </div>
+          <div class="chartbox">
+            <Bar
+              :data="timeCostChartData"
+              :options="timeCostChartOptions"
+            />
+          </div>
+        </div>
+
+        <div class="result-panel chart-panel">
+          <div class="section-head">
+            <div>
+              <h2>{{ tr.chartTitle }}</h2>
+              <p>{{ tr.chartDesc }}</p>
+            </div>
+          </div>
+          <div class="chartbox">
+            <Line
+              :data="chartData"
+              :options="chartOptions"
+            />
+          </div>
+        </div>
+      </section>
 
       <!--
         <div class="roi-print-footer-strip">

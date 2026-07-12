@@ -1446,6 +1446,28 @@ input {
     grid-template-rows: 1fr auto;
   }
 
+  .print-executive .roi-print-body-grid {
+    min-height: 155mm;
+  }
+
+  .roi-print-chart-grid.executive {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 4mm;
+    margin-top: 4mm;
+  }
+
+  .roi-print-chart-grid.executive .result-panel {
+    min-width: 0;
+    padding: 4mm;
+  }
+
+  .roi-print-chart-grid.executive .chartbox {
+    height: 62mm;
+  }
+
   .roi-print-hero-card,
   .roi-print-scenario-card,
   .roi-print-assumption-card,
@@ -2261,6 +2283,15 @@ input {
   display: block;
 }
 
+.roi-print-preparing {
+  position: fixed;
+  top: 0;
+  left: -240mm;
+  width: 210mm;
+  visibility: hidden;
+  pointer-events: none;
+}
+
 .roi-print-preview-toolbar {
   position: sticky;
   top: 0;
@@ -2674,6 +2705,12 @@ input {
     color: var(--ink);
   }
 
+  .roi-print-route-preview {
+    min-height: 0;
+    padding: 0;
+    background: transparent;
+  }
+
   .print-page {
     position: relative;
     overflow: hidden;
@@ -2774,6 +2811,28 @@ input {
     display: grid;
     gap: 4mm;
     align-content: start;
+  }
+
+  .print-executive .roi-print-body-grid {
+    min-height: 155mm;
+  }
+
+  .roi-print-chart-grid.executive {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 4mm;
+    margin-top: 4mm;
+  }
+
+  .roi-print-chart-grid.executive .result-panel {
+    min-width: 0;
+    padding: 4mm;
+  }
+
+  .roi-print-chart-grid.executive .chartbox {
+    height: 62mm;
   }
 
   .roi-print-hero-card,
@@ -2964,7 +3023,8 @@ input {
   .roi-print-summary-banner {
     position: relative;
     // min-height: 47mm;
-    padding: 5mm 6mm 5mm;
+    contain: content;
+    // padding: 3mm 4mm 3mm;
     overflow: hidden;
     border-radius: 2.4mm;
     color: #fff;
@@ -2996,18 +3056,19 @@ input {
   .roi-print-summary-main {
     display: grid;
     grid-template-columns: 14mm 1fr;
-    gap: 1.5mm;
-    align-items: center;
-    margin-top: 5mm;
+    gap: 3mm;
+    margin-top: 4mm;
+    margin-bottom: 4mm;
+    margin-left: 8mm;
   }
 
   .roi-print-summary-mark {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 18mm;
-    height: 18mm;
-    border: 1.1mm solid rgba(115, 233, 126, .9);
+    width: 12mm;
+    height: 12mm;
+    border: 1.5mm solid rgba(115, 233, 126, .9);
     border-radius: 50%;
     color: #73e97e;
     font-size: 8mm;
@@ -3045,9 +3106,9 @@ input {
 
   .roi-print-summary-graphic-image {
     display: block;
-    width: 120mm;
+    width: 90%;
     height: auto;
-    // object-fit: contain;
+    object-fit: contain;
     object-position: right bottom;
   }
 
@@ -3105,7 +3166,7 @@ input {
     grid-template-columns: 13mm 1fr;
     gap: 3mm;
     align-items: start;
-    min-height: 31mm;
+    // min-height: 31mm;
     padding: 4.2mm;
   }
 

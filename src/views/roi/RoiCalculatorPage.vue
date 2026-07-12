@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import {
   BarElement,
   CategoryScale,
@@ -13,16 +13,18 @@ import {
 } from 'chart.js'
 import { Bar, Line } from 'vue-chartjs'
 import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
 import RoiNavbar from './components/RoiNavbar.vue'
-import RoiPrintReport from './components/RoiPrintReport.vue'
 import RoiScenarioBrowser from './components/RoiScenarioBrowser.vue'
 import { uiFactorChoices, uiGroups } from '../../utils/roi/ui-copy'
 import { getFieldTooltip } from '../../utils/roi/ui-help-copy'
 import { useRoiStore } from '@/stores/roi.js'
+import { writeRoiPrintSnapshot } from '@/utils/roi/print-snapshot'
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, PointElement, LineElement, Filler, ChartTooltip, Legend)
 
 const store = useRoiStore()
+const router = useRouter()
 const { t, locale } = useI18n({ useScope: 'global' })
 const isFullWidth = ref(true)
 const isSaveDialogVisible = ref(false)
@@ -235,9 +237,6 @@ const fmt = value => `${currencySymbol}${Math.round(value).toLocaleString(format
 const fmt1 = value =>
   `${currencySymbol}${Number(value || 0).toLocaleString(formatterLocale.value, { minimumFractionDigits: 1, maximumFractionDigits: 1 })}`
 
-const fmtPercent = value =>
-  `${Number(value || 0).toLocaleString(formatterLocale.value, { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%`
-
 const hrs = (value, rounded = false) =>
   `${(rounded ? Math.round(value) : value).toLocaleString(formatterLocale.value, { maximumFractionDigits: rounded ? 0 : 1 })} ${tr.value.hours}`
 
@@ -320,80 +319,6 @@ const chartOptions = computed(() => ({
   },
 }))
 
-const printChartData = computed(() => ({
-  labels: chartLabels.value,
-  datasets: [
-    {
-      label: tr.value.oldMethod,
-      data: store.result.oldData,
-      borderColor: '#f26a21',
-      backgroundColor: 'rgba(242,106,33,.06)',
-      pointBackgroundColor: '#f26a21',
-      pointBorderColor: '#f26a21',
-      borderWidth: 3,
-      pointRadius: 4,
-      fill: false,
-      tension: 0.32,
-    },
-    {
-      label: 'Tenko Robot',
-      data: store.result.newData,
-      borderColor: '#12824f',
-      backgroundColor: 'rgba(18,130,79,.06)',
-      pointBackgroundColor: '#12824f',
-      pointBorderColor: '#12824f',
-      borderWidth: 3,
-      pointRadius: 4,
-      fill: false,
-      tension: 0.32,
-    },
-  ],
-}))
-
-const printChartOptions = computed(() => ({
-  responsive: true,
-  maintainAspectRatio: false,
-  animation: false,
-  devicePixelRatio: 2,
-  interaction: { mode: 'index', intersect: false },
-  plugins: {
-    tooltip: { enabled: false },
-    legend: {
-      position: 'top',
-      align: 'start',
-      labels: {
-        boxWidth: 10,
-        boxHeight: 10,
-        usePointStyle: true,
-        pointStyle: 'circle',
-        color: '#202228',
-        font: {
-          size: 10,
-          weight: '700',
-        },
-      },
-    },
-  },
-  scales: {
-    x: {
-      grid: { color: 'rgba(0,0,0,.04)' },
-      ticks: {
-        color: '#555',
-        font: { size: 10, weight: '700' },
-      },
-    },
-    y: {
-      beginAtZero: true,
-      grid: { color: 'rgba(0,0,0,.07)' },
-      ticks: {
-        color: '#555',
-        font: { size: 10, weight: '700' },
-        callback: value => `${currencySymbol}${Number(value).toLocaleString(formatterLocale.value)}`,
-      },
-    },
-  },
-}))
-
 const timeCostChartOptions = computed(() => ({
   responsive: true,
   maintainAspectRatio: false,
@@ -446,41 +371,6 @@ const metricCards = computed(() => [
     value: store.result.isWorth ? tr.value.worthGood : tr.value.worthBad,
     mini: store.result.isWorth ? tr.value.worthGoodNote : tr.value.worthBadNote,
     tone: store.result.isWorth ? 'green' : 'red',
-  },
-])
-
-const printMetrics = computed(() => [
-  {
-    icon: 'S',
-    title: tr.value.saving,
-    value: fmt(store.result.annualSave),
-    note: `${fmt(store.result.oldGrand)} -> ${fmt(store.result.newGrand)}`,
-    tone: 'green',
-    accent: false,
-  },
-  {
-    icon: 'T',
-    title: tr.value.timeSaving,
-    value: hrs(store.result.timeSaveYear, true),
-    note: `${hrs(store.result.oldTimeYear, true)} -> ${hrs(store.result.newTimeYear, true)}`,
-    tone: 'orange',
-    accent: true,
-  },
-  {
-    icon: 'P',
-    title: tr.value.prodSaving,
-    value: fmt(store.result.prodSave),
-    note: `${fmt(store.result.oldProd)} -> ${fmt(store.result.newProd)}`,
-    tone: 'green',
-    accent: false,
-  },
-  {
-    icon: 'R',
-    title: tr.value.roiFromTotal,
-    value: fmtPercent(store.result.roi),
-    note: 'Total Saving',
-    tone: 'orange',
-    accent: false,
   },
 ])
 
@@ -572,8 +462,47 @@ function onDuplicateScenario(scenario) {
   showNotice(scenarioText.value.duplicateSuccess)
 }
 
+let printFrame = null
+
+onBeforeUnmount(() => {
+  printFrame?.remove()
+  printFrame = null
+})
+
 function onPrint() {
-  window.print()
+  writeRoiPrintSnapshot({
+    input: store.input,
+    language: store.language,
+    scenarioName: store.scenarioName,
+    customerName: store.customerName,
+    scenarioNotes: store.scenarioNotes,
+  })
+
+  printFrame?.remove()
+
+  const { href } = router.resolve('/roi-report-print')
+  const iframe = document.createElement('iframe')
+
+  // ต้องมีขนาดจริงเพื่อให้ layout/chart ข้างในคำนวณถูก แค่ย้ายออกนอกจอแทนการ display:none
+  iframe.style.position = 'absolute'
+  iframe.style.left = '-10000px'
+  iframe.style.top = '0'
+  iframe.style.width = '1120px'
+  iframe.style.height = '1584px'
+  iframe.style.border = '0'
+  iframe.setAttribute('aria-hidden', 'true')
+  iframe.src = href
+
+  iframe.addEventListener('load', () => {
+    iframe.contentWindow?.addEventListener('afterprint', () => {
+      iframe.remove()
+      if (printFrame === iframe)
+        printFrame = null
+    })
+  })
+
+  printFrame = iframe
+  document.body.appendChild(iframe)
 }
 
 watch(() => store.language, value => {
@@ -1079,24 +1008,6 @@ onMounted(async () => {
         </VCardActions>
       </VCard>
     </VDialog>
-
-    <RoiPrintReport
-      :chart-data="printChartData"
-      :chart-options="printChartOptions"
-      :customer-name="store.customerName"
-      :fmt="fmt"
-      :fmt1="fmt1"
-      :formatter-locale="formatterLocale"
-      :hrs="hrs"
-      :input="store.input"
-      :labels="labels"
-      :mins="mins"
-      :print-metrics="printMetrics"
-      :result="store.result"
-      :scenario-name="store.scenarioName"
-      :scenario-notes="store.scenarioNotes"
-      :tr="tr"
-    />
 
     <VSnackbar
       v-model="snackbar.show"

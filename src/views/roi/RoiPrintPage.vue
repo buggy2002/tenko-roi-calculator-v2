@@ -1,6 +1,7 @@
 <script setup>
 import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import {
+  BarElement,
   CategoryScale,
   Chart as ChartJS,
   Filler,
@@ -21,7 +22,7 @@ const props = defineProps({
   previewMode: { type: Boolean, default: false },
 })
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Filler, ChartTooltip, Legend)
+ChartJS.register(BarElement, CategoryScale, LinearScale, PointElement, LineElement, Filler, ChartTooltip, Legend)
 
 const { t, locale } = useI18n({ useScope: 'global' })
 
@@ -75,8 +76,13 @@ const roiTextKeys = [
   'costPerMin',
   'timeSaveDay',
   'roiFromTotal',
+  'diffColumn',
   'chartTitle',
   'chartDesc',
+  'timeChartTitle',
+  'timeChartDesc',
+  'timeChartAnnual',
+  'timeChartSaved',
   'start',
   'year',
   'hours',
@@ -332,10 +338,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <main
-    class="roi-print-route"
-    :class="[previewMode && 'roi-print-route-preview']"
-  >
+  <main class="roi-print-route roi-print-route-preview">
     <div
       v-if="previewMode"
       class="roi-print-preview-toolbar"
