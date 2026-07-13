@@ -2482,7 +2482,7 @@ input {
   .print-details .roi-print-note {
     left: 13mm;
     right: 13mm;
-    bottom: 49.5mm;
+    bottom: 33mm;
     padding: 0;
     font-size: 7.2px;
     line-height: 1.15;
@@ -2501,7 +2501,7 @@ input {
     left: 12mm;
     right: 12mm;
     bottom: 10mm;
-    height: 40mm;
+    height: 21mm;
     overflow: visible;
   }
 
@@ -2518,7 +2518,10 @@ input {
 
   .print-details .roi-print-benefit-strip {
     position: relative;
-    display: block;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(0, 1.9fr);
+    grid-template-rows: 1fr;
+    column-gap: 1.8mm;
     overflow: visible;
     border: 0;
     border-radius: 0;
@@ -2541,31 +2544,26 @@ input {
   }
 
   .print-details .roi-print-benefit-item {
-    position: absolute;
-    top: 1mm;
-    width: 20%;
-    height: 34mm;
-    display: block;
-    padding: 4mm 1.8mm 0;
-    text-align: center;
+    position: static;
+    width: auto;
+    height: auto;
+    display: grid;
+    grid-template-columns: 9mm 1fr;
+    column-gap: 2.8mm;
+    align-items: center;
+    align-content: center;
+    min-width: 0;
+    padding: 2.2mm 3.1mm;
+    text-align: left;
     overflow: hidden;
-    border-top: 0;
-    border-bottom: 0;
-    border-left: 0;
-    border-right: .2mm solid #deded9;
-  }
-
-  .print-details .roi-print-benefit-strip > .roi-print-benefit-item:nth-child(1) {
-    left: 0;
-  }
-
-  .print-details .roi-print-benefit-strip > .roi-print-benefit-item:nth-child(2) {
-    left: 20%;
+    border: .32mm solid #e7e2d9;
+    border-radius: 2.6mm;
+    background: #fff;
+    box-shadow: 0 1.5mm 5mm rgba(15, 23, 42, .05);
   }
 
   .print-details .roi-print-benefit-strip > .roi-print-benefit-item:nth-child(3) {
-    left: 40%;
-    border-right: 0;
+    border-right: .32mm solid #e7e2d9;
   }
 
   .roi-print-benefit-icon {
@@ -2590,12 +2588,13 @@ input {
   }
 
   .print-details .roi-print-benefit-icon {
+    grid-row: span 2;
     width: 9mm;
     height: 9mm;
-    margin: 0 auto 2.2mm;
-    border: .3mm solid var(--orange);
+    margin: 0;
+    border: .3mm solid #eee6da;
     background: #fff;
-    font-size: 4.8mm;
+    font-size: 4.4mm;
     line-height: 1;
   }
 
@@ -2613,11 +2612,11 @@ input {
   }
 
   .print-details .roi-print-benefit-item b {
-    font-size: 6.8px;
-    line-height: 1.15;
-    text-align: center;
+    font-size: 6.9px;
+    line-height: 1.08;
+    text-align: left;
     text-transform: uppercase;
-    letter-spacing: .01em;
+    letter-spacing: .02em;
   }
 
   .roi-print-benefit-item span {
@@ -2630,10 +2629,10 @@ input {
   }
 
   .print-details .roi-print-benefit-item span {
-    margin-top: 1.6mm;
-    font-size: 5.9px;
-    line-height: 1.2;
-    text-align: center;
+    margin-top: .55mm;
+    font-size: 5.8px;
+    line-height: 1.16;
+    text-align: left;
   }
 
   .roi-print-conclusion {
@@ -2646,14 +2645,25 @@ input {
   }
 
   .print-details .roi-print-conclusion {
-    position: absolute;
-    inset: 1mm 0 auto 60%;
-    height: 34mm;
+    position: static;
+    grid-column: 4;
+    grid-row: 1;
+    display: grid;
+    grid-template-columns: 11mm 1fr;
+    column-gap: 3.2mm;
+    align-items: center;
+    height: auto;
     min-width: 0;
-    padding: 6.2mm 8mm 5.5mm 20mm;
-    border-radius: 4mm;
-    background: linear-gradient(135deg, #5d6065 0%, #25282d 100%);
+    padding: 2.2mm 4.2mm;
+    border-radius: 2.6mm;
+    background: linear-gradient(135deg, #2a2d36 0%, #14161d 100%);
     box-shadow: none;
+  }
+
+  .print-details .roi-print-conclusion::before {
+    inset: 2mm auto 2mm 15.6mm;
+    width: .3mm;
+    background: rgba(255, 255, 255, .14);
   }
 
   .roi-print-conclusion::before {
@@ -2680,11 +2690,10 @@ input {
   }
 
   .print-details .trophy {
-    top: 10mm;
-    left: 6mm;
-    width: 10.5mm;
-    height: 10.5mm;
-    font-size: 10.5mm;
+    position: static;
+    width: 10.6mm;
+    height: 10.6mm;
+    font-size: 10mm;
     z-index: 2;
   }
 
@@ -2702,8 +2711,8 @@ input {
   }
 
   .print-details .roi-print-conclusion b {
-    margin-bottom: 1.2mm;
-    font-size: 10.4px;
+    margin-bottom: .7mm;
+    font-size: 9.5px;
     line-height: 1.02;
   }
 
@@ -2716,7 +2725,8 @@ input {
 
   .print-details .roi-print-conclusion span {
     max-width: none;
-    line-height: 1.22;
+    font-size: 6.8px;
+    line-height: 1.2;
   }
 
   .roi-print-conclusion-sub {
@@ -2725,7 +2735,7 @@ input {
   }
 
   .print-details .roi-print-conclusion-sub {
-    margin-top: 1.5mm;
+    margin-top: 1mm;
   }
 }
 
@@ -4189,7 +4199,7 @@ input {
   .print-details .roi-print-note {
     left: 13mm;
     right: 13mm;
-    bottom: 49.5mm;
+    bottom: 33mm;
     padding: 0;
     font-size: 7.2px;
     line-height: 1.15;
@@ -4208,7 +4218,7 @@ input {
     left: 12mm;
     right: 12mm;
     bottom: 10mm;
-    height: 40mm;
+    height: 21mm;
     overflow: visible;
   }
 
@@ -4225,7 +4235,10 @@ input {
 
   .print-details .roi-print-benefit-strip {
     position: relative;
-    display: block;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(0, 1.9fr);
+    grid-template-rows: 1fr;
+    column-gap: 1.8mm;
     overflow: visible;
     border: 0;
     border-radius: 0;
@@ -4248,31 +4261,26 @@ input {
   }
 
   .print-details .roi-print-benefit-item {
-    position: absolute;
-    top: 1mm;
-    width: 20%;
-    height: 34mm;
-    display: block;
-    padding: 4mm 1.8mm 0;
-    text-align: center;
+    position: static;
+    width: auto;
+    height: auto;
+    display: grid;
+    grid-template-columns: 9mm 1fr;
+    column-gap: 2.8mm;
+    align-items: center;
+    align-content: center;
+    min-width: 0;
+    padding: 2.2mm 3.1mm;
+    text-align: left;
     overflow: hidden;
-    border-top: 0;
-    border-bottom: 0;
-    border-left: 0;
-    border-right: .2mm solid #deded9;
-  }
-
-  .print-details .roi-print-benefit-strip > .roi-print-benefit-item:nth-child(1) {
-    left: 0;
-  }
-
-  .print-details .roi-print-benefit-strip > .roi-print-benefit-item:nth-child(2) {
-    left: 20%;
+    border: .32mm solid #e7e2d9;
+    border-radius: 2.6mm;
+    background: #fff;
+    box-shadow: 0 1.5mm 5mm rgba(15, 23, 42, .05);
   }
 
   .print-details .roi-print-benefit-strip > .roi-print-benefit-item:nth-child(3) {
-    left: 40%;
-    border-right: 0;
+    border-right: .32mm solid #e7e2d9;
   }
 
   .roi-print-benefit-icon {
@@ -4297,12 +4305,13 @@ input {
   }
 
   .print-details .roi-print-benefit-icon {
+    grid-row: span 2;
     width: 9mm;
     height: 9mm;
-    margin: 0 auto 2.2mm;
-    border: .3mm solid var(--orange);
+    margin: 0;
+    border: .3mm solid #eee6da;
     background: #fff;
-    font-size: 4.8mm;
+    font-size: 4.4mm;
     line-height: 1;
   }
 
@@ -4320,11 +4329,11 @@ input {
   }
 
   .print-details .roi-print-benefit-item b {
-    font-size: 6.8px;
-    line-height: 1.15;
-    text-align: center;
+    font-size: 6.9px;
+    line-height: 1.08;
+    text-align: left;
     text-transform: uppercase;
-    letter-spacing: .01em;
+    letter-spacing: .02em;
   }
 
   .roi-print-benefit-item span {
@@ -4337,10 +4346,10 @@ input {
   }
 
   .print-details .roi-print-benefit-item span {
-    margin-top: 1.6mm;
-    font-size: 5.9px;
-    line-height: 1.2;
-    text-align: center;
+    margin-top: .55mm;
+    font-size: 5.8px;
+    line-height: 1.16;
+    text-align: left;
   }
 
   .roi-print-conclusion {
@@ -4353,14 +4362,25 @@ input {
   }
 
   .print-details .roi-print-conclusion {
-    position: absolute;
-    inset: 1mm 0 auto 60%;
-    height: 34mm;
+    position: static;
+    grid-column: 4;
+    grid-row: 1;
+    display: grid;
+    grid-template-columns: 11mm 1fr;
+    column-gap: 3.2mm;
+    align-items: center;
+    height: auto;
     min-width: 0;
-    padding: 6.2mm 8mm 5.5mm 20mm;
-    border-radius: 4mm;
-    background: linear-gradient(135deg, #5d6065 0%, #25282d 100%);
+    padding: 2.2mm 4.2mm;
+    border-radius: 2.6mm;
+    background: linear-gradient(135deg, #2a2d36 0%, #14161d 100%);
     box-shadow: none;
+  }
+
+  .print-details .roi-print-conclusion::before {
+    inset: 2mm auto 2mm 15.6mm;
+    width: .3mm;
+    background: rgba(255, 255, 255, .14);
   }
 
   .roi-print-conclusion::before {
@@ -4387,11 +4407,10 @@ input {
   }
 
   .print-details .trophy {
-    top: 10mm;
-    left: 6mm;
-    width: 10.5mm;
-    height: 10.5mm;
-    font-size: 10.5mm;
+    position: static;
+    width: 10.6mm;
+    height: 10.6mm;
+    font-size: 10mm;
     z-index: 2;
   }
 
@@ -4409,8 +4428,8 @@ input {
   }
 
   .print-details .roi-print-conclusion b {
-    margin-bottom: 1.2mm;
-    font-size: 10.4px;
+    margin-bottom: .7mm;
+    font-size: 9.5px;
     line-height: 1.02;
   }
 
@@ -4423,7 +4442,8 @@ input {
 
   .print-details .roi-print-conclusion span {
     max-width: none;
-    line-height: 1.22;
+    font-size: 6.8px;
+    line-height: 1.2;
   }
 
   .roi-print-conclusion-sub {
@@ -4432,7 +4452,7 @@ input {
   }
 
   .print-details .roi-print-conclusion-sub {
-    margin-top: 1.5mm;
+    margin-top: 1mm;
   }
 }
 

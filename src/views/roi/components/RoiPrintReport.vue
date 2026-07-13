@@ -640,7 +640,6 @@ function formatSignedValue(value, formatter) {
           Productivity Loss = employees x inspection days x inspection time x {{ fmt1(result.costPerMin) }}/{{ tr.min }}
         </span>
       </div>
-
       <div class="roi-print-benefit-wrap">
         <div class="roi-print-benefit-strip">
           <div
