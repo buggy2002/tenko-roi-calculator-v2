@@ -74,30 +74,72 @@ const assumptionItems = computed(() => [
   { label: props.labels.otHoursPerDay, value: props.hrs(props.input.otHoursPerDay, false) },
 ])
 
+// ข้อความตาราง Cost Breakdown เฉพาะหน้า print — ไม่ใช้ tr ร่วมกับหน้าจอหลัก
+// เพราะหน้าจอหลักต้องคงข้อความตรงกับไฟล์ต้นฉบับอ้างอิง
+const compareCopy = computed(() => {
+  const copy = {
+    th: {
+      item: 'รายการ',
+      old: 'แบบเดิม',
+      savings: 'ประหยัดได้',
+      operating: 'ต้นทุนดำเนินงาน',
+      time: 'เวลาตรวจสอบ',
+      prodLoss: 'Productivity Loss',
+      total: 'ต้นทุนรวม',
+    },
+    en: {
+      item: 'Item',
+      old: 'Conventional',
+      savings: 'Savings',
+      operating: 'Operating Cost',
+      time: 'Inspection Time',
+      prodLoss: 'Productivity Loss',
+      total: 'Total Cost',
+    },
+    ja: {
+      item: '項目',
+      old: '従来方式',
+      savings: '削減効果',
+      operating: '運用コスト',
+      time: '検査時間',
+      prodLoss: '生産性損失',
+      total: '総コスト',
+    },
+  }
+
+  return copy[locale.value] ?? copy.th
+})
+
+const diffTone = value => (value < 0 ? 'loss' : 'gain')
+
 const comparisonRows = computed(() => [
   {
-    label: props.tr.annualCost,
+    label: compareCopy.value.operating,
     oldValue: props.fmt(props.result.oldTotal),
     newValue: props.fmt(props.result.newTotal),
     diffValue: formatSignedValue(props.result.oldTotal - props.result.newTotal, props.fmt),
+    diffTone: diffTone(props.result.oldTotal - props.result.newTotal),
   },
   {
-    label: props.tr.annualTime,
+    label: compareCopy.value.time,
     oldValue: props.hrs(props.result.oldTimeYear),
     newValue: props.hrs(props.result.newTimeYear),
     diffValue: formatSignedValue(props.result.oldTimeYear - props.result.newTimeYear, props.hrs),
+    diffTone: diffTone(props.result.oldTimeYear - props.result.newTimeYear),
   },
   {
-    label: props.tr.prodLoss,
+    label: compareCopy.value.prodLoss,
     oldValue: props.fmt(props.result.oldProd),
     newValue: props.fmt(props.result.newProd),
     diffValue: formatSignedValue(props.result.oldProd - props.result.newProd, props.fmt),
+    diffTone: diffTone(props.result.oldProd - props.result.newProd),
   },
   {
-    label: props.tr.totalCost,
+    label: compareCopy.value.total,
     oldValue: props.fmt(props.result.oldGrand),
     newValue: props.fmt(props.result.newGrand),
     diffValue: formatSignedValue(props.result.oldGrand - props.result.newGrand, props.fmt),
+    diffTone: diffTone(props.result.oldGrand - props.result.newGrand),
     total: true,
   },
 ])
@@ -252,7 +294,7 @@ function formatNumber(value, maximumFractionDigits = 0) {
 
 function formatSignedValue(value, formatter) {
   const amount = Number(value || 0)
-  const sign = amount > 0 ? '+' : amount < 0 ? '-' : ''
+  const sign = amount < 0 ? '-' : ''
 
   return `${sign}${formatter(Math.abs(amount))}`
 }
@@ -435,15 +477,17 @@ function formatSignedValue(value, formatter) {
 
             <div class="roi-print-compare-table">
               <div class="roi-print-compare-toprow">
-                <div />
+                <div class="item">
+                  {{ compareCopy.item }}
+                </div>
                 <div class="old">
-                  {{ tr.oldMethod }}
+                  {{ compareCopy.old }}
                 </div>
                 <div class="new">
                   Tenko Robot
                 </div>
                 <div class="diff">
-                  {{ tr.diffColumn || 'Difference' }}
+                  {{ compareCopy.savings }}
                 </div>
               </div>
 
@@ -462,7 +506,10 @@ function formatSignedValue(value, formatter) {
                 <div class="roi-print-compare-value new">
                   {{ row.newValue }}
                 </div>
-                <div class="roi-print-compare-value diff">
+                <div
+                  class="roi-print-compare-value diff"
+                  :class="[row.diffTone]"
+                >
                   {{ row.diffValue }}
                 </div>
               </div>
@@ -586,7 +633,7 @@ function formatSignedValue(value, formatter) {
       </div>
 
       <div class="roi-print-note">
-        <span>{{ tr.disclaimer }}</span>
+        <!-- <span>{{ tr.disclaimer }}</span> -->
         <span v-if="customerName">{{ scenarioText.customerName }}: {{ customerName }}</span>
         <span v-if="scenarioNotes">{{ scenarioText.notes }}: {{ scenarioNotes }}</span>
         <span>

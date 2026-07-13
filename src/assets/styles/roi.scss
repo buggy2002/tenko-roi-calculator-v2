@@ -2087,9 +2087,10 @@ input {
     gap: 4mm;
     min-height: 12mm;
     padding: 3mm 4mm;
-    background: linear-gradient(90deg, #313236, #17181c);
-    color: #fff;
-    font-size: 9px;
+    border-bottom: .3mm solid #e8e3da;
+    background: linear-gradient(180deg, #fff, #f8f8f6);
+    color: #17191e;
+    font-size: 10.5px;
     font-weight: 800;
   }
 
@@ -2118,8 +2119,14 @@ input {
 
   .roi-print-compare-toprow {
     background: linear-gradient(180deg, rgba(255,255,255,.98), rgba(248,248,245,.96));
-    font-size: 8.2px;
+    font-size: 9.5px;
     font-weight: 900;
+  }
+
+  .roi-print-compare-toprow .item {
+    color: #6b6f76;
+    letter-spacing: .06em;
+    text-transform: uppercase;
   }
 
   .roi-print-compare-toprow .old {
@@ -2133,18 +2140,38 @@ input {
   }
 
   .roi-print-compare-toprow .diff {
-    color: #2f7ef7;
+    color: #17191e;
     text-align: center;
   }
 
   .roi-print-compare-line {
-    font-size: 8.3px;
+    font-size: 9.5px;
     background: rgba(255, 255, 255, .74);
   }
 
+  .roi-print-compare-line:nth-child(odd) {
+    background: rgba(248, 248, 245, .85);
+  }
+
+  .roi-print-compare-label {
+    display: flex;
+    align-items: center;
+    color: #454a52;
+    font-weight: 700;
+  }
+
+  /* คอลัมน์ประหยัดได้เป็นข้อสรุปหลักของตาราง — ไฮไลต์พื้นหลังอ่อนๆ ให้สายตาไล่ถึงง่าย */
+  .roi-print-compare-toprow .diff,
+  .roi-print-compare-value.diff {
+    background: rgba(16, 17, 20, .03);
+  }
+
   .roi-print-compare-value {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-family: var(--font-mono), monospace;
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 900;
     text-align: center;
   }
@@ -2157,16 +2184,30 @@ input {
     color: var(--green);
   }
 
-  .roi-print-compare-value.diff {
-    color: #1b5fd1;
+  .roi-print-compare-value.diff.gain {
+    color: var(--green);
+  }
+
+  .roi-print-compare-value.diff.loss {
+    color: var(--red);
   }
 
   .roi-print-compare-line.total {
     background: #fff7f1;
   }
 
+  .roi-print-compare-line.total > div {
+    border-top: .45mm solid #f0d9c4;
+  }
+
+  .roi-print-compare-line.total .roi-print-compare-label {
+    color: #17191e;
+    font-size: 10.5px;
+    font-weight: 900;
+  }
+
   .roi-print-compare-line.total .roi-print-compare-value {
-    font-size: 11px;
+    font-size: 12px;
   }
 
   .roi-print-chart-head {
@@ -3735,9 +3776,10 @@ input {
     gap: 4mm;
     min-height: 12mm;
     padding: 3mm 4mm;
-    background: linear-gradient(90deg, #313236, #17181c);
-    color: #fff;
-    font-size: 9px;
+    border-bottom: .3mm solid #e8e3da;
+    background: linear-gradient(180deg, #fff, #f8f8f6);
+    color: #17191e;
+    font-size: 10.5px;
     font-weight: 800;
   }
 
@@ -3749,7 +3791,7 @@ input {
   .roi-print-compare-toprow,
   .roi-print-compare-line {
     display: grid;
-    grid-template-columns: 1.34fr .83fr .83fr;
+    grid-template-columns: 1.22fr .8fr .8fr .8fr;
   }
 
   .roi-print-compare-toprow > div,
@@ -3766,8 +3808,14 @@ input {
 
   .roi-print-compare-toprow {
     background: linear-gradient(180deg, rgba(255,255,255,.98), rgba(248,248,245,.96));
-    font-size: 8.2px;
+    font-size: 9.5px;
     font-weight: 900;
+  }
+
+  .roi-print-compare-toprow .item {
+    color: #6b6f76;
+    letter-spacing: .06em;
+    text-transform: uppercase;
   }
 
   .roi-print-compare-toprow .old {
@@ -3780,19 +3828,38 @@ input {
     text-align: center;
   }
 
+  .roi-print-compare-toprow .diff {
+    color: #17191e;
+    text-align: center;
+  }
+
   .roi-print-compare-line {
-    font-size: 8.3px;
+    font-size: 9.5px;
     background: rgba(255, 255, 255, .74);
   }
 
+  .roi-print-compare-line:nth-child(odd) {
+    background: rgba(248, 248, 245, .85);
+  }
+
   .roi-print-compare-label {
+    display: flex;
+    align-items: center;
     color: #454a52;
     font-weight: 700;
   }
 
+  .roi-print-compare-toprow .diff,
+  .roi-print-compare-value.diff {
+    background: rgba(16, 17, 20, .03);
+  }
+
   .roi-print-compare-value {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-family: var(--font-mono), monospace;
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 900;
     text-align: center;
   }
@@ -3805,12 +3872,30 @@ input {
     color: var(--green);
   }
 
+  .roi-print-compare-value.diff.gain {
+    color: var(--green);
+  }
+
+  .roi-print-compare-value.diff.loss {
+    color: var(--red);
+  }
+
   .roi-print-compare-line.total {
     background: #fff7f1;
   }
 
+  .roi-print-compare-line.total > div {
+    border-top: .45mm solid #f0d9c4;
+  }
+
+  .roi-print-compare-line.total .roi-print-compare-label {
+    color: #17191e;
+    font-size: 10.5px;
+    font-weight: 900;
+  }
+
   .roi-print-compare-line.total .roi-print-compare-value {
-    font-size: 11px;
+    font-size: 12px;
   }
 
   .roi-print-chart-card {
@@ -4353,7 +4438,7 @@ input {
 
 @media print {
   .roi-print-compare-label {
-    display: block;
+    display: flex;
     align-items: center;
   }
 
