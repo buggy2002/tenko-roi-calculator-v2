@@ -3,9 +3,17 @@ import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import growthGraphImage from '@images/roi/stats.png'
 import moneyIcon from '@images/roi/money.png'
+import assumptionIcon from '@images/roi/paperclip.png'
+import staffCostIcon from '@images/roi/financial-profit.png'
+import equipmentIcon from '@images/roi/settings.png'
+import tenkoIcon from '@images/roi/robot.png'
 import robotImage from '@images/roi/tenko-robot-main.png'
+import safeIcon from '@images/roi/shield.png'
+import productivityIcon from '@images/roi/performance.png'
+import investmentIcon from '@images/roi/money-bag.png'
 import targetIcon from '@images/roi/target.png'
 import timeIcon from '@images/roi/time.png'
+import trophyIcon from '@images/roi/trophy.png'
 import { Bar, Line } from 'vue-chartjs'
 import statsIcon from '@images/roi/growth-graph-white.png'
 
@@ -158,7 +166,7 @@ const timeCostChartOptions = computed(() => ({
 const detailSections = computed(() => [
   {
     title: props.tr.assumptions,
-    accent: 'A',
+    icon: assumptionIcon,
     rows: [
       { label: props.labels.peoplePerDay, value: formatNumber(props.input.peoplePerDay) },
       { label: props.labels.daysPerMonth, value: formatNumber(props.input.daysPerMonth) },
@@ -170,7 +178,7 @@ const detailSections = computed(() => [
   },
   {
     title: props.tr.staffCost,
-    accent: 'S',
+    icon: staffCostIcon,
     rows: [
       { label: props.tr.staffByUtil, value: props.fmt(props.result.oldLabor) },
       { label: props.tr.baseSalary, value: props.fmt(props.result.baseSalaryCost) },
@@ -182,7 +190,7 @@ const detailSections = computed(() => [
   },
   {
     title: props.tr.equipment,
-    accent: 'E',
+    icon: equipmentIcon,
     rows: [
       { label: props.tr.dep, value: props.fmt(props.result.oldDep) },
       { label: props.tr.maint, value: props.fmt(props.result.oldMaint) },
@@ -192,7 +200,7 @@ const detailSections = computed(() => [
   },
   {
     title: 'Tenko Robot',
-    accent: 'T',
+    icon: tenkoIcon,
     rows: [
       { label: props.tr.tenkoMonthly, value: props.fmt(props.result.newMonthly) },
       { label: props.tr.setup, value: props.fmt(props.result.newSetup) },
@@ -203,9 +211,9 @@ const detailSections = computed(() => [
 ])
 
 const benefitItems = computed(() => [
-  { icon: 'S', title: props.tr.printBenefitSafeTitle, desc: props.tr.printBenefitSafeDesc },
-  { icon: 'P', title: props.tr.printBenefitProdTitle, desc: props.tr.printBenefitProdDesc },
-  { icon: 'I', title: props.tr.printBenefitInvestTitle, desc: props.tr.printBenefitInvestDesc },
+  { icon: safeIcon, title: props.tr.printBenefitSafeTitle, desc: props.tr.printBenefitSafeDesc },
+  { icon: productivityIcon, title: props.tr.printBenefitProdTitle, desc: props.tr.printBenefitProdDesc },
+  { icon: investmentIcon, title: props.tr.printBenefitInvestTitle, desc: props.tr.printBenefitInvestDesc },
 ])
 
 const kpiIconMap = {
@@ -539,7 +547,12 @@ function formatSignedValue(value, formatter) {
           class="roi-print-box"
         >
           <h3>
-            <span class="box-icon">{{ section.accent }}</span>
+            <span class="box-icon">
+              <img
+                :src="section.icon"
+                alt=""
+              >
+            </span>
             <span>{{ section.title }}</span>
           </h3>
 
@@ -572,7 +585,10 @@ function formatSignedValue(value, formatter) {
             class="roi-print-benefit-item"
           >
             <div class="roi-print-benefit-icon">
-              {{ item.icon }}
+              <img
+                :src="item.icon"
+                alt=""
+              >
             </div>
             <b>{{ item.title }}</b>
             <span>{{ item.desc }}</span>
@@ -580,7 +596,10 @@ function formatSignedValue(value, formatter) {
 
           <div class="roi-print-conclusion">
             <div class="trophy">
-              ROI
+              <img
+                :src="trophyIcon"
+                alt=""
+              >
             </div>
             <p class="roi-print-conclusion-text">
               <b>{{ tr.printConclusionTitle }}</b>

@@ -2147,6 +2147,13 @@ input {
     line-height: 1;
   }
 
+  .box-icon img {
+    width: 4.1mm;
+    height: 4.1mm;
+    object-fit: contain;
+    filter: brightness(0) invert(1);
+  }
+
   .roi-print-row {
     display: flex;
     align-items: flex-start;
@@ -2296,6 +2303,12 @@ input {
     font-weight: 900;
   }
 
+  .roi-print-benefit-icon img {
+    width: 4.2mm;
+    height: 4.2mm;
+    object-fit: contain;
+  }
+
   .print-details .roi-print-benefit-icon {
     width: 9mm;
     height: 9mm;
@@ -2304,6 +2317,11 @@ input {
     background: #fff;
     font-size: 4.8mm;
     line-height: 1;
+  }
+
+  .print-details .roi-print-benefit-icon img {
+    width: 4.8mm;
+    height: 4.8mm;
   }
 
   .roi-print-benefit-item b {
@@ -2375,9 +2393,17 @@ input {
     line-height: 1;
   }
 
+  .trophy img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
   .print-details .trophy {
     top: 10mm;
     left: 6mm;
+    width: 10.5mm;
+    height: 10.5mm;
     font-size: 10.5mm;
     z-index: 2;
   }
@@ -3869,6 +3895,12 @@ input {
     font-weight: 900;
   }
 
+  .roi-print-benefit-icon img {
+    width: 4.2mm;
+    height: 4.2mm;
+    object-fit: contain;
+  }
+
   .print-details .roi-print-benefit-icon {
     width: 9mm;
     height: 9mm;
@@ -3877,6 +3909,11 @@ input {
     background: #fff;
     font-size: 4.8mm;
     line-height: 1;
+  }
+
+  .print-details .roi-print-benefit-icon img {
+    width: 4.8mm;
+    height: 4.8mm;
   }
 
   .roi-print-benefit-item b {
@@ -3948,9 +3985,17 @@ input {
     line-height: 1;
   }
 
+  .trophy img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
   .print-details .trophy {
     top: 10mm;
     left: 6mm;
+    width: 10.5mm;
+    height: 10.5mm;
     font-size: 10.5mm;
     z-index: 2;
   }
