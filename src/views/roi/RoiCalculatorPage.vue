@@ -298,7 +298,7 @@ const timeCostChartData = computed(() => ({
 const chartOptions = computed(() => ({
   responsive: true,
   maintainAspectRatio: false,
-  interaction: { mode: 'index', intersect: false },
+  interaction: { mode: 'nearest', intersect: true },
   plugins: {
     legend: {
       position: 'top',
