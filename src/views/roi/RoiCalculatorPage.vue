@@ -711,12 +711,25 @@ onMounted(async () => {
                   type="button"
                   @click="store.selectFactor(choice.value)"
                 >
-                  <span>
+                  <span class="factor-radio" />
+                  <span class="factor-option-copy">
                     <b>{{ tr[choice.title] }}</b>
                     <small>{{ choice.value === 'custom' ? tr.factorCustom : tr[choice.desc] }}</small>
                   </span>
-                  <span class="factor-val">{{ choice.value === 'custom' ? store.input.employeeCostFactor.toFixed(2) :
-                    choice.value }}</span>
+                  <input
+                    v-if="choice.value === 'custom'"
+                    :value="store.input.employeeCostFactor"
+                    class="factor-val factor-input"
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    @click.stop
+                    @input="onNumericInput('employeeCostFactor', $event)"
+                  >
+                  <span
+                    v-else
+                    class="factor-val"
+                  >{{ choice.value }}</span>
                 </button>
               </div>
             </div>
@@ -933,7 +946,7 @@ onMounted(async () => {
     >
       <VCard class="roi-save-dialog">
         <VCardTitle class="roi-save-dialog__title">
-          <div>
+          <div class="roi-save-dialog__header-copy">
             <div class="roi-save-dialog__eyebrow">
               {{ scenarioText.metadataTitle }}
             </div>
@@ -951,7 +964,7 @@ onMounted(async () => {
         </VCardTitle>
 
         <VCardText class="roi-save-dialog__body">
-          <div class="grid2">
+          <div class="roi-save-dialog__fields">
             <div class="field">
               <div class="field-label-row">
                 <label for="scenarioName">{{ scenarioText.scenario }}</label>
@@ -978,7 +991,7 @@ onMounted(async () => {
             </div>
           </div>
 
-          <div class="field">
+          <div class="field roi-save-dialog__notes">
             <div class="field-label-row">
               <label for="scenarioNotes">{{ scenarioText.notes }}</label>
             </div>
@@ -993,6 +1006,7 @@ onMounted(async () => {
 
         <VCardActions class="roi-save-dialog__actions">
           <VBtn
+            class="roi-save-dialog__button"
             variant="text"
             color="default"
             @click="isSaveDialogVisible = false"
@@ -1000,6 +1014,7 @@ onMounted(async () => {
             {{ scenarioText.cancel }}
           </VBtn>
           <VBtn
+            class="roi-save-dialog__button roi-save-dialog__button-primary"
             color="primary"
             @click="onConfirmSaveScenario"
           >

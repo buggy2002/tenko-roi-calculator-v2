@@ -180,11 +180,16 @@ function groupHeading(value) {
       max-width="860"
       scrollable
     >
-      <VCard rounded="xl">
-        <VCardTitle class="d-flex align-center justify-space-between gap-4">
-          <span>{{ scenarioText.browseSaved }}</span>
+      <VCard class="roi-scenario-dialog">
+        <VCardTitle class="roi-scenario-dialog__title">
+          <div class="roi-scenario-dialog__header-copy">
+            <div class="roi-scenario-dialog__eyebrow">
+              Scenario Library
+            </div>
+            <h2>{{ scenarioText.browseSaved }}</h2>
+          </div>
           <button
-            class="btn-icon"
+            class="roi-scenario-dialog__close"
             type="button"
             :aria-label="scenarioText.close"
             @click="listOpen = false"
@@ -193,7 +198,7 @@ function groupHeading(value) {
           </button>
         </VCardTitle>
 
-        <VCardText>
+        <VCardText class="roi-scenario-dialog__body">
           <div class="scenario-list-search-row">
             <input
               v-model="search"
@@ -224,14 +229,14 @@ function groupHeading(value) {
 
           <div
             v-if="isRemoteLoading && savedScenarioCount === 0"
-            class="px-3 py-6 text-center text-sm"
+            class="scenario-list-empty"
           >
             {{ scenarioText.loading }}
           </div>
 
           <div
             v-else-if="filteredGroups.length === 0"
-            class="px-3 py-6 text-center text-sm"
+            class="scenario-list-empty"
           >
             {{ scenarioText.noSaved }}
           </div>
@@ -243,8 +248,9 @@ function groupHeading(value) {
             <div
               v-for="group in filteredGroups"
               :key="group.value"
+              class="scenario-list-group"
             >
-              <div class="text-overline mb-3">
+              <div class="scenario-list-group-title">
                 {{ groupHeading(group.value) }}
               </div>
 
@@ -252,7 +258,7 @@ function groupHeading(value) {
                 <div
                   v-for="scenario in group.items"
                   :key="scenario.localId"
-                  class="scenario-list-item rounded-2xl px-3 py-3"
+                  class="scenario-list-item"
                   :class="[currentLocalId === scenario.localId && 'scenario-list-item-active']"
                 >
                   <template v-if="renamingLocalId === scenario.localId">
