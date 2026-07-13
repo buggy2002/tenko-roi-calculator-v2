@@ -623,7 +623,7 @@ onMounted(async () => {
                   </template>
 
                   <div class="roi-help-tooltip__inner">
-                    {{ getFieldTooltip(store.language, key, labels[key]) }}
+                    {{ getFieldTooltip(store.language, key) }}
                   </div>
                 </VTooltip>
               </div>
@@ -698,7 +698,7 @@ onMounted(async () => {
                   </template>
 
                   <div class="roi-help-tooltip__inner">
-                    {{ getFieldTooltip(store.language, 'employeeCostFactorChoice', tr.factorChoice) }}
+                    {{ getFieldTooltip(store.language, 'employeeCostFactorChoice') }}
                   </div>
                 </VTooltip>
               </div>

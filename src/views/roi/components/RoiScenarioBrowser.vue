@@ -260,9 +260,18 @@ function groupHeading(value) {
                   :key="scenario.localId"
                   class="scenario-list-item"
                   :class="[currentLocalId === scenario.localId && 'scenario-list-item-active']"
+                  role="button"
+                  tabindex="0"
+                  @click="emit('openScenario', scenario); listOpen = false"
+                  @keydown.enter.prevent="emit('openScenario', scenario); listOpen = false"
+                  @keydown.space.prevent="emit('openScenario', scenario); listOpen = false"
                 >
                   <template v-if="renamingLocalId === scenario.localId">
-                    <div class="scenario-rename-wrap">
+                    <div
+                      class="scenario-rename-wrap"
+                      @click.stop
+                      @keydown.stop
+                    >
                       <input
                         :value="renameDraft"
                         class="input-control"
@@ -302,7 +311,7 @@ function groupHeading(value) {
                       <button
                         class="scenario-list-title text-left"
                         type="button"
-                        @click="emit('openScenario', scenario); listOpen = false"
+                        @click.stop="emit('openScenario', scenario); listOpen = false"
                       >
                         {{ scenario.name }}
                       </button>
@@ -311,7 +320,7 @@ function groupHeading(value) {
                         <button
                           class="scenario-list-icon-button"
                           type="button"
-                          @click="emit('startRenameScenario', scenario)"
+                          @click.stop="emit('startRenameScenario', scenario)"
                         >
                           <VIcon
                             icon="tabler-pencil"
@@ -321,7 +330,7 @@ function groupHeading(value) {
                         <button
                           class="scenario-list-icon-button"
                           type="button"
-                          @click="emit('duplicateScenario', scenario)"
+                          @click.stop="emit('duplicateScenario', scenario)"
                         >
                           <VIcon
                             icon="tabler-copy-plus"
@@ -331,7 +340,7 @@ function groupHeading(value) {
                         <button
                           class="scenario-list-icon-button danger"
                           type="button"
-                          @click="emit('deleteScenario', scenario)"
+                          @click.stop="emit('deleteScenario', scenario)"
                         >
                           <VIcon
                             icon="tabler-trash"
