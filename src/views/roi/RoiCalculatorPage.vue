@@ -1012,10 +1012,10 @@ onMounted(async () => {
           </div>
         </VCardText>
 
-        <VCardActions class="roi-save-dialog__actions">
+        <VCardActions>
           <VBtn
             class="roi-save-dialog__button"
-            variant="text"
+            variant="elevated"
             color="default"
             @click="isSaveDialogVisible = false"
           >
@@ -1023,6 +1023,7 @@ onMounted(async () => {
           </VBtn>
           <VBtn
             class="roi-save-dialog__button roi-save-dialog__button-primary"
+            variant="elevated"
             color="primary"
             @click="onConfirmSaveScenario"
           >
