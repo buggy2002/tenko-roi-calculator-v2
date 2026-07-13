@@ -729,7 +729,7 @@ onMounted(async () => {
 
         <div class="btn-row">
           <button
-            class="btn-outline"
+            class="btn-solid"
             type="button"
             @click="store.resetToDefaultSession()"
           >

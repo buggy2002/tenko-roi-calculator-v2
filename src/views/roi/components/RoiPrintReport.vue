@@ -8,6 +8,8 @@ import staffCostIcon from '@images/roi/financial-profit.png'
 import equipmentIcon from '@images/roi/settings.png'
 import tenkoIcon from '@images/roi/robot.png'
 import robotImage from '@images/roi/tenko-robot-main.png'
+import robotImageEn from '@images/roi/tenko-robot-main-en.png'
+import robotImageJp from '@images/roi/tenko-robot-main-jp.png'
 import safeIcon from '@images/roi/shield.png'
 import productivityIcon from '@images/roi/performance.png'
 import investmentIcon from '@images/roi/money-bag.png'
@@ -36,6 +38,16 @@ const props = defineProps({
 })
 
 const { t, locale } = useI18n({ useScope: 'global' })
+
+const localizedRobotImage = computed(() => {
+  if (locale.value === 'en')
+    return robotImageEn
+
+  if (locale.value === 'ja')
+    return robotImageJp
+
+  return robotImage
+})
 
 const scenarioText = computed(() => {
   locale.value
@@ -120,14 +132,20 @@ const timeCostChartOptions = computed(() => ({
   animation: false,
   devicePixelRatio: 2,
   interaction: { mode: 'index', intersect: false },
+  layout: {
+    padding: {
+      top: 4,
+    },
+  },
   plugins: {
     tooltip: { enabled: false },
     legend: {
       position: 'top',
       align: 'center',
       labels: {
-        boxWidth: 10,
-        boxHeight: 10,
+        boxWidth: 8,
+        boxHeight: 8,
+        padding: 16,
         usePointStyle: true,
         pointStyle: 'circle',
         color: '#202228',
@@ -254,8 +272,10 @@ function formatSignedValue(value, formatter) {
             {{ customerName || scenarioName }}
           </div>
         </div>
-        <div class="roi-print-logo-mark executive">
-          TENKO ROBOT
+        <div class="roi-print-topline detail">
+          <div class="roi-print-logo-mark">
+            TENKO<span>ROBOT</span>
+          </div>
         </div>
       </div>
       <!-- # Header -->
@@ -278,7 +298,7 @@ function formatSignedValue(value, formatter) {
               <!-- <div class="roi-print-robot-glow" /> -->
               <img
                 class="roi-print-robot-main"
-                :src="robotImage"
+                :src="localizedRobotImage"
                 alt="Tenko Robot"
               >
             </div>

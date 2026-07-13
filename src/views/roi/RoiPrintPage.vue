@@ -218,14 +218,20 @@ const chartOptions = computed(() => ({
   animation: false,
   devicePixelRatio: 2,
   interaction: { mode: 'index', intersect: false },
+  layout: {
+    padding: {
+      top: 4,
+    },
+  },
   plugins: {
     tooltip: { enabled: false },
     legend: {
       position: 'top',
-      align: 'start',
+      align: 'center',
       labels: {
-        boxWidth: 10,
-        boxHeight: 10,
+        boxWidth: 8,
+        boxHeight: 8,
+        padding: 16,
         usePointStyle: true,
         pointStyle: 'circle',
         color: '#202228',
