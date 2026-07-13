@@ -128,6 +128,7 @@ export const useRoiStore = defineStore('roi', () => {
   const currentRemoteId = ref<string | null>(null)
   const savedScenarios = ref<StoredScenario[]>([])
   const openTabIds = ref<string[]>([])
+  const hiddenPresetKeys = ref<PresetKey[]>([])
   const hasHydrated = ref(false)
   const isRemoteLoading = ref(false)
   const sortMode = ref<ScenarioSortMode>('recent')
@@ -149,6 +150,9 @@ export const useRoiStore = defineStore('roi', () => {
     const itemMap = new Map(savedScenarios.value.map(item => [item.localId, item]))
     return openTabIds.value.map(id => itemMap.get(id)).filter(Boolean) as StoredScenario[]
   })
+  const visiblePresetKeys = computed(() =>
+    Object.keys(roiPresets).filter(key => !hiddenPresetKeys.value.includes(key as PresetKey)) as PresetKey[],
+  )
 
   const scenarioGroups = computed<ScenarioListGroup[]>(() => {
     const sortItems = (items: StoredScenario[]) => [...items].sort((a, b) => {
@@ -261,6 +265,17 @@ export const useRoiStore = defineStore('roi', () => {
     currentRemoteId.value = null
     scenarioName.value = roiPresets[key].name
     selectPreset(key)
+  }
+
+  function closePresetTab(key: PresetKey) {
+    if (key === 'default')
+      return
+
+    if (!hiddenPresetKeys.value.includes(key))
+      hiddenPresetKeys.value = [...hiddenPresetKeys.value, key]
+
+    if (currentLocalId.value === null && presetKey.value === key)
+      activatePresetTab('default')
   }
 
   function selectFactor(value: string) {
@@ -478,11 +493,14 @@ export const useRoiStore = defineStore('roi', () => {
     }
 
     try {
-      const parsed = JSON.parse(raw) as Partial<StoredScenarioBundle>
+      const parsed = JSON.parse(raw) as Partial<StoredScenarioBundle> & { hiddenPresetKeys?: string[] }
       const items = Array.isArray(parsed.items)
         ? parsed.items.map(item => normalizeStoredScenario(item as Partial<StoredScenario>)).filter(Boolean) as StoredScenario[]
         : []
       const tabs = Array.isArray(parsed.openTabIds) ? parsed.openTabIds : []
+      const nextHiddenPresetKeys = Array.isArray(parsed.hiddenPresetKeys)
+        ? parsed.hiddenPresetKeys.filter((key): key is PresetKey => typeof key === 'string' && key in roiPresets && key !== 'default')
+        : []
       const nextCurrentLocalId =
         typeof parsed.currentLocalId === 'string' && items.some(item => item.localId === parsed.currentLocalId)
           ? parsed.currentLocalId
@@ -490,12 +508,14 @@ export const useRoiStore = defineStore('roi', () => {
 
       savedScenarios.value = items
       openTabIds.value = tabs.filter(tabId => items.some(item => item.localId === tabId))
+      hiddenPresetKeys.value = nextHiddenPresetKeys
       currentLocalId.value = nextCurrentLocalId
       sortMode.value = parsed.sortMode === 'name' ? 'name' : 'recent'
     }
     catch {
       savedScenarios.value = []
       openTabIds.value = []
+      hiddenPresetKeys.value = []
       currentLocalId.value = null
       sortMode.value = 'recent'
     }
@@ -516,14 +536,15 @@ export const useRoiStore = defineStore('roi', () => {
   }
 
   watch(
-    [savedScenarios, openTabIds, currentLocalId, sortMode],
+    [savedScenarios, openTabIds, hiddenPresetKeys, currentLocalId, sortMode],
     () => {
       if (!hasHydrated.value || typeof window === 'undefined')
         return
 
-      const payload: StoredScenarioBundle = {
+      const payload: StoredScenarioBundle & { hiddenPresetKeys: PresetKey[] } = {
         items: savedScenarios.value,
         openTabIds: openTabIds.value,
+        hiddenPresetKeys: hiddenPresetKeys.value,
         currentLocalId: currentLocalId.value,
         sortMode: sortMode.value,
       }
@@ -536,6 +557,7 @@ export const useRoiStore = defineStore('roi', () => {
   return {
     autoOTEnabled,
     cancelRenameScenario,
+    closePresetTab,
     closeScenarioTab,
     currentLocalId,
     currentRemoteId,
@@ -545,6 +567,7 @@ export const useRoiStore = defineStore('roi', () => {
     factorChoice,
     formatterLocale,
     hasHydrated,
+    hiddenPresetKeys,
     hydrate,
     input,
     isRemoteLoading,
@@ -573,6 +596,7 @@ export const useRoiStore = defineStore('roi', () => {
     syncSavedScenario,
     updateInput,
     activatePresetTab,
+    visiblePresetKeys,
     visibleTabs,
   }
 })

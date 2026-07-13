@@ -13,11 +13,13 @@ const props = defineProps({
   savedScenarioCount: { type: Number, default: 0 },
   scenarioGroups: { type: Array, default: () => [] },
   sortMode: { type: String, required: true },
+  visiblePresetKeys: { type: Array, default: () => [] },
   visibleTabs: { type: Array, default: () => [] },
 })
 
 const emit = defineEmits([
   'activatePresetTab',
+  'closePresetTab',
   'closeScenarioTab',
   'duplicateScenario',
   'openScenario',
@@ -123,16 +125,32 @@ function groupHeading(value) {
 <template>
   <section class="session-shell roi-shell">
     <div class="session-tabs">
-      <button
-        v-for="(preset, key) in roiPresets"
+      <div
+        v-for="key in visiblePresetKeys"
         :key="key"
-        type="button"
         class="session-tab session-preset-tab"
         :class="[currentLocalId === null && presetKey === key && 'active']"
-        @click="activatePresetTab(key)"
       >
-        <span class="session-tab-main">{{ preset.name }}</span>
-      </button>
+        <button
+          class="session-tab-main"
+          type="button"
+          @click="activatePresetTab(key)"
+        >
+          {{ key === 'default' ? '+ Default' : roiPresets[key].name }}
+        </button>
+        <button
+          v-if="key !== 'default'"
+          class="session-tab-close"
+          type="button"
+          :aria-label="scenarioText.closeTab"
+          @click.stop="emit('closePresetTab', key)"
+        >
+          <VIcon
+            icon="tabler-x"
+            size="16"
+          />
+        </button>
+      </div>
 
       <div
         v-for="scenario in visibleTabs"

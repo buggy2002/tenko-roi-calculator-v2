@@ -95,6 +95,7 @@ export const useRoiStore = defineStore('roi', () => {
     const currentRemoteId = ref(null);
     const savedScenarios = ref([]);
     const openTabIds = ref([]);
+    const hiddenPresetKeys = ref([]);
     const hasHydrated = ref(false);
     const isRemoteLoading = ref(false);
     const sortMode = ref('recent');
@@ -113,6 +114,7 @@ export const useRoiStore = defineStore('roi', () => {
         const itemMap = new Map(savedScenarios.value.map(item => [item.localId, item]));
         return openTabIds.value.map(id => itemMap.get(id)).filter(Boolean);
     });
+    const visiblePresetKeys = computed(() => Object.keys(roiPresets).filter(key => !hiddenPresetKeys.value.includes(key)));
     const scenarioGroups = computed(() => {
         const sortItems = (items) => [...items].sort((a, b) => {
             if (sortMode.value === 'name')
@@ -201,6 +203,14 @@ export const useRoiStore = defineStore('roi', () => {
         currentRemoteId.value = null;
         scenarioName.value = roiPresets[key].name;
         selectPreset(key);
+    }
+    function closePresetTab(key) {
+        if (key === 'default')
+            return;
+        if (!hiddenPresetKeys.value.includes(key))
+            hiddenPresetKeys.value = [...hiddenPresetKeys.value, key];
+        if (currentLocalId.value === null && presetKey.value === key)
+            activatePresetTab('default');
     }
     function selectFactor(value) {
         factorChoice.value = value;
@@ -384,17 +394,22 @@ export const useRoiStore = defineStore('roi', () => {
                 ? parsed.items.map(item => normalizeStoredScenario(item)).filter(Boolean)
                 : [];
             const tabs = Array.isArray(parsed.openTabIds) ? parsed.openTabIds : [];
+            const nextHiddenPresetKeys = Array.isArray(parsed.hiddenPresetKeys)
+                ? parsed.hiddenPresetKeys.filter(key => typeof key === 'string' && key in roiPresets && key !== 'default')
+                : [];
             const nextCurrentLocalId = typeof parsed.currentLocalId === 'string' && items.some(item => item.localId === parsed.currentLocalId)
                 ? parsed.currentLocalId
                 : null;
             savedScenarios.value = items;
             openTabIds.value = tabs.filter(tabId => items.some(item => item.localId === tabId));
+            hiddenPresetKeys.value = nextHiddenPresetKeys;
             currentLocalId.value = nextCurrentLocalId;
             sortMode.value = parsed.sortMode === 'name' ? 'name' : 'recent';
         }
         catch {
             savedScenarios.value = [];
             openTabIds.value = [];
+            hiddenPresetKeys.value = [];
             currentLocalId.value = null;
             sortMode.value = 'recent';
         }
@@ -410,12 +425,13 @@ export const useRoiStore = defineStore('roi', () => {
             }
         }
     }
-    watch([savedScenarios, openTabIds, currentLocalId, sortMode], () => {
+    watch([savedScenarios, openTabIds, hiddenPresetKeys, currentLocalId, sortMode], () => {
         if (!hasHydrated.value || typeof window === 'undefined')
             return;
         const payload = {
             items: savedScenarios.value,
             openTabIds: openTabIds.value,
+            hiddenPresetKeys: hiddenPresetKeys.value,
             currentLocalId: currentLocalId.value,
             sortMode: sortMode.value,
         };
@@ -424,6 +440,7 @@ export const useRoiStore = defineStore('roi', () => {
     return {
         autoOTEnabled,
         cancelRenameScenario,
+        closePresetTab,
         closeScenarioTab,
         currentLocalId,
         currentRemoteId,
@@ -433,6 +450,7 @@ export const useRoiStore = defineStore('roi', () => {
         factorChoice,
         formatterLocale,
         hasHydrated,
+        hiddenPresetKeys,
         hydrate,
         input,
         isRemoteLoading,
@@ -461,6 +479,7 @@ export const useRoiStore = defineStore('roi', () => {
         syncSavedScenario,
         updateInput,
         activatePresetTab,
+        visiblePresetKeys,
         visibleTabs,
     };
 });
