@@ -177,6 +177,8 @@ const timeCostChartOptions = computed(() => ({
   },
 }))
 
+const printSectionTitle = title => title.replace(/^\d+\)\s*/, '')
+
 const detailSections = computed(() => [
   {
     title: props.tr.assumptions,
@@ -191,7 +193,7 @@ const detailSections = computed(() => [
     ],
   },
   {
-    title: props.tr.staffCost,
+    title: printSectionTitle(props.tr.staffCost),
     icon: staffCostIcon,
     rows: [
       { label: props.tr.staffByUtil, value: props.fmt(props.result.oldLabor) },
@@ -203,7 +205,7 @@ const detailSections = computed(() => [
     ],
   },
   {
-    title: props.tr.equipment,
+    title: printSectionTitle(props.tr.equipment),
     icon: equipmentIcon,
     rows: [
       { label: props.tr.dep, value: props.fmt(props.result.oldDep) },

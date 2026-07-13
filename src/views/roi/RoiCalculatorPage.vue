@@ -119,6 +119,7 @@ const roiTextKeys = [
   'formula',
   'utilTitle',
   'utilLegend',
+  'productivityPanelTitle',
   'productivityPanelDesc',
   'printHeroTitle',
   'printHeroSubtitle',
@@ -883,7 +884,7 @@ onMounted(async () => {
         <div class="result-panel">
           <div class="section-head">
             <div>
-              <h2>{{ tr.productivity }}</h2>
+              <h2>{{ tr.productivityPanelTitle }}</h2>
               <p>{{ tr.productivityPanelDesc }}</p>
             </div>
           </div>
