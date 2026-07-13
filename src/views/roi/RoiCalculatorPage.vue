@@ -91,6 +91,8 @@ const roiTextKeys = [
   'costBreakTitle',
   'costBreakDesc',
   'staffByUtil',
+  'recordingStaff',
+  'automated',
   'baseSalary',
   'otCost',
   'extras',
@@ -872,6 +874,9 @@ onMounted(async () => {
               </div>
               <div class="compare-row">
                 <span>{{ tr.other }}</span><strong>{{ fmt(store.result.newOther) }}</strong>
+              </div>
+              <div class="compare-row">
+                <span>{{ tr.recordingStaff }}</span><strong>{{ `${fmt(0)} / ${tr.automated}` }}</strong>
               </div>
               <div class="compare-row total">
                 <span>{{ tr.annualCost }}</span><strong>{{ fmt(store.result.newTotal)

@@ -83,6 +83,8 @@ const compareCopy = computed(() => {
       old: 'แบบเดิม',
       savings: 'ประหยัดได้',
       operating: 'ต้นทุนดำเนินงาน',
+      recordingStaff: 'ค่าเจ้าหน้าที่จดบันทึก',
+      automated: 'อัตโนมัติ',
       time: 'เวลาตรวจสอบ',
       prodLoss: 'Productivity Loss',
       total: 'ต้นทุนรวม',
@@ -92,6 +94,8 @@ const compareCopy = computed(() => {
       old: 'Conventional',
       savings: 'Savings',
       operating: 'Operating Cost',
+      recordingStaff: 'Recording Staff Cost',
+      automated: 'Automated',
       time: 'Inspection Time',
       prodLoss: 'Productivity Loss',
       total: 'Total Cost',
@@ -101,6 +105,8 @@ const compareCopy = computed(() => {
       old: '従来方式',
       savings: '削減効果',
       operating: '運用コスト',
+      recordingStaff: '記録担当者コスト',
+      automated: '自動化',
       time: '検査時間',
       prodLoss: '生産性損失',
       total: '総コスト',
@@ -119,6 +125,13 @@ const comparisonRows = computed(() => [
     newValue: props.fmt(props.result.newTotal),
     diffValue: formatSignedValue(props.result.oldTotal - props.result.newTotal, props.fmt),
     diffTone: diffTone(props.result.oldTotal - props.result.newTotal),
+  },
+  {
+    label: compareCopy.value.recordingStaff,
+    oldValue: props.fmt(props.result.oldLabor),
+    newValue: `${props.fmt(0)} / ${compareCopy.value.automated}`,
+    diffValue: formatSignedValue(props.result.oldLabor, props.fmt),
+    diffTone: diffTone(props.result.oldLabor),
   },
   {
     label: compareCopy.value.time,
@@ -219,8 +232,6 @@ const timeCostChartOptions = computed(() => ({
   },
 }))
 
-const printSectionTitle = title => title.replace(/^\d+\)\s*/, '')
-
 const detailSections = computed(() => [
   {
     title: props.tr.assumptions,
@@ -235,7 +246,7 @@ const detailSections = computed(() => [
     ],
   },
   {
-    title: printSectionTitle(props.tr.staffCost),
+    title: props.tr.staffCostTitle,
     icon: staffCostIcon,
     rows: [
       { label: props.tr.staffByUtil, value: props.fmt(props.result.oldLabor) },
@@ -247,7 +258,7 @@ const detailSections = computed(() => [
     ],
   },
   {
-    title: printSectionTitle(props.tr.equipment),
+    title: props.tr.equipCostTitle,
     icon: equipmentIcon,
     rows: [
       { label: props.tr.dep, value: props.fmt(props.result.oldDep) },
@@ -257,9 +268,10 @@ const detailSections = computed(() => [
     ],
   },
   {
-    title: 'Tenko Robot',
+    title: props.tr.tenkoCostTitle,
     icon: tenkoIcon,
     rows: [
+      { label: props.tr.recordingStaff, value: `${props.fmt(0)} / ${props.tr.automated}` },
       { label: props.tr.tenkoMonthly, value: props.fmt(props.result.newMonthly) },
       { label: props.tr.setup, value: props.fmt(props.result.newSetup) },
       { label: props.tr.other, value: props.fmt(props.result.newOther) },
@@ -636,9 +648,7 @@ function formatSignedValue(value, formatter) {
         <!-- <span>{{ tr.disclaimer }}</span> -->
         <span v-if="customerName">{{ scenarioText.customerName }}: {{ customerName }}</span>
         <span v-if="scenarioNotes">{{ scenarioText.notes }}: {{ scenarioNotes }}</span>
-        <span>
-          Productivity Loss = employees x inspection days x inspection time x {{ fmt1(result.costPerMin) }}/{{ tr.min }}
-        </span>
+        <span>{{ tr.printNote }}</span>
       </div>
       <div class="roi-print-benefit-wrap">
         <div class="roi-print-benefit-strip">
