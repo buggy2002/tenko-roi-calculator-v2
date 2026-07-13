@@ -4062,23 +4062,8 @@ input {
 
 @media print {
   .roi-print-compare-label {
-    display: grid;
-    grid-template-columns: 7mm 1fr;
+    display: block;
     align-items: center;
-    gap: 2mm;
-  }
-
-  .roi-print-compare-icon {
-    display: inline-grid;
-    place-items: center;
-    width: 5.5mm;
-    height: 5.5mm;
-    border-radius: 50%;
-    background: #f5efe5;
-    color: #222;
-    font-size: 3.4mm;
-    font-weight: 900;
-    line-height: 1;
   }
 
   .roi-print-chart-card {

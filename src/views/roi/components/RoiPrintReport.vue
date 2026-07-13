@@ -64,28 +64,24 @@ const assumptionItems = computed(() => [
 
 const comparisonRows = computed(() => [
   {
-    icon: 'C',
     label: props.tr.annualCost,
     oldValue: props.fmt(props.result.oldTotal),
     newValue: props.fmt(props.result.newTotal),
     diffValue: formatSignedValue(props.result.oldTotal - props.result.newTotal, props.fmt),
   },
   {
-    icon: 'T',
     label: props.tr.annualTime,
     oldValue: props.hrs(props.result.oldTimeYear),
     newValue: props.hrs(props.result.newTimeYear),
     diffValue: formatSignedValue(props.result.oldTimeYear - props.result.newTimeYear, props.hrs),
   },
   {
-    icon: 'P',
     label: props.tr.prodLoss,
     oldValue: props.fmt(props.result.oldProd),
     newValue: props.fmt(props.result.newProd),
     diffValue: formatSignedValue(props.result.oldProd - props.result.newProd, props.fmt),
   },
   {
-    icon: 'R',
     label: props.tr.totalCost,
     oldValue: props.fmt(props.result.oldGrand),
     newValue: props.fmt(props.result.newGrand),
@@ -436,7 +432,6 @@ function formatSignedValue(value, formatter) {
                 :class="[row.total && 'total']"
               >
                 <div class="roi-print-compare-label">
-                  <span class="roi-print-compare-icon">{{ row.icon }}</span>
                   <span>{{ row.label }}</span>
                 </div>
                 <div class="roi-print-compare-value old">
