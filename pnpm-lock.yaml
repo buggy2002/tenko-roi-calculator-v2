@@ -167,7 +167,7 @@ importers:
         specifier: 1.2.3
         version: 1.2.3
       '@iconify-json/tabler':
-        specifier: 1.2.23
+        specifier: ^1.2.23
         version: 1.2.23
       '@iconify/tools':
         specifier: 4.1.4
