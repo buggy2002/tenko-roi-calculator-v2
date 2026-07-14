@@ -12,6 +12,7 @@ const props = defineProps({
   renamingLocalId: { type: String, default: null },
   savedScenarioCount: { type: Number, default: 0 },
   scenarioGroups: { type: Array, default: () => [] },
+  selectedProductName: { type: String, default: '' },
   sortMode: { type: String, required: true },
   visiblePresetKeys: { type: Array, default: () => [] },
   visibleTabs: { type: Array, default: () => [] },
@@ -91,6 +92,13 @@ const scenarioText = computed(() => {
   return buildTextMap('roiScenario', scenarioKeys)
 })
 
+const defaultTabLabel = computed(() => {
+  if (!props.selectedProductName)
+    return '+ Default'
+
+  return `+ Default · ${props.selectedProductName}`
+})
+
 const filteredGroups = computed(() => {
   const needle = search.value.trim().toLowerCase()
   if (!needle)
@@ -136,7 +144,7 @@ function groupHeading(value) {
           type="button"
           @click="activatePresetTab(key)"
         >
-          {{ key === 'default' ? '+ Default' : roiPresets[key].name }}
+          {{ key === 'default' ? defaultTabLabel : roiPresets[key].name }}
         </button>
         <button
           v-if="key !== 'default'"

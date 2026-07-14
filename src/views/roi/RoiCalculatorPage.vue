@@ -588,6 +588,7 @@ onMounted(async () => {
       :renaming-local-id="store.renamingLocalId"
       :saved-scenario-count="store.savedScenarios.length"
       :scenario-groups="store.scenarioGroups"
+      :selected-product-name="selectedProduct?.name ?? ''"
       :sort-mode="store.sortMode"
       :visible-preset-keys="store.visiblePresetKeys"
       :visible-tabs="store.visibleTabs"
