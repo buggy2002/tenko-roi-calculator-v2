@@ -354,6 +354,8 @@ const timeCostChartOptions = computed(() => ({
   },
 }))
 
+const heroProductName = computed(() => store.productName || selectedProduct.value?.name || 'Tenko Robot')
+
 const metricCards = computed(() => [
   {
     title: tr.value.saving,
@@ -405,7 +407,12 @@ async function loadProducts() {
 
 function selectProduct(product) {
   selectedProduct.value = product
-  store.applyProductDefaults(product?.machine_roi_defaults)
+  store.applyProductDefaults(product)
+}
+
+function resetEditor() {
+  store.resetToDefaultSession()
+  store.applyProductDefaults(selectedProduct.value)
 }
 
 function formatSavedAt(savedAt) {
@@ -506,6 +513,7 @@ function onPrint() {
     scenarioName: store.scenarioName,
     customerName: store.customerName,
     scenarioNotes: store.scenarioNotes,
+    productName: heroProductName.value,
   })
 
   printFrame?.remove()
@@ -540,9 +548,24 @@ watch(() => store.language, value => {
   document.documentElement.lang = value
 }, { immediate: true })
 
+// เปิด scenario ของเครื่องไหน ให้ selector บน navbar เด้งตาม (sync ref อย่างเดียว ไม่ทับ input)
+watch(() => store.productId, id => {
+  if (id === null || id === selectedProduct.value?.id)
+    return
+
+  const match = products.value.find(product => product.id === id)
+  if (match)
+    selectedProduct.value = match
+})
+
 onMounted(async () => {
   store.hydrate()
   await loadProducts()
+
+  // scenario ที่ restore มาก่อน products โหลดเสร็จ — sync selector ให้ตรงเครื่องของ scenario
+  const restoredProduct = products.value.find(product => product.id === store.productId)
+  if (restoredProduct)
+    selectedProduct.value = restoredProduct
 
   const status = await store.loadRemoteScenarios()
   if (status === 'error')
@@ -575,7 +598,7 @@ onMounted(async () => {
         {{ tr.eyebrow }}
       </div>
       <h1>
-        {{ tr.titleA }} <span>Tenko Robot</span>
+        {{ tr.titleA }} <span>{{ heroProductName }}</span>
       </h1>
       <p>{{ tr.desc }}</p>
     </section>
@@ -611,7 +634,18 @@ onMounted(async () => {
       <section class="input-panel">
         <div class="input-panel-head">
           <div class="session-name-block">
-            <h2>{{ tr.inputTitle }}</h2>
+            <h2 class="product-title">
+              <!--
+                <VIcon
+                icon="tabler-robot"
+                size="20"
+                /> 
+              -->
+              <span>{{ heroProductName }}</span>
+            </h2>
+            <div class="input-title">
+              {{ tr.inputTitle }}
+            </div>
             <p class="subtext">
               {{ tr.inputSub }}
             </p>
@@ -784,7 +818,7 @@ onMounted(async () => {
           <button
             class="btn-solid"
             type="button"
-            @click="store.resetToDefaultSession()"
+            @click="resetEditor"
           >
             <VIcon
               icon="tabler-rotate-clockwise-2"

@@ -707,6 +707,34 @@ input {
   gap: 6px;
 }
 
+.input-panel h2.product-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  color: var(--orange);
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.product-title .v-icon {
+  flex-shrink: 0;
+}
+
+.product-title span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.input-title {
+  margin-top: 2px;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
 .scenario-meta-block {
   margin-bottom: 18px;
   padding: 14px;

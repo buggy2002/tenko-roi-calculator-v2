@@ -50,6 +50,8 @@ function normalizeStoredScenario(raw) {
     notes: typeof raw.notes === 'string' ? raw.notes : '',
     language: raw.language,
     presetKey,
+    productId: typeof raw.productId === 'number' || typeof raw.productId === 'string' ? raw.productId : null,
+    productName: typeof raw.productName === 'string' ? raw.productName : '',
     input: cloneInput(raw.input),
     autoOTEnabled: typeof raw.autoOTEnabled === 'boolean' ? raw.autoOTEnabled : inferAutoOtEnabled(presetKey),
     otEdited: typeof raw.otEdited === 'boolean' ? raw.otEdited : false,
@@ -70,6 +72,8 @@ function toStoredScenarioFromRecord(record, fallbackLocalId) {
     notes: record.notes ?? '',
     language: record.language,
     presetKey: nextPresetKey,
+    productId: record.productId ?? null,
+    productName: record.productName ?? '',
     input: cloneInput(record.input),
     autoOTEnabled,
     otEdited: autoOTEnabled ? record.input.otHoursPerDay !== calculatedOt : false,
@@ -106,6 +110,8 @@ export const useRoiStore = defineStore('roi', () => {
   const scenarioName = ref(roiPresets.default.name)
   const customerName = ref('')
   const scenarioNotes = ref('')
+  const productId = ref(null)
+  const productName = ref('')
   const currentLocalId = ref(null)
   const currentRemoteId = ref(null)
   const savedScenarios = ref([])
@@ -160,6 +166,8 @@ export const useRoiStore = defineStore('roi', () => {
     scenarioName.value = scenario.name
     customerName.value = scenario.customerName
     scenarioNotes.value = scenario.notes
+    productId.value = scenario.productId ?? null
+    productName.value = scenario.productName ?? ''
     currentLocalId.value = scenario.localId
     currentRemoteId.value = scenario.remoteId
     language.value = scenario.language
@@ -187,6 +195,8 @@ export const useRoiStore = defineStore('roi', () => {
       notes: scenarioNotes.value,
       language: language.value,
       presetKey: presetKey.value,
+      productId: productId.value,
+      productName: productName.value,
       input: cloneInput(input.value),
       autoOTEnabled: autoOTEnabled.value,
       otEdited: otEdited.value,
@@ -204,6 +214,8 @@ export const useRoiStore = defineStore('roi', () => {
     scenarioName.value = roiPresets.default.name
     customerName.value = ''
     scenarioNotes.value = ''
+    productId.value = null
+    productName.value = ''
     currentLocalId.value = null
     currentRemoteId.value = null
     language.value = 'th'
@@ -282,8 +294,11 @@ export const useRoiStore = defineStore('roi', () => {
 
     return `${baseName} ${nextNumber}`
   }
-  function applyProductDefaults(machineDefaults) {
-    const mapped = mapMachineRoiDefaultsToInput(machineDefaults)
+  function applyProductDefaults(product) {
+    productId.value = product?.id ?? null
+    productName.value = product?.name ?? ''
+
+    const mapped = mapMachineRoiDefaultsToInput(product?.machine_roi_defaults)
     if (!mapped)
       return false
 
@@ -341,6 +356,8 @@ export const useRoiStore = defineStore('roi', () => {
       notes: '',
       language: language.value,
       presetKey: 'default',
+      productId: product?.id ?? null,
+      productName: product?.name ?? '',
       input: presetInput,
       autoOTEnabled: preset.autoOT,
       otEdited: draftOtEdited,
@@ -476,6 +493,8 @@ export const useRoiStore = defineStore('roi', () => {
       notes: scenarioNotes.value.trim() || null,
       language: language.value,
       presetKey: presetKey.value,
+      productId: productId.value,
+      productName: productName.value || null,
       formulaVersion: FORMULA_VERSION,
       input: cloneInput(input.value),
       result: result.value,
@@ -495,6 +514,8 @@ export const useRoiStore = defineStore('roi', () => {
       notes: scenarioNotes.value.trim(),
       language: language.value,
       presetKey: presetKey.value,
+      productId: productId.value,
+      productName: productName.value,
       input: cloneInput(input.value),
       autoOTEnabled: autoOTEnabled.value,
       otEdited: otEdited.value,
@@ -644,6 +665,8 @@ export const useRoiStore = defineStore('roi', () => {
     openTabIds,
     otEdited,
     presetKey,
+    productId,
+    productName,
     renameDraft,
     renamingLocalId,
     resetToDefaultSession,
