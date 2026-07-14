@@ -18,6 +18,7 @@ import RoiNavbar from './components/RoiNavbar.vue'
 import RoiScenarioBrowser from './components/RoiScenarioBrowser.vue'
 import { uiFactorChoices, uiGroups } from '../../utils/roi/ui-copy'
 import { getFieldTooltip } from '../../utils/roi/ui-help-copy'
+import { listRoiProducts } from '@/services/roi-products'
 import { useRoiStore } from '@/stores/roi.js'
 import { writeRoiPrintSnapshot } from '@/utils/roi/print-snapshot'
 
@@ -29,6 +30,9 @@ const { t, locale } = useI18n({ useScope: 'global' })
 const isFullWidth = ref(true)
 const isSaveDialogVisible = ref(false)
 const snackbar = ref({ show: false, text: '', color: 'success' })
+const products = ref([])
+const isProductsLoading = ref(false)
+const selectedProduct = ref(null)
 
 const buildTextMap = (prefix, keys) => {
   const result = {}
@@ -381,6 +385,28 @@ function showNotice(text, color = 'success') {
   snackbar.value = { show: true, text, color }
 }
 
+async function loadProducts() {
+  isProductsLoading.value = true
+  try {
+    const response = await listRoiProducts()
+
+    products.value = Array.isArray(response?.products) ? response.products : []
+    if (!selectedProduct.value && products.value.length > 0)
+      selectedProduct.value = products.value[0]
+  }
+  catch {
+    products.value = []
+    showNotice('Machine list load failed', 'error')
+  }
+  finally {
+    isProductsLoading.value = false
+  }
+}
+
+function selectProduct(product) {
+  selectedProduct.value = product
+}
+
 function formatSavedAt(savedAt) {
   return new Intl.DateTimeFormat(formatterLocale.value, {
     dateStyle: 'medium',
@@ -515,6 +541,7 @@ watch(() => store.language, value => {
 
 onMounted(async () => {
   store.hydrate()
+  await loadProducts()
 
   const status = await store.loadRemoteScenarios()
   if (status === 'error')
@@ -532,7 +559,11 @@ onMounted(async () => {
       :is-full-width="isFullWidth"
       :print-label="tr.print"
       :full-width-label="tr.fullWidth"
+      :products="products"
+      :selected-product-name="selectedProduct?.name ?? 'Select machine'"
+      :is-products-loading="isProductsLoading"
       @print="onPrint"
+      @select-product="selectProduct"
       @toggle-full-width="isFullWidth = !isFullWidth"
       @update-language="store.setLanguage"
     />

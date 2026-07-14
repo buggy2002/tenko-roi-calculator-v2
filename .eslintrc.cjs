@@ -51,7 +51,11 @@ module.exports = {
     'object-curly-spacing': ['error', 'always'],
 
     // Enforce camelCase naming convention
-    'camelcase': 'error',
+    'camelcase': ['error', {
+      properties: 'never',
+      ignoreDestructuring: true,
+      ignoreImports: true,
+    }],
 
     // Disable max-len
     'max-len': 'off',

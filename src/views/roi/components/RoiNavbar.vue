@@ -6,12 +6,16 @@ defineProps({
   isFullWidth: { type: Boolean, default: false },
   printLabel: { type: String, required: true },
   fullWidthLabel: { type: String, required: true },
+  products: { type: Array, default: () => [] },
+  selectedProductName: { type: String, default: 'Select machine' },
+  isProductsLoading: { type: Boolean, default: false },
 })
 
 const emit = defineEmits([
   'print',
   'toggleFullWidth',
   'updateLanguage',
+  'selectProduct',
 ])
 
 const { t } = useI18n({ useScope: 'global' })
@@ -25,8 +29,65 @@ const languageOptions = [
 
 <template>
   <header class="nav-shell">
-    <div class="brand-mark">
-      {{ t('roi.brand') }}
+    <div class=" nav-flex">
+      <div class="brand-mark">
+        {{ t('roi.brand') }}
+      </div>
+      <span> | </span>
+
+      <VMenu location="bottom start">
+        <template #activator="{ props }">
+          <button
+            class="session-list-trigger-nav"
+            type="button"
+            v-bind="props"
+          >
+            <div class="selector-nav">
+              <span>{{ selectedProductName }}</span>
+              <!--
+                <VIcon
+                icon="tabler-layout-list"
+                size="18"
+                class="icon-color"
+                /> 
+              -->
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="1em"
+                height="1em"
+                viewBox="0 0 24 24"
+              ><!-- Icon from Tabler Icons by Paweł Kuna - https://github.com/tabler/tabler-icons/blob/master/LICENSE --><path
+                fill="none"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="m8 9l4-4l4 4m0 6l-4 4l-4-4"
+              /></svg>
+            </div>
+          </button>
+        </template>
+
+        <VList min-width="100">
+          <VListItem
+            v-if="isProductsLoading"
+            disabled
+          >
+            <VListItemTitle>Loading machines...</VListItemTitle>
+          </VListItem>
+
+          <template v-else>
+            <VListItem
+              v-for="product in products"
+              :key="product.id"
+              @click="emit('selectProduct', product)"
+            >
+              <VListItemTitle>{{ product.name }}</VListItemTitle>
+              <!-- <VListItemSubtitle>{{ product.description }}</VListItemSubtitle> -->
+            </VListItem>
+          </template>
+        </VList>
+      </VMenu>
     </div>
 
     <div class="nav-actions">
@@ -79,3 +140,57 @@ const languageOptions = [
     </div>
   </header>
 </template>
+
+<style lang="css">
+.nav-flex {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.session-list-trigger-nav {
+  font: inherit;
+}
+
+.session-list-trigger-nav {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  min-width: 180px;
+  gap: 8px;
+  border-radius: 12px;
+  padding: 10px 14px;
+  transition: transform .18s ease, border-color .18s ease, background-color .18s ease, color .18s ease;
+}
+
+.btn-solid:hover {
+  background: #dc5d1a;
+  border-color: #dc5d1a;
+}
+
+.btn-outline,
+.session-list-trigger-nav {
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, .98);
+  color: var(--ink);
+}
+
+.icon-color{
+  color: #000;
+}
+
+.btn-outline:hover,
+.session-list-trigger-nav:hover {
+  border-color: rgba(242, 106, 33, 0.377);
+  color: var(--orange);
+}
+
+.selector-nav{
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+}
+</style>
