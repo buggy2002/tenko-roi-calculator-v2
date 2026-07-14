@@ -263,6 +263,9 @@ input {
   flex-wrap: wrap;
   gap: 8px;
   min-width: 0;
+  max-height: 92px; /* ~2 rows of tabs */
+  overflow-y: auto;
+  scrollbar-width: thin;
 }
 
 .session-tab {
@@ -277,6 +280,24 @@ input {
 
 .session-preset-tab {
   padding-right: 2px;
+}
+
+.session-tab:hover {
+  border-color: rgba(242, 106, 33, .45);
+  box-shadow: 0 2px 6px rgba(16, 17, 20, .08);
+}
+
+.session-default-tab:hover {
+  background: rgba(242, 106, 33, .08);
+}
+
+.session-default-tab:hover .session-tab-main {
+  color: var(--orange);
+}
+
+.session-default-tab:active {
+  background: rgba(242, 106, 33, .16);
+  transform: scale(.96);
 }
 
 .session-tab.active {
@@ -295,6 +316,7 @@ input {
 .session-tab-main {
   display: flex;
   align-items: center;
+  gap: 6px;
   /* flex: 1; */
   min-width: 0;
   width: 100%;
@@ -2883,6 +2905,7 @@ input {
 
   .session-tabs {
     gap: 6px;
+    max-height: 80px; /* ~2 rows at mobile tab size */
   }
 
   .session-tab {

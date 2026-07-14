@@ -405,6 +405,7 @@ async function loadProducts() {
 
 function selectProduct(product) {
   selectedProduct.value = product
+  store.applyProductDefaults(product?.machine_roi_defaults)
 }
 
 function formatSavedAt(savedAt) {
@@ -594,6 +595,7 @@ onMounted(async () => {
       :visible-tabs="store.visibleTabs"
       @activate-preset-tab="store.activatePresetTab"
       @close-preset-tab="store.closePresetTab"
+      @create-default-scenario="store.createDefaultDraft(selectedProduct)"
       @cancel-rename-scenario="store.cancelRenameScenario"
       @close-scenario-tab="store.closeScenarioTab"
       @delete-scenario="onDeleteScenario"

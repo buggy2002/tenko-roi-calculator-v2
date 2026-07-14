@@ -21,6 +21,7 @@ const props = defineProps({
 const emit = defineEmits([
   'activatePresetTab',
   'closePresetTab',
+  'createDefaultScenario',
   'closeScenarioTab',
   'duplicateScenario',
   'openScenario',
@@ -94,9 +95,9 @@ const scenarioText = computed(() => {
 
 const defaultTabLabel = computed(() => {
   if (!props.selectedProductName)
-    return '+ Default'
+    return 'Default'
 
-  return `+ Default · ${props.selectedProductName}`
+  return `Default · ${props.selectedProductName}`
 })
 
 const filteredGroups = computed(() => {
@@ -115,6 +116,11 @@ const filteredGroups = computed(() => {
 })
 
 function activatePresetTab(value) {
+  if (value === 'default') {
+    emit('createDefaultScenario')
+
+    return
+  }
   emit('activatePresetTab', value)
 }
 
@@ -137,13 +143,21 @@ function groupHeading(value) {
         v-for="key in visiblePresetKeys"
         :key="key"
         class="session-tab session-preset-tab"
-        :class="[currentLocalId === null && presetKey === key && 'active']"
+        :class="[
+          currentLocalId === null && presetKey === key && 'active',
+          key === 'default' && 'session-default-tab',
+        ]"
       >
         <button
           class="session-tab-main"
           type="button"
           @click="activatePresetTab(key)"
         >
+          <VIcon
+            v-if="key === 'default'"
+            icon="tabler-copy-plus"
+            size="16"
+          />
           {{ key === 'default' ? defaultTabLabel : roiPresets[key].name }}
         </button>
         <button

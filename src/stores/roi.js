@@ -3,6 +3,7 @@ import { defineStore } from 'pinia'
 import { calculateAutoOt, calculateRoi } from '@/utils/roi/calculate-roi'
 import { FORMULA_VERSION } from '@/utils/roi/constants'
 import { defaultInput, roiPresets } from '@/utils/roi/presets'
+import { mapMachineRoiDefaultsToInput } from '@/utils/roi/product-defaults'
 import { createScenario, deleteScenarioRequest, hasScenarioApiConfig, listScenarios, updateScenario } from '@/services/roi-scenarios.js'
 
 const STORAGE_KEY = 'tenko-roi-scenarios'
@@ -17,6 +18,9 @@ function createLocalId() {
 }
 function getDefaultScenarioName(presetKey) {
   return roiPresets[presetKey].name
+}
+function escapeRegExp(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 }
 function resolvePresetKey(value) {
   return value && value in roiPresets ? value : 'default'
@@ -168,6 +172,29 @@ export const useRoiStore = defineStore('roi', () => {
   function syncSavedScenario(scenario) {
     savedScenarios.value = mergeScenarioCollections(savedScenarios.value.filter(item => item.localId !== scenario.localId), [scenario])
   }
+  function stashCurrentEditor() {
+    if (!currentLocalId.value)
+      return
+
+    const existing = savedScenarios.value.find(item => item.localId === currentLocalId.value)
+    if (!existing)
+      return
+
+    const stashed = {
+      ...existing,
+      name: scenarioName.value,
+      customerName: customerName.value,
+      notes: scenarioNotes.value,
+      language: language.value,
+      presetKey: presetKey.value,
+      input: cloneInput(input.value),
+      autoOTEnabled: autoOTEnabled.value,
+      otEdited: otEdited.value,
+      factorChoice: factorChoice.value,
+    }
+
+    savedScenarios.value = savedScenarios.value.map(item => (item.localId === existing.localId ? stashed : item))
+  }
   function resetToDefaultSession() {
     const baseInput = {
       ...defaultInput,
@@ -225,10 +252,107 @@ export const useRoiStore = defineStore('roi', () => {
     input.value = presetInput
   }
   function activatePresetTab(key) {
+    stashCurrentEditor()
     currentLocalId.value = null
     currentRemoteId.value = null
     scenarioName.value = roiPresets[key].name
     selectPreset(key)
+  }
+  function defaultDraftBaseName(productName) {
+    return productName ? `Default ${productName}` : 'Default'
+  }
+  function defaultDraftNamePattern(productName) {
+    return new RegExp(`^${escapeRegExp(defaultDraftBaseName(productName))} (\\d+)$`)
+  }
+  function isSameInput(a, b) {
+    const keys = new Set([...Object.keys(a), ...Object.keys(b)])
+
+    return [...keys].every(key => a[key] === b[key])
+  }
+  function nextDefaultDraftName(productName) {
+    const baseName = defaultDraftBaseName(productName)
+    const pattern = defaultDraftNamePattern(productName)
+
+    const numbers = savedScenarios.value
+      .map(item => item.name.match(pattern))
+      .filter(Boolean)
+      .map(match => Number(match[1]))
+
+    const nextNumber = numbers.length > 0 ? Math.max(...numbers) + 1 : 1
+
+    return `${baseName} ${nextNumber}`
+  }
+  function applyProductDefaults(machineDefaults) {
+    const mapped = mapMachineRoiDefaultsToInput(machineDefaults)
+    if (!mapped)
+      return false
+
+    const calculatedOt = Number(calculateAutoOt(mapped).toFixed(1))
+
+    otEdited.value = autoOTEnabled.value ? mapped.otHoursPerDay !== calculatedOt : false
+    factorChoice.value = inferFactorChoice(mapped.employeeCostFactor)
+    input.value = mapped
+
+    return true
+  }
+  function createDefaultDraft(product = null) {
+    stashCurrentEditor()
+
+    const preset = roiPresets.default
+    const mapped = mapMachineRoiDefaultsToInput(product?.machine_roi_defaults)
+
+    let presetInput
+    let draftOtEdited = false
+    if (mapped) {
+      const calculatedOt = Number(calculateAutoOt(mapped).toFixed(1))
+
+      presetInput = mapped
+      draftOtEdited = preset.autoOT ? mapped.otHoursPerDay !== calculatedOt : false
+    }
+    else {
+      const { key: _presetKey, name: _name, autoOT: _autoOT, ...baseInput } = { ...preset, employeeCostFactor: 1.2 }
+      if (preset.autoOT)
+        baseInput.otHoursPerDay = Number(calculateAutoOt(baseInput).toFixed(1))
+      presetInput = baseInput
+    }
+
+    const namePattern = defaultDraftNamePattern(product?.name ?? '')
+
+    const pristineDraft = savedScenarios.value.find(item =>
+      !item.remoteId
+      && item.presetKey === 'default'
+      && namePattern.test(item.name)
+      && item.customerName === ''
+      && item.notes === ''
+      && isSameInput(item.input, presetInput),
+    )
+
+    if (pristineDraft) {
+      openScenario(pristineDraft)
+
+      return pristineDraft
+    }
+
+    const draft = {
+      localId: createLocalId(),
+      remoteId: null,
+      name: nextDefaultDraftName(product?.name ?? ''),
+      customerName: '',
+      notes: '',
+      language: language.value,
+      presetKey: 'default',
+      input: presetInput,
+      autoOTEnabled: preset.autoOT,
+      otEdited: draftOtEdited,
+      factorChoice: inferFactorChoice(presetInput.employeeCostFactor),
+      savedAt: new Date().toISOString(),
+    }
+
+    syncSavedScenario(draft)
+    openTabIds.value = [draft.localId, ...openTabIds.value]
+    setEditorFromScenario(draft)
+
+    return draft
   }
   function closePresetTab(key) {
     if (key === 'default')
@@ -246,7 +370,10 @@ export const useRoiStore = defineStore('roi', () => {
     }
   }
   function openScenario(scenario) {
-    setEditorFromScenario(scenario)
+    if (scenario.localId !== currentLocalId.value) {
+      stashCurrentEditor()
+      setEditorFromScenario(scenario)
+    }
     openTabIds.value = openTabIds.value.includes(scenario.localId)
       ? openTabIds.value
       : [scenario.localId, ...openTabIds.value]
@@ -493,10 +620,12 @@ export const useRoiStore = defineStore('roi', () => {
   }, { deep: true })
   
   return {
+    applyProductDefaults,
     autoOTEnabled,
     cancelRenameScenario,
     closePresetTab,
     closeScenarioTab,
+    createDefaultDraft,
     currentLocalId,
     currentRemoteId,
     customerName,
