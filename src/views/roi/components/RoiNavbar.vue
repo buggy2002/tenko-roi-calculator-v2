@@ -34,7 +34,7 @@ const languageOptions = [
       <div class="brand-mark">
         {{ t('roi.brand') }}
       </div>
-      <span> | </span>
+      <span class="brand-divider"> | </span>
 
       <VMenu location="bottom start">
         <template #activator="{ props }">
@@ -203,5 +203,22 @@ const languageOptions = [
 
 .selector-option.v-list-item--active > .v-list-item__overlay {
   opacity: 0 !important;
+}
+
+@media (max-width: 720px) {
+  .brand-mark,
+  .brand-divider {
+    display: none;
+  }
+
+  .session-list-trigger-nav {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .nav-flex {
+    flex: 1;
+    min-width: 0;
+  }
 }
 </style>

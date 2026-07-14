@@ -3,5 +3,6 @@
         "src/plugins/i18n",
         "src/plugins/i18n/locales"
     ],
-    "claudeCode.useTerminal": true
+    "claudeCode.useTerminal": true,
+    "i18n-ally.keystyle": "nested"
 }
