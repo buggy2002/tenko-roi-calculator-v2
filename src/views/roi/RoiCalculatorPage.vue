@@ -560,6 +560,7 @@ onMounted(async () => {
       :print-label="tr.print"
       :full-width-label="tr.fullWidth"
       :products="products"
+      :selected-product-id="selectedProduct?.id ?? null"
       :selected-product-name="selectedProduct?.name ?? 'Select machine'"
       :is-products-loading="isProductsLoading"
       @print="onPrint"

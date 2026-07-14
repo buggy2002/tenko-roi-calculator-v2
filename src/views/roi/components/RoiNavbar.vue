@@ -7,6 +7,7 @@ defineProps({
   printLabel: { type: String, required: true },
   fullWidthLabel: { type: String, required: true },
   products: { type: Array, default: () => [] },
+  selectedProductId: { type: Number, default: null },
   selectedProductName: { type: String, default: 'Select machine' },
   isProductsLoading: { type: Boolean, default: false },
 })
@@ -80,10 +81,11 @@ const languageOptions = [
             <VListItem
               v-for="product in products"
               :key="product.id"
+              class="selector-option"
+              :active="selectedProductId === product.id"
               @click="emit('selectProduct', product)"
             >
               <VListItemTitle>{{ product.name }}</VListItemTitle>
-              <!-- <VListItemSubtitle>{{ product.description }}</VListItemSubtitle> -->
             </VListItem>
           </template>
         </VList>
@@ -192,5 +194,14 @@ const languageOptions = [
   width: 100%;
   justify-content: space-between;
   align-items: center;
+}
+
+.selector-option.v-list-item--active {
+  background: rgba(242, 106, 33, 0.12);
+  color: #f26a21;
+}
+
+.selector-option.v-list-item--active > .v-list-item__overlay {
+  opacity: 0 !important;
 }
 </style>
