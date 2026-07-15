@@ -227,6 +227,7 @@ input {
 }
 
 .hero-shell h1 span {
+  display: block;
   color: var(--orange);
 }
 
@@ -940,7 +941,7 @@ input {
 
 .field {
   min-width: 0;
-  margin-bottom: 10px;
+  margin-bottom: 16px;
 }
 
 /* จัดแถว label/input ให้ตรงกันแม้ label พับหลายบรรทัด — browser เก่าที่ไม่รองรับ subgrid ได้ layout เดิม */
@@ -956,7 +957,7 @@ input {
     /* 3 แถวย่อย: label / input / caption (แถว caption สูง 0 ถ้าไม่มี) */
     grid-row: span 3;
     margin-bottom: 0;
-    padding-bottom: 10px;
+    padding-bottom: 16px;
   }
 
   .grid2 > .field > .field-label-row {
@@ -968,7 +969,7 @@ input {
   display: flex;
   align-items: center;
   gap: 6px;
-  margin-bottom: 5px;
+  margin-bottom: 8px;
 }
 
 .field-label-row > label {
@@ -1762,7 +1763,14 @@ input {
   }
 
   .print-executive .roi-print-left-column {
-    grid-template-rows: 1fr auto;
+    grid-template-rows: 1fr;
+    align-content: stretch;
+  }
+
+  /* การ์ดรูปยืดเต็มความสูงคอลัมน์ — ท้ายเสมอกับคอลัมน์ขวา รูป crop ส่วนบนเพิ่มเอง */
+  .print-executive .roi-print-hero-card {
+    height: 100%;
+    min-height: 112mm;
   }
 
   .print-executive .roi-print-body-grid {
@@ -1830,26 +1838,38 @@ input {
     box-shadow: none;
   }
 
+  /* ข้อความ header ทับพื้นที่ว่างด้านบนของรูปเครื่อง */
+  .roi-print-hero-copy {
+    position: relative;
+    z-index: 2;
+    padding: 6mm 6mm 0;
+  }
+
   .roi-print-title {
     color: #111318;
     font-size: 31px;
     font-weight: 900;
-    line-height: 1.08;
-    overflow-wrap: anywhere;
+    line-height: 1.14;
+    white-space: pre;
   }
 
-  .roi-print-title span {
-    display: block;
+  .roi-print-title-product {
     margin-top: 2.1mm;
     color: var(--orange);
+    font-size: 36px;
+    font-weight: 900;
+    letter-spacing: 0;
+    line-height: 1.05;
+    white-space: nowrap;
   }
 
   .roi-print-subtitle {
-    max-width: 54mm;
-    margin-top: 4.2mm;
-    color: #5e646d;
-    font-size: 9.7px;
-    line-height: 1.6;
+    margin-top: 2mm;
+    color: #45505c;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.65;
+    white-space: pre;
   }
 
   .roi-print-robot-stage {
@@ -1872,10 +1892,12 @@ input {
     inset: 0;
     z-index: 1;
     width: 100%;
-    min-height: 500px;
+    height: 100%;
     filter: drop-shadow(0 5mm 7mm rgba(0, 0, 0, .12));
+
+    /* สูงเต็ม layout เสมอ — ครอปส่วนเกิน โดยยึดด้านล่าง (ตัวเครื่อง) ไว้ ครอปพื้นหลังว่างด้านบน */
     object-fit: cover;
-    object-position: center top;
+    object-position: center bottom;
     mask-image: linear-gradient(180deg, #000 0%, #000 88%, rgba(0, 0, 0, .55) 95%, transparent 100%);
     -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 88%, rgba(0, 0, 0, .55) 95%, transparent 100%);
   }
@@ -3434,6 +3456,17 @@ input {
     align-content: start;
   }
 
+  .print-executive .roi-print-left-column {
+    grid-template-rows: 1fr;
+    align-content: stretch;
+  }
+
+  /* การ์ดรูปยืดเต็มความสูงคอลัมน์ — ท้ายเสมอกับคอลัมน์ขวา รูป crop ส่วนบนเพิ่มเอง */
+  .print-executive .roi-print-hero-card {
+    height: 100%;
+    min-height: 112mm;
+  }
+
   .print-executive .roi-print-body-grid {
     min-height: 155mm;
   }
@@ -3499,27 +3532,39 @@ input {
     box-shadow: none;
   }
 
+  /* ข้อความ header ทับพื้นที่ว่างด้านบนของรูปเครื่อง */
+  .roi-print-hero-copy {
+    position: relative;
+    z-index: 2;
+    padding: 6mm 6mm 0;
+  }
+
   .roi-print-title {
     color: #111318;
     font-size: 31px;
     font-weight: 900;
     letter-spacing: 0;
-    line-height: 1.08;
-    overflow-wrap: anywhere;
+    line-height: 1.14;
+    white-space: pre;
   }
 
-  .roi-print-title span {
-    display: block;
+  .roi-print-title-product {
     margin-top: 2.1mm;
     color: var(--orange);
+    font-size: 36px;
+    font-weight: 900;
+    letter-spacing: 0;
+    line-height: 1.05;
+    white-space: nowrap;
   }
 
   .roi-print-subtitle {
-    max-width: 54mm;
-    margin-top: 4.2mm;
-    color: #5e646d;
-    font-size: 9.7px;
-    line-height: 1.6;
+    margin-top: 2mm;
+    color: #45505c;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.65;
+    white-space: pre;
   }
 
   .roi-print-robot-stage {
@@ -3542,10 +3587,12 @@ input {
     inset: 0;
     z-index: 1;
     width: 100%;
-    min-height: 500px;
+    height: 100%;
     filter: drop-shadow(0 5mm 7mm rgba(0, 0, 0, .12));
+
+    /* สูงเต็ม layout เสมอ — ครอปส่วนเกิน โดยยึดด้านล่าง (ตัวเครื่อง) ไว้ ครอปพื้นหลังว่างด้านบน */
     object-fit: cover;
-    object-position: center top;
+    object-position: center bottom;
     mask-image: linear-gradient(180deg, #000 0%, #000 88%, rgba(0, 0, 0, .55) 95%, transparent 100%);
     -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 88%, rgba(0, 0, 0, .55) 95%, transparent 100%);
   }

@@ -31,6 +31,7 @@ const language = ref('th')
 const scenarioName = ref('Default')
 const customerName = ref('')
 const scenarioNotes = ref('')
+const productName = ref('')
 
 const buildTextMap = (prefix, keys) => {
   const result = {}
@@ -113,6 +114,8 @@ const roiTextKeys = [
   'printBenefitInvestDesc',
   'titleA',
   'desc',
+  'printTitleTop',
+  'printDesc',
 ]
 
 const roiLabelKeys = [
@@ -338,6 +341,7 @@ onMounted(async () => {
   scenarioName.value = snapshot?.scenarioName ?? 'Default'
   customerName.value = snapshot?.customerName ?? ''
   scenarioNotes.value = snapshot?.scenarioNotes ?? ''
+  productName.value = snapshot?.productName ?? ''
 
   await nextTick()
   await document.fonts?.ready
@@ -381,6 +385,7 @@ onMounted(async () => {
       :labels="labels"
       :mins="mins"
       :print-metrics="printMetrics"
+      :product-name="productName"
       :result="result"
       :scenario-name="scenarioName"
       :scenario-notes="scenarioNotes"

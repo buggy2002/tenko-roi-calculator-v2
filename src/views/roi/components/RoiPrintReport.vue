@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import growthGraphImage from '@images/roi/stats.png'
 import moneyIcon from '@images/roi/money.png'
@@ -7,9 +7,9 @@ import assumptionIcon from '@images/roi/paperclip.png'
 import staffCostIcon from '@images/roi/financial-profit.png'
 import equipmentIcon from '@images/roi/settings.png'
 import tenkoIcon from '@images/roi/robot.png'
-import robotImage from '@images/roi/tenko-robot-main.png'
-import robotImageEn from '@images/roi/tenko-robot-main-en.png'
-import robotImageJp from '@images/roi/tenko-robot-main-jp.png'
+import robotImage from '@images/roi/tenko-robot/robot-pdf.webp'
+import maxImage from '@images/roi/tenko-max/max-pdf.webp'
+import stationImage from '@images/roi/tenko-station/station-pdf.webp'
 import safeIcon from '@images/roi/shield.png'
 import productivityIcon from '@images/roi/performance.png'
 import investmentIcon from '@images/roi/money-bag.png'
@@ -34,17 +34,52 @@ const props = defineProps({
   result: { type: Object, required: true },
   scenarioName: { type: String, required: true },
   scenarioNotes: { type: String, default: '' },
+  productName: { type: String, default: '' },
   tr: { type: Object, required: true },
 })
 
 const { t, locale } = useI18n({ useScope: 'global' })
 
-const localizedRobotImage = computed(() => {
-  if (locale.value === 'en')
-    return robotImageEn
+const heroTitleEl = ref(null)
+const heroProductEl = ref(null)
+const heroDescEl = ref(null)
 
-  if (locale.value === 'ja')
-    return robotImageJp
+// บรรทัดถูก fix ด้วย \n + white-space: pre — ถ้าบรรทัดยาวเกินความกว้าง ให้ลดขนาด font ลงทีละ 1px จนพอดี
+function fitHeroText() {
+  [heroTitleEl.value, heroProductEl.value, heroDescEl.value].forEach(el => {
+    if (!el)
+      return
+
+    el.style.fontSize = ''
+
+    let size = Number.parseFloat(window.getComputedStyle(el).fontSize)
+
+    while (el.scrollWidth > el.clientWidth && size > 10) {
+      size -= 1
+      el.style.fontSize = `${size}px`
+    }
+  })
+}
+
+onMounted(async () => {
+  await document.fonts?.ready
+  fitHeroText()
+})
+
+watch([locale, () => props.productName], async () => {
+  await nextTick()
+  fitHeroText()
+})
+
+// รูปตามเครื่องที่เลือก — ไม่มีข้อความในรูปแล้ว เลยไม่ต้องแยกภาษา
+const productImage = computed(() => {
+  const name = props.productName.toLowerCase()
+
+  if (name.includes('max'))
+    return maxImage
+
+  if (name.includes('station'))
+    return stationImage
 
   return robotImage
 })
@@ -346,23 +381,35 @@ function formatSignedValue(value, formatter) {
       <div class="roi-print-body-grid">
         <section class="roi-print-left-column">
           <div class="roi-print-hero-card">
-            <!--
-              <div class="roi-print-title">
-              {{ tr.titleA }}
-              <span>Tenko Robot</span>
+            <div class="roi-print-hero-copy">
+              <div
+                ref="heroTitleEl"
+                class="roi-print-title"
+              >
+                {{ tr.printTitleTop }}
               </div>
 
-              <div class="roi-print-subtitle">
-              {{ tr.desc }}
-              </div> 
-            -->
+              <div
+                ref="heroProductEl"
+                class="roi-print-title-product"
+              >
+                {{ productName || 'Tenko Robot' }}
+              </div>
+
+              <div
+                ref="heroDescEl"
+                class="roi-print-subtitle"
+              >
+                {{ tr.printDesc }}
+              </div>
+            </div>
 
             <div>
               <!-- <div class="roi-print-robot-glow" /> -->
               <img
                 class="roi-print-robot-main"
-                :src="localizedRobotImage"
-                alt="Tenko Robot"
+                :src="productImage"
+                :alt="productName || 'Tenko Robot'"
               >
             </div>
           </div>
