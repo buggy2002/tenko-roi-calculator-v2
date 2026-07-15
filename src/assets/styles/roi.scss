@@ -943,6 +943,27 @@ input {
   margin-bottom: 10px;
 }
 
+/* จัดแถว label/input ให้ตรงกันแม้ label พับหลายบรรทัด — browser เก่าที่ไม่รองรับ subgrid ได้ layout เดิม */
+@supports (grid-template-rows: subgrid) {
+  .grid2 {
+    row-gap: 0;
+  }
+
+  .grid2 > .field {
+    display: grid;
+    grid-template-rows: subgrid;
+
+    /* 3 แถวย่อย: label / input / caption (แถว caption สูง 0 ถ้าไม่มี) */
+    grid-row: span 3;
+    margin-bottom: 0;
+    padding-bottom: 10px;
+  }
+
+  .grid2 > .field > .field-label-row {
+    align-self: end;
+  }
+}
+
 .field-label-row {
   display: flex;
   align-items: center;
@@ -952,6 +973,16 @@ input {
 
 .field-label-row > label {
   margin-bottom: 0;
+}
+
+/* ช่องเวลา Tenko (วินาที) — เน้นด้วยสีส้มตาม requirement */
+.field-tenko-time .field-label-row > label {
+  color: var(--orange);
+}
+
+.field-tenko-time .input-control {
+  border-color: var(--orange);
+  // background: var(--orange-soft);
 }
 
 .info-btn {

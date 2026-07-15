@@ -2,7 +2,7 @@ import { computed, ref, watch } from 'vue'
 import { defineStore } from 'pinia'
 import { calculateAutoOt, calculateRoi } from '@/utils/roi/calculate-roi'
 import { FORMULA_VERSION } from '@/utils/roi/constants'
-import { defaultInput, roiPresets } from '@/utils/roi/presets'
+import { defaultInput, deriveAbsenceYear, deriveBonusYear, deriveSocialSecurityYear, roiPresets } from '@/utils/roi/presets'
 import { mapMachineRoiDefaultsToInput } from '@/utils/roi/product-defaults'
 import { createScenario, deleteScenarioRequest, hasScenarioApiConfig, listScenarios, updateScenario } from '@/services/roi-scenarios.js'
 
@@ -233,8 +233,25 @@ export const useRoiStore = defineStore('roi', () => {
       next = { ...next, otHoursPerDay: Number(calculateAutoOt(next).toFixed(1)) }
     input.value = next
   }
+
+  const derivedStaffCostFields = {
+    socialSecurityYear: deriveSocialSecurityYear,
+    bonusYear: deriveBonusYear,
+    absenceYear: deriveAbsenceYear,
+  }
+
   function updateInput(key, value) {
     const next = { ...input.value, [key]: Math.max(0, Number.isFinite(value) ? value : 0) }
+
+    // เงินเดือนเปลี่ยน — อัปเดตช่องที่ยังตรงสูตร default ตาม ช่องที่ผู้ใช้ override แล้วไม่แตะ
+    if (key === 'salaryPerMonth') {
+      const prevSalary = input.value.salaryPerMonth
+
+      Object.entries(derivedStaffCostFields).forEach(([field, derive]) => {
+        if (input.value[field] === derive(prevSalary))
+          next[field] = derive(next.salaryPerMonth)
+      })
+    }
     if (key === 'otHoursPerDay') {
       otEdited.value = true
       input.value = next

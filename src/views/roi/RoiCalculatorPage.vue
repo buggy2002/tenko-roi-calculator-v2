@@ -422,7 +422,13 @@ function formatSavedAt(savedAt) {
   }).format(new Date(savedAt))
 }
 
+// ช่องเวลา Tenko เก็บภายในเป็นนาที แต่แสดง/รับค่าจากผู้ใช้เป็นวินาที
+const SECONDS_INPUT_KEY = 'tenkoMinutesPerPerson'
+
 function fieldStep(key) {
+  if (key === SECONDS_INPUT_KEY)
+    return 1
+
   if (key === 'otMultiplier' || key === 'staffCount' || key.includes('Minutes') || key === 'workHoursDay')
     return 0.1
 
@@ -439,10 +445,17 @@ function fieldMin(key) {
   return 0
 }
 
+function fieldDisplayValue(key) {
+  if (key === SECONDS_INPUT_KEY)
+    return Number((store.input[key] * 60).toFixed(2))
+
+  return store.input[key]
+}
+
 function onNumericInput(key, event) {
   const value = Number(event.target.value)
 
-  store.updateInput(key, value)
+  store.updateInput(key, key === SECONDS_INPUT_KEY ? value / 60 : value)
 }
 
 function updateRenameDraft(value) {
@@ -678,6 +691,7 @@ onMounted(async () => {
               v-for="key in group.keys"
               :key="key"
               class="field"
+              :class="[key === SECONDS_INPUT_KEY && 'field-tenko-time']"
             >
               <div class="field-label-row">
                 <label :for="key">{{ labels[key] }}</label>
@@ -708,7 +722,7 @@ onMounted(async () => {
                 :min="fieldMin(key)"
                 :max="key === 'years' ? 10 : undefined"
                 :step="fieldStep(key)"
-                :value="store.input[key]"
+                :value="fieldDisplayValue(key)"
                 type="number"
                 @input="onNumericInput(key, $event)"
               >

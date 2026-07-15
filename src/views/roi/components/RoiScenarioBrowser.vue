@@ -391,8 +391,11 @@ function groupHeading(value) {
                     </div>
 
                     <div class="scenario-list-meta mt-2">
-                      {{ scenario.customerName ? `${scenario.customerName} | ` : '' }}{{ formatSavedAt(scenario.savedAt)
-                      }}
+                      {{ scenario.customerName ? `${scenario.customerName} | ` : '' }}
+                      <!--
+                        {{ formatSavedAt(scenario.savedAt)
+                        }} 
+                      -->
                     </div>
                   </template>
                 </div>

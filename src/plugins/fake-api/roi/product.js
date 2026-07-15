@@ -1,3 +1,5 @@
+import { deriveAbsenceYear, deriveBonusYear, deriveSocialSecurityYear } from '@/utils/roi/presets'
+
 export const baseMachineRoiDefaults = {
   people_per_day: 50,
   days_per_month: 26,
@@ -9,9 +11,9 @@ export const baseMachineRoiDefaults = {
   salary_per_month: 18000,
   ot_hours_per_day: 0,
   ot_multiplier: 1.5,
-  social_security_year: 9000,
-  bonus_year: 18000,
-  absence_year: 12000,
+  social_security_year: deriveSocialSecurityYear(18000),
+  bonus_year: deriveBonusYear(18000),
+  absence_year: deriveAbsenceYear(18000),
   employee_avg_salary: 18000,
   work_hours_day: 8,
   employee_cost_factor: 1.2,
@@ -34,8 +36,18 @@ export const baseMachineRoiDefaults = {
 }
 
 export function createMachineRoiDefaults(overrides = {}) {
-  return {
+  const merged = {
     ...baseMachineRoiDefaults,
     ...overrides,
   }
+
+  // ต้นทุน จนท. ที่ไม่ได้ override ให้ตามสูตร default จากเงินเดือนของเครื่องนั้น
+  if (!('social_security_year' in overrides))
+    merged.social_security_year = deriveSocialSecurityYear(merged.salary_per_month)
+  if (!('bonus_year' in overrides))
+    merged.bonus_year = deriveBonusYear(merged.salary_per_month)
+  if (!('absence_year' in overrides))
+    merged.absence_year = deriveAbsenceYear(merged.salary_per_month)
+
+  return merged
 }

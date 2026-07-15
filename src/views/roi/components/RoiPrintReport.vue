@@ -65,11 +65,18 @@ const worthSummary = computed(() => ({
   tone: props.result.isWorth ? 'good' : 'bad',
 }))
 
+// input เก็บเวลา Tenko เป็นนาที — รายงานแสดงเป็นวินาทีตาม label
+const tenkoSeconds = computed(() => {
+  locale.value
+
+  return `${formatNumber(props.input.tenkoMinutesPerPerson * 60, 1)} ${t('roi.sec')}`
+})
+
 const assumptionItems = computed(() => [
   { label: props.labels.peoplePerDay, value: formatNumber(props.input.peoplePerDay) },
   { label: props.labels.daysPerMonth, value: formatNumber(props.input.daysPerMonth) },
   { label: props.labels.minutesPerPerson, value: props.mins(props.input.minutesPerPerson) },
-  { label: props.labels.tenkoMinutesPerPerson, value: props.mins(props.input.tenkoMinutesPerPerson) },
+  { label: props.labels.tenkoMinutesPerPerson, value: tenkoSeconds.value },
   { label: props.labels.staffCount, value: formatNumber(props.input.staffCount, 1) },
   { label: props.labels.otHoursPerDay, value: props.hrs(props.input.otHoursPerDay, false) },
 ])
@@ -241,7 +248,7 @@ const detailSections = computed(() => [
       { label: props.labels.daysPerMonth, value: formatNumber(props.input.daysPerMonth) },
       { label: props.labels.minutesPerPerson, value: props.mins(props.input.minutesPerPerson) },
       { label: props.labels.waitMinutes, value: props.mins(props.input.waitMinutes) },
-      { label: props.labels.tenkoMinutesPerPerson, value: props.mins(props.input.tenkoMinutesPerPerson) },
+      { label: props.labels.tenkoMinutesPerPerson, value: tenkoSeconds.value },
       { label: props.labels.workDaysYear, value: formatNumber(props.input.workDaysYear) },
     ],
   },
