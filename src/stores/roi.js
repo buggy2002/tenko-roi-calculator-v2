@@ -33,6 +33,15 @@ function inferFactorChoice(value) {
 function inferAutoOtEnabled(presetKey) {
   return roiPresets[presetKey].autoOT
 }
+
+// DB เก็บ product_id เป็น text แต่ mock catalog ใช้ id ตัวเลข — แปลงกลับให้ === กับ product.id ได้
+function normalizeProductId(value) {
+  if (value === null || value === undefined || value === '')
+    return null
+  const numeric = Number(value)
+
+  return Number.isFinite(numeric) ? numeric : value
+}
 function normalizeStoredScenario(raw) {
   if (typeof raw.localId !== 'string' ||
         typeof raw.name !== 'string' ||
@@ -61,9 +70,15 @@ function normalizeStoredScenario(raw) {
 }
 function toStoredScenarioFromRecord(record, fallbackLocalId) {
   const nextPresetKey = resolvePresetKey(record.presetKey)
-  const autoOTEnabled = inferAutoOtEnabled(nextPresetKey)
+
+  // record เก่าใน DB ไม่มี session fields (null) — fallback เป็นการ infer แบบเดิม
+  const autoOTEnabled = typeof record.autoOTEnabled === 'boolean' ? record.autoOTEnabled : inferAutoOtEnabled(nextPresetKey)
   const calculatedOt = Number(calculateAutoOt(record.input).toFixed(1))
-  
+
+  const otEdited = typeof record.otEdited === 'boolean'
+    ? record.otEdited
+    : (autoOTEnabled ? record.input.otHoursPerDay !== calculatedOt : false)
+
   return {
     localId: fallbackLocalId ?? `remote-${record.id}`,
     remoteId: record.id,
@@ -72,12 +87,12 @@ function toStoredScenarioFromRecord(record, fallbackLocalId) {
     notes: record.notes ?? '',
     language: record.language,
     presetKey: nextPresetKey,
-    productId: record.productId ?? null,
+    productId: normalizeProductId(record.productId),
     productName: record.productName ?? '',
     input: cloneInput(record.input),
     autoOTEnabled,
-    otEdited: autoOTEnabled ? record.input.otHoursPerDay !== calculatedOt : false,
-    factorChoice: inferFactorChoice(record.input.employeeCostFactor),
+    otEdited,
+    factorChoice: typeof record.factorChoice === 'string' ? record.factorChoice : inferFactorChoice(record.input.employeeCostFactor),
     savedAt: record.updatedAt,
   }
 }
@@ -512,6 +527,9 @@ export const useRoiStore = defineStore('roi', () => {
       presetKey: presetKey.value,
       productId: productId.value,
       productName: productName.value || null,
+      autoOTEnabled: autoOTEnabled.value,
+      otEdited: otEdited.value,
+      factorChoice: factorChoice.value,
       formulaVersion: FORMULA_VERSION,
       input: cloneInput(input.value),
       result: result.value,
