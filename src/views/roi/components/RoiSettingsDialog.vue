@@ -219,17 +219,19 @@ async function save() {
             />
           </div>
 
-          <button
+          <!--
+            <button
             class="btn-outline roi-settings-factory"
             type="button"
             @click="applyFactoryDefaults"
-          >
+            >
             <VIcon
-              icon="tabler-refresh"
-              size="17"
+            icon="tabler-refresh"
+            size="17"
             />
             {{ tr.settingsFactory }}
-          </button>
+            </button> 
+          -->
         </div>
 
         <div
@@ -274,15 +276,16 @@ async function save() {
         </div>
       </VCardText>
 
-      <VCardActions class="roi-save-dialog__actions roi-settings-actions">
+      <VCardActions class="roi-save-dialog__actions roi-settings-actions padding-top-save">
         <VBtn
-          variant="text"
+          variant="elevated"
           color="default"
           @click="close"
         >
           {{ tr.settingsCancel }}
         </VBtn>
         <VBtn
+          variant="elevated"
           color="primary"
           @click="requestSave"
         >
@@ -328,9 +331,9 @@ async function save() {
         </div>
       </VCardText>
 
-      <VCardActions class="roi-save-dialog__actions">
+      <VCardActions class="roi-save-dialog__actions padding-top-save">
         <VBtn
-          variant="text"
+          variant="elevated"
           color="default"
           :disabled="isSaving"
           @click="closePasswordDialog"
@@ -338,6 +341,7 @@ async function save() {
           {{ tr.settingsCancel }}
         </VBtn>
         <VBtn
+          variant="elevated"
           color="primary"
           :loading="isSaving"
           @click="save"
@@ -389,5 +393,9 @@ async function save() {
   margin-top: 4px;
   color: var(--red);
   font-size: 12px;
+}
+
+.padding-top-save{
+  padding-top: 12px;
 }
 </style>
