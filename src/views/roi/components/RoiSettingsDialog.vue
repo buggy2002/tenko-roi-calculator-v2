@@ -186,8 +186,8 @@ async function save() {
     @update:model-value="value => emit('update:modelValue', value)"
   >
     <VCard class="roi-save-dialog roi-settings-dialog">
-      <div class="roi-save-dialog__title">
-        <div>
+      <div class="roi-save-dialog__title roi-settings-dialog__header">
+        <div class="roi-settings-dialog__header-copy">
           <div class="roi-save-dialog__eyebrow">
             SETTINGS
           </div>
@@ -200,6 +200,7 @@ async function save() {
         <button
           class="roi-save-dialog__close"
           type="button"
+          :aria-label="tr.settingsCancel"
           @click="close"
         >
           <VIcon icon="tabler-x" />
@@ -361,6 +362,46 @@ async function save() {
   margin-bottom: 6px;
 }
 
+.roi-settings-dialog__header {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: flex-start;
+  justify-content: space-between;
+  min-height: 0;
+  gap: 20px;
+  padding: 24px 26px 20px;
+}
+
+.roi-settings-dialog__header-copy {
+  flex: 1;
+  min-width: 0;
+}
+
+.roi-settings-dialog__header h2 {
+  font-size: 23px;
+  font-weight: 650;
+  line-height: 1.35;
+  letter-spacing: -.015em;
+}
+
+.roi-settings-dialog__header .subtext {
+  max-width: 560px;
+  margin: 5px 0 0;
+  line-height: 1.5;
+}
+
+.roi-settings-dialog__header .roi-save-dialog__close {
+  position: static;
+  margin-top: 0;
+}
+
+.roi-settings-key-dialog .roi-save-dialog__title {
+  flex: 0 0 auto;
+  min-height: 0;
+  padding-top: 22px;
+  padding-bottom: 18px;
+}
+
 .roi-settings-machine {
   flex: 1;
   margin-bottom: 0;
@@ -397,5 +438,21 @@ async function save() {
 
 .padding-top-save{
   padding-top: 12px;
+}
+
+@media (max-width: 600px) {
+  .roi-settings-dialog__header {
+    gap: 12px;
+    padding: 18px 16px 16px;
+  }
+
+  .roi-settings-dialog__header h2 {
+    font-size: 20px;
+  }
+
+  .roi-settings-dialog__header .roi-save-dialog__close {
+    width: 34px;
+    height: 34px;
+  }
 }
 </style>
