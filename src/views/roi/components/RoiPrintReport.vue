@@ -205,8 +205,8 @@ const timeCostChartData = computed(() => ({
     {
       label: props.tr.oldMethod,
       data: [props.result.oldTimeYear],
-      backgroundColor: 'rgba(184,60,50,.88)',
-      borderColor: '#b83c32',
+      backgroundColor: 'rgba(63,68,76,.85)',
+      borderColor: '#3f444c',
       borderWidth: 1,
       borderRadius: 10,
       borderSkipped: false,
@@ -214,8 +214,8 @@ const timeCostChartData = computed(() => ({
     {
       label: 'Tenko Robot',
       data: [props.result.newTimeYear],
-      backgroundColor: 'rgba(21,130,78,.88)',
-      borderColor: '#15824e',
+      backgroundColor: 'rgba(242,106,33,.88)',
+      borderColor: '#f26a21',
       borderWidth: 1,
       borderRadius: 10,
       borderSkipped: false,

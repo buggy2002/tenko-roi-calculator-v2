@@ -16,6 +16,7 @@ import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import RoiNavbar from './components/RoiNavbar.vue'
 import RoiScenarioBrowser from './components/RoiScenarioBrowser.vue'
+import RoiSettingsDialog from './components/RoiSettingsDialog.vue'
 import { uiFactorChoices, uiGroups } from '../../utils/roi/ui-copy'
 import { getFieldTooltip } from '../../utils/roi/ui-help-copy'
 import { listRoiProducts } from '@/services/roi-products'
@@ -29,6 +30,7 @@ const router = useRouter()
 const { t, locale } = useI18n({ useScope: 'global' })
 const isFullWidth = ref(true)
 const isSaveDialogVisible = ref(false)
+const isSettingsDialogVisible = ref(false)
 const snackbar = ref({ show: false, text: '', color: 'success' })
 const products = ref([])
 const isProductsLoading = ref(false)
@@ -110,6 +112,18 @@ const roiTextKeys = [
   'costPerMin',
   'timeSaveDay',
   'roiFromTotal',
+  'settingsTitle',
+  'settingsDesc',
+  'settingsSelectMachine',
+  'settingsFactory',
+  'settingsSave',
+  'settingsCancel',
+  'settingsPassword',
+  'settingsPasswordHint',
+  'settingsWrongPassword',
+  'settingsSaved',
+  'settingsSaveFailed',
+  'settingsUpdatedAt',
   'chartTitle',
   'chartDesc',
   'timeChartTitle',
@@ -255,8 +269,8 @@ const chartData = computed(() => ({
     {
       label: tr.value.oldMethod,
       data: store.result.oldData,
-      borderColor: '#b83c32',
-      backgroundColor: 'rgba(184,60,50,.07)',
+      borderColor: '#3f444c',
+      backgroundColor: 'rgba(63,68,76,.08)',
       borderWidth: 3,
       pointRadius: 4,
       fill: true,
@@ -265,8 +279,8 @@ const chartData = computed(() => ({
     {
       label: 'Tenko Robot',
       data: store.result.newData,
-      borderColor: '#15824e',
-      backgroundColor: 'rgba(21,130,78,.07)',
+      borderColor: '#f26a21',
+      backgroundColor: 'rgba(242,106,33,.07)',
       borderWidth: 3,
       pointRadius: 4,
       fill: true,
@@ -281,8 +295,8 @@ const timeCostChartData = computed(() => ({
     {
       label: tr.value.oldMethod,
       data: [store.result.oldTimeYear],
-      backgroundColor: 'rgba(184,60,50,.88)',
-      borderColor: '#b83c32',
+      backgroundColor: 'rgba(63,68,76,.85)',
+      borderColor: '#3f444c',
       borderWidth: 1,
       borderRadius: 10,
       borderSkipped: false,
@@ -290,8 +304,8 @@ const timeCostChartData = computed(() => ({
     {
       label: 'Tenko Robot',
       data: [store.result.newTimeYear],
-      backgroundColor: 'rgba(21,130,78,.88)',
-      borderColor: '#15824e',
+      backgroundColor: 'rgba(242,106,33,.88)',
+      borderColor: '#f26a21',
       borderWidth: 1,
       borderRadius: 10,
       borderSkipped: false,
@@ -405,9 +419,94 @@ async function loadProducts() {
   }
 }
 
-function selectProduct(product) {
+async function selectProduct(product) {
   selectedProduct.value = product
   store.applyProductDefaults(product)
+
+  const status = await store.loadRemoteScenarios({
+    productId: product.id,
+    limit: MAX_SESSION_TABS,
+  })
+
+  if (status === 'error')
+    showNotice('Database list refresh failed', 'error')
+
+  store.openTabsForProduct(product.id, MAX_SESSION_TABS)
+}
+
+// Tab ของ session แสดงเฉพาะของ product ที่เลือกใน navbar สูงสุด 5 tab
+const MAX_SESSION_TABS = 5
+
+const visibleSessionTabs = computed(() => {
+  const activeId = selectedProduct.value?.id
+
+  if (activeId == null)
+    return store.visibleTabs.slice(0, MAX_SESSION_TABS)
+
+  return store.visibleTabs
+    .filter(tab => String(tab.productId) === String(activeId))
+    .slice(0, MAX_SESSION_TABS)
+})
+
+const visibleScenarioGroups = computed(() => {
+  const activeId = selectedProduct.value?.id
+  if (activeId == null)
+    return []
+
+  const recentIds = new Set(store.savedScenarios
+    .filter(scenario => String(scenario.productId) === String(activeId))
+    .sort((a, b) => b.savedAt.localeCompare(a.savedAt))
+    .slice(0, MAX_SESSION_TABS)
+    .map(scenario => scenario.localId))
+
+  return store.scenarioGroups
+    .map(group => ({
+      ...group,
+      items: group.items.filter(scenario => recentIds.has(scenario.localId)),
+    }))
+    .filter(group => group.items.length > 0)
+})
+
+// เลือกเครื่องแล้วดึง scenario ล่าสุดของเครื่องนั้น (รวมจาก database) ขึ้นเป็น tab อัตโนมัติ
+watch(selectedProduct, product => {
+  if (product)
+    store.openTabsForProduct(product.id, MAX_SESSION_TABS)
+})
+
+function onOpenScenario(scenario) {
+  // scenario เก่าที่ยังไม่ผูกเครื่อง — ผูกเข้ากับเครื่องที่เลือกอยู่ เพื่อให้ tab ไม่หายเพราะ filter
+  if (scenario.productId == null && selectedProduct.value) {
+    const adopted = {
+      ...scenario,
+      productId: selectedProduct.value.id,
+      productName: selectedProduct.value.name,
+    }
+
+    store.syncSavedScenario(adopted)
+    store.openScenario(adopted)
+
+    return
+  }
+
+  // เปิด scenario ของเครื่องอื่นให้สลับ product ที่ navbar ตามไปด้วย ไม่งั้น tab จะโดน filter ซ่อน
+  if (scenario.productId != null && String(scenario.productId) !== String(selectedProduct.value?.id)) {
+    const owner = products.value.find(product => String(product.id) === String(scenario.productId))
+
+    if (owner)
+      selectedProduct.value = owner
+  }
+
+  store.openScenario(scenario)
+}
+
+function onProductDefaultsSaved(updatedProduct) {
+  const index = products.value.findIndex(product => product.id === updatedProduct.id)
+
+  if (index !== -1)
+    products.value.splice(index, 1, updatedProduct)
+
+  if (selectedProduct.value?.id === updatedProduct.id)
+    selectedProduct.value = updatedProduct
 }
 
 function resetEditor() {
@@ -467,6 +566,12 @@ function updateSortMode(value) {
 }
 
 async function onSaveScenario() {
+  // กัน scenario ไม่ผูกเครื่อง — ถ้า editor ยังไม่มี product ให้ใช้เครื่องที่เลือกบน navbar
+  if (store.productId == null && selectedProduct.value) {
+    store.productId = selectedProduct.value.id
+    store.productName = selectedProduct.value.name
+  }
+
   const response = await store.saveScenario()
   if (response.status === 'synced')
     showNotice(scenarioText.value.saveSynced)
@@ -580,9 +685,15 @@ onMounted(async () => {
   if (restoredProduct)
     selectedProduct.value = restoredProduct
 
-  const status = await store.loadRemoteScenarios()
+  const status = selectedProduct.value
+    ? await store.loadRemoteScenarios({ productId: selectedProduct.value.id, limit: MAX_SESSION_TABS })
+    : await store.loadRemoteScenarios()
   if (status === 'error')
     showNotice('Database list refresh failed', 'error')
+
+  // scenario จาก database มาถึงหลังเลือกเครื่องแล้ว — เติม tab ให้เครื่องที่เลือกอยู่
+  if (selectedProduct.value)
+    store.openTabsForProduct(selectedProduct.value.id, MAX_SESSION_TABS)
 })
 </script>
 
@@ -604,6 +715,18 @@ onMounted(async () => {
       @select-product="selectProduct"
       @toggle-full-width="isFullWidth = !isFullWidth"
       @update-language="store.setLanguage"
+      @open-settings="isSettingsDialogVisible = true"
+    />
+
+    <RoiSettingsDialog
+      v-model="isSettingsDialogVisible"
+      :products="products"
+      :initial-product-id="selectedProduct?.id ?? null"
+      :labels="labels"
+      :tr="tr"
+      :formatter-locale="formatterLocale"
+      @saved="onProductDefaultsSaved"
+      @notice="notice => showNotice(notice.text, notice.color)"
     />
 
     <section class="hero-shell roi-shell">
@@ -624,11 +747,10 @@ onMounted(async () => {
       :rename-draft="store.renameDraft"
       :renaming-local-id="store.renamingLocalId"
       :saved-scenario-count="store.savedScenarios.length"
-      :scenario-groups="store.scenarioGroups"
-      :selected-product-name="selectedProduct?.name ?? ''"
+      :scenario-groups="visibleScenarioGroups"
       :sort-mode="store.sortMode"
       :visible-preset-keys="store.visiblePresetKeys"
-      :visible-tabs="store.visibleTabs"
+      :visible-tabs="visibleSessionTabs"
       @activate-preset-tab="store.activatePresetTab"
       @close-preset-tab="store.closePresetTab"
       @create-default-scenario="store.createDefaultDraft(selectedProduct)"
@@ -636,7 +758,7 @@ onMounted(async () => {
       @close-scenario-tab="store.closeScenarioTab"
       @delete-scenario="onDeleteScenario"
       @duplicate-scenario="onDuplicateScenario"
-      @open-scenario="store.openScenario"
+      @open-scenario="onOpenScenario"
       @rename-draft-change="updateRenameDraft"
       @set-sort-mode="updateSortMode"
       @start-rename-scenario="store.startRenameScenario"

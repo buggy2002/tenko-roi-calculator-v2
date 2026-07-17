@@ -195,6 +195,22 @@ export const useRoiStore = defineStore('roi', () => {
   function syncSavedScenario(scenario) {
     savedScenarios.value = mergeScenarioCollections(savedScenarios.value.filter(item => item.localId !== scenario.localId), [scenario])
   }
+
+  // เปิด scenario ล่าสุดของเครื่องนั้นจากรายการ (รวมที่ sync จาก database) ขึ้นเป็น tab อัตโนมัติ
+  function openTabsForProduct(targetProductId, limit = 5) {
+    if (targetProductId == null)
+      return
+
+    const matches = savedScenarios.value
+      .filter(item => isSameProductId(item.productId, targetProductId))
+      .sort((a, b) => b.savedAt.localeCompare(a.savedAt))
+      .slice(0, limit)
+
+    const matchIds = matches.map(item => item.localId)
+    const otherProductIds = openTabIds.value.filter(id => !matchIds.includes(id))
+
+    openTabIds.value = [...matchIds, ...otherProductIds]
+  }
   function stashCurrentEditor() {
     if (!currentLocalId.value)
       return
@@ -302,29 +318,30 @@ export const useRoiStore = defineStore('roi', () => {
     scenarioName.value = roiPresets[key].name
     selectPreset(key)
   }
-  function defaultDraftBaseName(productName) {
-    return productName ? `Default ${productName}` : 'Default'
+  function defaultDraftNamePattern() {
+    return /^Default (\d+)$/
   }
-  function defaultDraftNamePattern(productName) {
-    return new RegExp(`^${escapeRegExp(defaultDraftBaseName(productName))} (\\d+)$`)
+  function isSameProductId(a, b) {
+    return String(a ?? '') === String(b ?? '')
   }
   function isSameInput(a, b) {
     const keys = new Set([...Object.keys(a), ...Object.keys(b)])
 
     return [...keys].every(key => a[key] === b[key])
   }
-  function nextDefaultDraftName(productName) {
-    const baseName = defaultDraftBaseName(productName)
-    const pattern = defaultDraftNamePattern(productName)
+  function nextDefaultDraftName(draftProductId) {
+    const pattern = defaultDraftNamePattern()
 
+    // นับเลขแยกตาม product เพื่อให้แต่ละเครื่องเริ่ม Default 1 ของตัวเอง
     const numbers = savedScenarios.value
+      .filter(item => isSameProductId(item.productId, draftProductId))
       .map(item => item.name.match(pattern))
       .filter(Boolean)
       .map(match => Number(match[1]))
 
     const nextNumber = numbers.length > 0 ? Math.max(...numbers) + 1 : 1
 
-    return `${baseName} ${nextNumber}`
+    return `Default ${nextNumber}`
   }
   function applyProductDefaults(product) {
     productId.value = product?.id ?? null
@@ -363,12 +380,13 @@ export const useRoiStore = defineStore('roi', () => {
       presetInput = baseInput
     }
 
-    const namePattern = defaultDraftNamePattern(product?.name ?? '')
+    const namePattern = defaultDraftNamePattern()
 
     const pristineDraft = savedScenarios.value.find(item =>
       !item.remoteId
       && item.presetKey === 'default'
       && namePattern.test(item.name)
+      && isSameProductId(item.productId, product?.id)
       && item.customerName === ''
       && item.notes === ''
       && isSameInput(item.input, presetInput),
@@ -383,7 +401,7 @@ export const useRoiStore = defineStore('roi', () => {
     const draft = {
       localId: createLocalId(),
       remoteId: null,
-      name: nextDefaultDraftName(product?.name ?? ''),
+      name: nextDefaultDraftName(product?.id ?? null),
       customerName: '',
       notes: '',
       language: language.value,
@@ -586,12 +604,12 @@ export const useRoiStore = defineStore('roi', () => {
       return { status: 'sync-failed', scenario: baseScenario }
     }
   }
-  async function loadRemoteScenarios() {
+  async function loadRemoteScenarios(options = {}) {
     if (!hasHydrated.value || !hasScenarioApiConfig())
       return
     isRemoteLoading.value = true
     try {
-      const records = await listScenarios()
+      const records = await listScenarios(options)
 
       savedScenarios.value = mergeScenarioCollections(savedScenarios.value, records.map(record => {
         const existing = savedScenarios.value.find(item => item.remoteId === record.id)
@@ -698,6 +716,7 @@ export const useRoiStore = defineStore('roi', () => {
     loadRemoteScenarios,
     openScenario,
     openTabIds,
+    openTabsForProduct,
     otEdited,
     presetKey,
     productId,

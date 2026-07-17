@@ -12,8 +12,13 @@ const api = ofetch.create({
 export function hasScenarioApiConfig() {
   return Boolean(rawBaseURL)
 }
-export function listScenarios() {
-  return api('/api/roi/scenarios')
+export function listScenarios({ productId = null, limit = null } = {}) {
+  return api('/api/roi/scenarios', {
+    query: {
+      ...(productId == null ? {} : { productId }),
+      ...(limit == null ? {} : { limit }),
+    },
+  })
 }
 export function createScenario(payload) {
   return api('/api/roi/scenarios', {

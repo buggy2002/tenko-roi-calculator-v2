@@ -4,6 +4,26 @@ function toCamelCase(key) {
   return key.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase())
 }
 
+function toSnakeCase(key) {
+  return key.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`)
+}
+
+export function mapInputToMachineRoiDefaults(input) {
+  if (!input || typeof input !== 'object')
+    return null
+
+  const payload = {}
+
+  Object.keys(defaultInput).forEach(key => {
+    const numberValue = Number(input[key])
+
+    if (Number.isFinite(numberValue))
+      payload[toSnakeCase(key)] = numberValue
+  })
+
+  return payload
+}
+
 export function mapMachineRoiDefaultsToInput(machineDefaults) {
   if (!machineDefaults || typeof machineDefaults !== 'object')
     return null

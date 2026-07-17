@@ -17,6 +17,7 @@ const emit = defineEmits([
   'toggleFullWidth',
   'updateLanguage',
   'selectProduct',
+  'openSettings',
 ])
 
 const { t } = useI18n({ useScope: 'global' })
@@ -45,13 +46,6 @@ const languageOptions = [
           >
             <div class="selector-nav">
               <span>{{ selectedProductName }}</span>
-              <!--
-                <VIcon
-                icon="tabler-layout-list"
-                size="18"
-                class="icon-color"
-                /> 
-              -->
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="1em"
@@ -93,14 +87,16 @@ const languageOptions = [
     </div>
 
     <div class="nav-actions">
-      <button
+      <!--
+        <button
         class="btn-icon"
         type="button"
         :aria-label="fullWidthLabel"
         @click="emit('toggleFullWidth')"
-      >
+        >
         <VIcon :icon="isFullWidth ? 'tabler-minimize' : 'tabler-maximize'" />
-      </button>
+        </button> 
+      -->
 
       <VMenu location="bottom end">
         <template #activator="{ props }">
@@ -130,6 +126,15 @@ const languageOptions = [
           </VListItem>
         </VList>
       </VMenu>
+
+      <button
+        class="btn-icon"
+        type="button"
+        aria-label="Settings"
+        @click="emit('openSettings')"
+      >
+        <VIcon icon="tabler-settings" />
+      </button>
 
       <button
         class="btn-icon"

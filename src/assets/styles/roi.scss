@@ -1343,11 +1343,11 @@ input {
 }
 
 .compare-box.old header {
-  color: var(--red);
+  color: #3f444c;
 }
 
 .compare-box.new header {
-  color: var(--green);
+  color: var(--orange);
 }
 
 .compare-row {
@@ -2235,12 +2235,12 @@ input {
   }
 
   .roi-print-compare-toprow .old {
-    color: var(--orange);
+    color: #3f444c;
     text-align: center;
   }
 
   .roi-print-compare-toprow .new {
-    color: var(--green);
+    color: var(--orange);
     text-align: center;
   }
 
@@ -2282,11 +2282,11 @@ input {
   }
 
   .roi-print-compare-value.old {
-    color: var(--orange);
+    color: #3f444c;
   }
 
   .roi-print-compare-value.new {
-    color: var(--green);
+    color: var(--orange);
   }
 
   .roi-print-compare-value.diff.gain {
@@ -3960,12 +3960,12 @@ input {
   }
 
   .roi-print-compare-toprow .old {
-    color: var(--orange);
+    color: #3f444c;
     text-align: center;
   }
 
   .roi-print-compare-toprow .new {
-    color: var(--green);
+    color: var(--orange);
     text-align: center;
   }
 
@@ -4006,11 +4006,11 @@ input {
   }
 
   .roi-print-compare-value.old {
-    color: var(--orange);
+    color: #3f444c;
   }
 
   .roi-print-compare-value.new {
-    color: var(--green);
+    color: var(--orange);
   }
 
   .roi-print-compare-value.diff.gain {
