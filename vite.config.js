@@ -12,7 +12,7 @@ import MetaLayouts from 'vite-plugin-vue-meta-layouts'
 import vuetify from 'vite-plugin-vuetify'
 import svgLoader from 'vite-svg-loader'
 
-const appBasePath = '/roi/'
+const appBasePath = '/tenko-roi/'
 
 // https://vitejs.dev/config/
 export default defineConfig({
